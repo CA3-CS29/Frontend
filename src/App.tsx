@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import {COLORS} from './colors';
-import{Route, Switch, Link, BrowserRouter as Router} from 'react-router-dom';
+import{Route, Switch, BrowserRouter as Router} from 'react-router-dom';
 
 
 import Header from './Pages/Header';

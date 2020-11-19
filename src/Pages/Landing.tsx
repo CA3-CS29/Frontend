@@ -4,7 +4,7 @@ import './Landing.css';
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row'
-import picture from '../media/landingPicture.jpg';
+
 
 export default function Landing(){
     return(
