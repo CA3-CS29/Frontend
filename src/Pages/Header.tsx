@@ -1,7 +1,6 @@
 import React from 'react';
 import '../App.css';
 import {COLORS} from '../colors';
-import '../index'
 
 import {Link} from 'react-router-dom';
 
