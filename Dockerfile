@@ -5,15 +5,15 @@
 FROM node:14.1-alpine AS builder
 
 WORKDIR /opt/web
-COPY package.json package-lock.json ./
+COPY package.json yarn.lock ./
 
-RUN yarn install
+RUN yarn
 
 ENV PATH="./node_modules/.bin:$PATH"
 
 COPY . ./
 
-RUN yarn run build
+RUN yarn build
 
 FROM nginx:1.17-alpine
 
