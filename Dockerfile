@@ -6,7 +6,7 @@ FROM node:14.1-alpine AS builder
 
 WORKDIR /opt/web
 COPY package.json package-lock.json ./
-RUN docker image prune -f
+
 RUN yarn install
 
 ENV PATH="./node_modules/.bin:$PATH"
