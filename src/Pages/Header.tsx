@@ -40,7 +40,6 @@ export default function Header(props: HeaderProps) {
                 </Navbar.Brand>
 
             </Nav>
-                
                 <Button className = "Button"
                 style = {{
                     color: COLORS.darkText,
