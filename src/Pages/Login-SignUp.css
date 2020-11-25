@@ -1,0 +1,11 @@
+
+.Button{   
+    font-family: 'Lato';
+    font-weight: 'lighter';
+    font-size: 25;
+    height: 40;
+    align-items: "right";
+    justify-content: "center";
+    display: "flex";   
+    
+}

@@ -16,16 +16,12 @@ export default function Landing(){
                 backgroundColor: COLORS.accent
             }}>
 
-                <Button 
+            <Button className="Button"
+                size="lg"
                 style={{
                     color: COLORS.darkText,
                     backgroundColor: COLORS.highlight,
-                    fontFamily: 'Lato',
-                    fontWeight: 'lighter',
-                    fontSize: 25,
-                    height: 40,
-                    alignItems: "center",
-                    justifyContent: "center",
+                    borderColor: COLORS.highlight,
                     display: "inline",
                     position: "absolute",
                     top: 400,
@@ -36,16 +32,12 @@ export default function Landing(){
                     Log in
                 </Button>
 
-                <Button 
+            <Button className="Button"
+                size="lg"
                 style={{
                     color: COLORS.darkText,
                     backgroundColor: COLORS.secondaryAccent,
-                    fontFamily: 'Lato',
-                    fontWeight: 'lighter',
-                    fontSize: 25,
-                    height: 40,
-                    alignItems: "center",
-                    justifyContent: "center",
+                    borderColor: COLORS.secondaryAccent,
                     display: "inline",
                     position: "absolute",
                     top: 400,

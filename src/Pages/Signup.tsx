@@ -45,16 +45,11 @@ export default function SignUp() {
                         </Form.Group>
                     </Form.Row>
                         
-                    <Button 
+                    <Button className="Button"
                         style={{
-                        color: COLORS.darkText,
-                        backgroundColor: COLORS.secondaryAccent,
-                        fontFamily: 'Lato',
-                        fontWeight: 'lighter',
-                        fontSize: 25,
-                        height: 40,
-                        alignItems: "center",
-                        justifyContent: "center",
+                            color: COLORS.darkText,
+                            backgroundColor: COLORS.secondaryAccent,
+                            borderColor: COLORS.secondaryAccent,
                         display: "inline",
                         position: "absolute",
                         top: 400,

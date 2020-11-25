@@ -52,16 +52,12 @@ export default function LogIn() {
                     </Form.Row>
                         
  
-                        <Button 
+                        <Button className="Button"
                             style={{
                                 color: COLORS.darkText,
                                 backgroundColor: COLORS.highlight,
-                                fontFamily: 'Lato',
-                                fontWeight: 'lighter',
-                                fontSize: 25,
-                                height: 40,
-                                alignItems: "center",
-                                justifyContent: "center",
+                                borderColor: COLORS.highlight,
+
                                 display: "inline",
                                 position: "absolute",
                                 top: 400,
