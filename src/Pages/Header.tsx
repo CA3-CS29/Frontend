@@ -1,6 +1,7 @@
 import React from 'react';
 import '../App.css';
 import {COLORS} from '../colors';
+import './Header.css'
 
 import {Link} from 'react-router-dom';
 
@@ -40,18 +41,14 @@ export default function Header(props: HeaderProps) {
 
             </Nav>
                 
-                <Button 
-                style={{
+                <Button className = "Button"
+                style = {{
                     color: COLORS.darkText,
                     backgroundColor: COLORS.highlight,
-                    fontFamily: 'Lato',
-                    fontWeight: 'lighter',
-                    fontSize: 25,
-                    height: 40,
-                    alignItems: "center",
-                    justifyContent: "center",
-                    display: "flex",
+                    borderColor : COLORS.highlight,
+            
                 }}
+
                 as={Link} to="/about"
                 >
                     About
