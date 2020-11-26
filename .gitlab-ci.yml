@@ -26,9 +26,9 @@ build:
     paths:
       - build
       - node_modules/
-  
- 
-    
+
+
+
 test:
   stage: test
   tags:
@@ -42,14 +42,16 @@ test:
     - CI=true yarn test
     - echo "Test successfully!"
 
-    
+
 docker-build:
   stage: docker-build
   image: docker-latest
   tags:
     - frontend
-  services: 
+  services:
     - name: docker:19.03.8-dind
+  only:
+    - master
   before_script:
     - docker login -u _ -p $HEROKU_API_KEY registry.heroku.com
   script:
