@@ -4,6 +4,7 @@ variables:
 stages:
   - build
   - test
+  - prune
   - docker-build
 
 
@@ -27,7 +28,17 @@ build:
       - build
       - node_modules/
 
-
+prune:
+  stage: prune
+  image: docker-latest
+  tags:
+    - frontend
+  script:
+    - echo "Pruning docker... 🐳"
+    - echo "y" | docker image prune
+    - echo "Pruned images"
+    - echo "y" | docker container prune
+    - echo "Pruned containers"
 
 test:
   stage: test
