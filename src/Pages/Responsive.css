@@ -1,0 +1,42 @@
+.responsiveRow {
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+    height: 100%;
+}
+
+.bodyColumn {
+    box-sizing: border-box;
+    flex: 70%;
+    padding: 2em;
+}
+
+.leavesColumn {
+    box-sizing: border-box;
+    flex: 30%;
+    padding: 0;
+    background: url("/src/media/landingPicture.jpg") center no-repeat;
+    background-size: cover;
+    height: 100%;
+}
+
+.leavesImage {
+    position: absolute;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+@media screen and (max-width: 1000px) {
+    .responsiveRow {
+        flex-direction: column;
+    }
+    .bodyColumn {
+        flex: 40%;
+    }
+    .leavesColumn {
+        flex: 60%;
+    }
+}
