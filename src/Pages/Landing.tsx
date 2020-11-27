@@ -1,12 +1,10 @@
 import React from 'react';
 import { COLORS } from '../colors';
 import './Landing.css';
+import './Responsive.css'
 
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-
-import landingPicture from '../media/landingPicture.jpg'
-
 
 export default function Landing(){
     return(
@@ -17,48 +15,8 @@ export default function Landing(){
                 padding: 0,
                 backgroundColor: COLORS.accent,
             }}>
-            <Row
-                style={{
-                    margin: 0,
-                }}>
-                <Col
-                    xs={8}
-                    style={{
-                        padding: 0,
-                    }}>
-
-                    <Button className="Button"
-                        size="lg"
-                        style={{
-                            color: COLORS.darkText,
-                            backgroundColor: COLORS.highlight,
-                            borderColor: COLORS.highlight,
-                            display: "inline",
-                            position: "absolute",
-                            top: 400,
-                            left: 200,
-                        }}
-                        as={Link} to="/login"
-                        >
-                            Log in
-                        </Button>
-
-                    <Button className="Button"
-                        size="lg"
-                        style={{
-                            color: COLORS.darkText,
-                            backgroundColor: COLORS.secondaryAccent,
-                            borderColor: COLORS.secondaryAccent,
-                            display: "inline",
-                            position: "absolute",
-                            top: 400,
-                            left: 300,
-                        }}
-                        as={Link} to="/signup"
-                        >
-                            Sign up
-                        </Button>
-
+            <Row className="responsiveRow">
+                <Col className="bodyColumn">
                     <Container>
                         <Row>
                             <h1 className="bigText"
@@ -77,20 +35,41 @@ export default function Landing(){
                             </p>
                         </Row>
                     </Container>
+                    <Row style={{
+                        marginTop: "1em",
+                        display: "flex",
+                        flexWrap: "wrap",
+                        }}>
+                        <Col style={{ flex: "50%" }}>
+                            <Button
+                                className="Button"
+                                size="lg"
+                                style={{
+                                    color: COLORS.darkText,
+                                    backgroundColor: COLORS.highlight,
+                                    borderColor: COLORS.highlight,
+                                }}
+                                as={Link} to="/login" >
+                                Log in
+                            </Button>
+                        </Col>
+                        <Col style={{ flex: "50%" }}>
+                            <Button
+                                className="Button"
+                                size="lg"
+                                style={{
+                                    color: COLORS.darkText,
+                                    backgroundColor: COLORS.secondaryAccent,
+                                    borderColor: COLORS.secondaryAccent,
+                                }}
+                                as={Link} to="/signup" >
+                                Sign up
+                            </Button>
+                        </Col>
+                    </Row>
                 </Col>
 
-                <Col
-                    style={{
-                        padding: 0,
-                    }}>
-                    <img src={landingPicture}
-                         alt="Leaves"
-                         style={{
-                             position: "absolute",
-                             right: 0,
-                             maxWidth: "100%",
-                         }}/>
-                </Col>
+                <Col className="leavesColumn"> </Col>
             </Row>
         </Container>
     );

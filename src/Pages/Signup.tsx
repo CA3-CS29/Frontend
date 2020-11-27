@@ -1,12 +1,11 @@
 import React, {useContext, useState} from 'react';
 import '../App.css';
+import './Responsive.css'
 import { COLORS } from '../colors';
 
 import { Container, Row, Col, Button, Form } from 'react-bootstrap';
 import { FirebaseContext, IFirebaseContext } from "../FirebaseContext";
 import { useHistory } from "react-router-dom";
-
-import landingPicture from '../media/landingPicture.jpg'
 
 
 export default function SignUp() {
@@ -37,15 +36,8 @@ export default function SignUp() {
                 padding: 0,
                 backgroundColor: COLORS.accent,
             }}>
-            <Row
-                style={{
-                    margin: 0,
-                }}>
-                <Col
-                    xs={8}
-                    style={{
-                        padding: 0,
-                    }}>
+            <Row className="responsiveRow">
+                <Col className="bodyColumn">
                     <Container>
                         <Row>
                             <h1 className="bigText"
@@ -55,10 +47,14 @@ export default function SignUp() {
                                 Welcome
                             </h1>
                         </Row>
-
                         <Form onSubmit={handleSubmit}>
                             <Form.Row>
-                                <Form.Group controlId="signupEmail">
+                                <Form.Group controlId="signupEmail"
+                                            style={{
+                                                margin: "auto",
+                                                marginBottom: "1em",
+                                            }}
+                                    >
                                     <Form.Label>Email</Form.Label>
                                     <Form.Control
                                         autoFocus
@@ -73,7 +69,12 @@ export default function SignUp() {
                             </Form.Row>
 
                             <Form.Row>
-                                <Form.Group controlId="signupPassword">
+                                <Form.Group controlId="signupPassword"
+                                            style={{
+                                                margin: "auto",
+                                                marginBottom: "1em",
+                                            }}
+                                    >
                                     <Form.Label>Password</Form.Label>
                                     <Form.Control
                                         type="password"
@@ -90,10 +91,7 @@ export default function SignUp() {
                                         color: COLORS.darkText,
                                         backgroundColor: COLORS.secondaryAccent,
                                         borderColor: COLORS.secondaryAccent,
-                                        display: "inline",
-                                        position: "absolute",
-                                        top: 400,
-                                        left: 300,
+                                        marginTop: "1em",
                                     }}>
                                 Sign up
                             </Button>
@@ -101,18 +99,7 @@ export default function SignUp() {
                     </Container>
                 </Col>
 
-                <Col
-                    style={{
-                        padding: 0,
-                    }}>
-                    <img src={landingPicture}
-                         alt="Leaves"
-                         style={{
-                             position: "absolute",
-                             right: 0,
-                             maxWidth: "100%",
-                         }}/>
-                </Col>
+                <Col className="leavesColumn"> </Col>
             </Row>
 
 
