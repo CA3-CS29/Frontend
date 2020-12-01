@@ -1,11 +1,13 @@
 import React, {useContext, useState} from 'react';
 import '../App.css';
-import './Responsive.css'
-import { COLORS } from '../colors';
 
-import { Container, Row, Col, Button, Form } from 'react-bootstrap';
-import { FirebaseContext, IFirebaseContext } from "../FirebaseContext";
-import { useHistory } from "react-router-dom";
+import './Responsive.css'
+import {COLORS} from '../colors';
+import axios from 'axios';
+import {Button, Col, Container, Form, Row} from 'react-bootstrap';
+import {FirebaseContext, IFirebaseContext} from "../FirebaseContext";
+import {useHistory} from "react-router-dom";
+import {ApiEndPoints} from "../ApiEndpoints";
 
 
 export default function SignUp() {
@@ -22,6 +24,10 @@ export default function SignUp() {
         event.preventDefault();
         try {
             await firebaseContext.firebase.auth().createUserWithEmailAndPassword(email, password);
+            axios({
+                method: 'post',
+                url: ApiEndPoints.createAccount + firebaseContext.firebase.auth().currentUser?.uid,
+            });
             history.push("/");
         } catch (error) {
             alert(error);
@@ -54,7 +60,7 @@ export default function SignUp() {
                                                 margin: "auto",
                                                 marginBottom: "1em",
                                             }}
-                                    >
+                                >
                                     <Form.Label>Email</Form.Label>
                                     <Form.Control
                                         autoFocus
@@ -74,7 +80,7 @@ export default function SignUp() {
                                                 margin: "auto",
                                                 marginBottom: "1em",
                                             }}
-                                    >
+                                >
                                     <Form.Label>Password</Form.Label>
                                     <Form.Control
                                         type="password"
@@ -98,10 +104,7 @@ export default function SignUp() {
                         </Form>
                     </Container>
                 </Col>
-
                 <Col className="leavesColumn"> </Col>
             </Row>
-
-
         </Container>);
 }
