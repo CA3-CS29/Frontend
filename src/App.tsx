@@ -10,6 +10,7 @@ import About from './Pages/About'
 import Login from './Pages/Login'
 import Signup from './Pages/Signup'
 import {FirebaseProvider} from "./FirebaseContext";
+import CreatePortfolio from './Pages/CreatePortfolio';
 
 function App() {
     return (
@@ -27,11 +28,11 @@ function App() {
                         <Route path="/about" exact component={About}/>
                         <Route path="/login" exact component={Login}/>
                         <Route path="/signup" exact component={Signup}/>
+                        <Route path="/create-portfolio" exact component={CreatePortfolio}/>
                     </Switch>
 
 
                 </div>
-                <div>Login</div>
             </Router>
         </FirebaseProvider>
     );
