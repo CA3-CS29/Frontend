@@ -6,8 +6,8 @@ import './Responsive.css'
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-export default function Landing(){
-    return(
+export default function Landing() {
+    return (
         <Container
             fluid
             className="Landing"
@@ -27,7 +27,7 @@ export default function Landing(){
                             </h1>
                         </Row>
                         <Row>
-                            <p  className="smallText"
+                            <p className="smallText"
                                 style={{
                                     color: COLORS.darkText,
                                 }}>
@@ -39,7 +39,7 @@ export default function Landing(){
                         marginTop: "1em",
                         display: "flex",
                         flexWrap: "wrap",
-                        }}>
+                    }}>
                         <Col style={{ flex: "50%" }}>
                             <Button
                                 className="Button"
