@@ -1,23 +1,41 @@
-import React from 'react';
+import React, {} from 'react';
 import '../App.css';
 import { COLORS } from '../colors';
 import './Header.css'
-
 import { Link } from 'react-router-dom';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav'
 import Button from 'react-bootstrap/Button'
-
+import ButtonToolbar from 'react-bootstrap/ButtonToolbar'
 
 interface HeaderProps {
     logoText: string;
-    //accountName: string;
+     
 }
 
-export default function Header(props: HeaderProps) {
+function ButtonsLoggedOut(){
+    return(
+        <div>
+            <Button className="Button mr-1"
+                style={{
+                    color: COLORS.darkText,
+                    backgroundColor: COLORS.highlight,
+                    borderColor: COLORS.highlight,
 
+                }}
+
+                as={Link} to="/about"
+            >
+                About
+            </Button>
+        </div>
+    )
+}
+
+export default function HeaderLoggedOut(props: HeaderProps) {
+    
     return (
         <Navbar style={{
             backgroundColor: COLORS.primary,
@@ -40,37 +58,21 @@ export default function Header(props: HeaderProps) {
                 </Navbar.Brand>
 
             </Nav>
-            <Button className="Button"
-                style={{
-                    color: COLORS.darkText,
-                    backgroundColor: COLORS.highlight,
-                    borderColor: COLORS.highlight,
 
-                }}
 
-                as={Link} to="/about"
-            >
-                About
-                </Button>
+            <ButtonToolbar>
 
-            <Button className="Button"
-                style={{
-                    color: COLORS.darkText,
-                    backgroundColor: COLORS.highlight,
-                    borderColor: COLORS.highlight,
+                <ButtonsLoggedOut />
 
-                }}
-
-                as={Link} to="/create-portfolio"
-            >
-                Create Portfolio
-                </Button>
+            </ButtonToolbar>
 
 
         </Navbar>
-
-
     )
+// }
+            
+   
+    
 }
 
 
