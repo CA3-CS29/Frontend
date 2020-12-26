@@ -8,6 +8,7 @@ import {Button, Col, Container, Form, Row} from 'react-bootstrap';
 import {FirebaseContext, IFirebaseContext} from "../FirebaseContext";
 import {useHistory} from "react-router-dom";
 import {ApiEndPoints} from "../ApiEndpoints";
+import { AuthContext } from '../App';
 
 
 export default function SignUp() {
@@ -15,6 +16,8 @@ export default function SignUp() {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const firebaseContext: IFirebaseContext = useContext(FirebaseContext);
+
+    const Auth = useContext(AuthContext);
 
     if (firebaseContext.firebase.auth().currentUser) {
         history.push("/");
@@ -28,6 +31,7 @@ export default function SignUp() {
                 method: 'post',
                 url: ApiEndPoints.createAccount + firebaseContext.firebase.auth().currentUser?.uid,
             });
+            Auth.setLoggedIn(true);
             history.push("/");
         } catch (error) {
             alert(error);

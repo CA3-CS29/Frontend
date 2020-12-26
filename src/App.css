@@ -27,3 +27,19 @@
                         
                     
 }
+
+.MediumText{
+  fontFamily: "Lato";
+  fontSize: 8vw;
+                        
+                    
+}
+
+.SmallText{
+  fontFamily: "Lato";
+  fontSize: 5vw;
+                        
+                    
+}
+
+

@@ -1,5 +1,5 @@
 import firebase from 'firebase';
-import React from "react";
+import React from 'react';
 
 // Firebase configuration loaded from env variables
 const firebaseConfig = {
@@ -19,7 +19,11 @@ if (!firebase.apps.length) {
 export interface IFirebaseContext {
     firebase: firebase.app.App,
     authProviders: string[]
+    isLoggedIn: boolean,
+
 }
+
+
 
 export const FirebaseContext = React.createContext({} as IFirebaseContext)
 
@@ -27,7 +31,7 @@ export const FirebaseProvider = ({children}: any) => {
     return (
         <div>
             <FirebaseContext.Provider
-                value={{'firebase': firebase.app(), authProviders: ["Firebase"]} as IFirebaseContext}>
+                value={{ 'firebase': firebase.app(), authProviders: ["Firebase"]} as IFirebaseContext}>
                 {children}
             </FirebaseContext.Provider>
         </div>

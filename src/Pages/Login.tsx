@@ -5,21 +5,30 @@ import { COLORS } from '../colors';
 
 import { Container, Row, Col, Button, Form } from 'react-bootstrap';
 import { FirebaseContext, IFirebaseContext } from "../FirebaseContext";
+import {AuthContext} from '../App';
 import { useHistory } from "react-router-dom";
 
-export default function LogIn() {
+
+
+export default function LogIn(props: { user: any; onLogin: (arg0: any) => void; }) {
     let history = useHistory();
+
+    const Auth = useContext(AuthContext);
+
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const firebaseContext: IFirebaseContext = useContext(FirebaseContext);
     if (firebaseContext.firebase.auth().currentUser) {
         history.push("/");
+        Auth.setLoggedIn(true);
     }
+
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         try {
             await firebaseContext.firebase.auth().signInWithEmailAndPassword(email, password);
+            Auth.setLoggedIn(true);
             history.push("/");
         } catch (error) {
             alert(error);

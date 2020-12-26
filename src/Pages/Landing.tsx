@@ -42,7 +42,7 @@ export default function Landing() {
                     }}>
                         <Col style={{ flex: "50%" }}>
                             <Button
-                                className="Button"
+                                className="Button mr-1"
                                 size="lg"
                                 style={{
                                     color: COLORS.darkText,
@@ -52,8 +52,8 @@ export default function Landing() {
                                 as={Link} to="/login" >
                                 Log in
                             </Button>
-                        </Col>
-                        <Col style={{ flex: "50%" }}>
+                        {/* </Col>
+                        <Col style={{ flex: "50%" }}> */}
                             <Button
                                 className="Button"
                                 size="lg"
