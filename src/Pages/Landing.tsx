@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { COLORS } from '../colors';
 import './Landing.css';
 import './Responsive.css'
@@ -6,7 +6,18 @@ import './Responsive.css'
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
+import { useHistory } from 'react-router-dom';
+import { FirebaseContext, IFirebaseContext } from '../FirebaseContext';
+
 export default function Landing() {
+    let history = useHistory();
+    const firebaseContext: IFirebaseContext = useContext(FirebaseContext);
+
+    if (firebaseContext.firebase.auth().currentUser) {
+        history.push("/portfolios");
+    }
+
+
     return (
         <Container
             fluid
