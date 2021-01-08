@@ -39,13 +39,16 @@ function App() {
                     }}>
 
                         {isLoggedIn ?
-                            <HeaderLoggedIn logoText="CA3" />
+                            
+                                <HeaderLoggedIn logoText="CA3" />
                             :
-                            <div>
                                 <HeaderLoggedOut logoText="CA3" />
-                                <Landing/>
-                            </div>
+                                
+                            
                         }
+
+                       
+
 
                         
 
