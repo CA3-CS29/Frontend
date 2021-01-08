@@ -42,6 +42,7 @@ function App() {
                             
                                 <HeaderLoggedIn logoText="CA3" />
                             :
+<<<<<<< HEAD
                                 <HeaderLoggedOut logoText="CA3" />
                                 
                             
@@ -50,6 +51,14 @@ function App() {
                        
 
 
+=======
+                            <div>
+                                <HeaderLoggedOut logoText="CA3" />
+                                <Landing/>
+                            </div>
+                        }
+
+>>>>>>> 86823ded5bc92643b7cac9625820f0fc94b49464
                         
 
                         <Switch>
