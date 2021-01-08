@@ -4,15 +4,15 @@ import {COLORS} from './colors';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 
 import { FirebaseProvider } from "./FirebaseContext";
-import HeaderLoggedOut from './Pages/HeaderLoggedOut';
-import HeaderLoggedIn from './Pages/HeaderLoggedIn';
-import Landing from './Pages/Landing';
-import About from './Pages/About'
-import Login from './Pages/Login'
-import Signup from './Pages/Signup'
-import CreatePortfolio from './Pages/CreatePortfolio';
-import Portfolios from './Pages/Portfolios'
-import Account from './Pages/Account';
+import HeaderLoggedOut from './pages/HeaderLoggedOut';
+import HeaderLoggedIn from './pages/HeaderLoggedIn';
+import Landing from './pages/Landing';
+import About from './pages/About'
+import Login from './pages/Login'
+import Signup from './pages/Signup'
+import CreatePortfolio from './pages/CreatePortfolio';
+import Portfolios from './pages/Portfolios'
+import Account from './pages/Account';
 
 
 export const AuthContext = React.createContext({
