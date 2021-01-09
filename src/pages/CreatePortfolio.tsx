@@ -5,16 +5,21 @@ import './Responsive.css'
 import '../App.css';
 import { useHistory } from 'react-router-dom';
 import { FirebaseContext, IFirebaseContext } from '../FirebaseContext';
-
+import axios from "axios";
+import {ApiEndPoints} from "../ApiEndpoints";
+import { v4 as uuidv4 } from 'uuid';
+const portfolio_id = uuidv4();
+const office_id = uuidv4();
+const region_id = uuidv4();
 
 export default function CreatePortfolio() {
     const [portfolioTag, setPortfolioTag] = useState<string>("");
     const [officeTag, setOfficeTag] = useState<string>("");
-    const [selectedRegion, setSelectedRegion] = useState<string>("");
     const [displayCreateOfficeButton, setDisplayCreateOfficeButton] = useState<boolean>(false);
     const [displayCreateOfficeForm, setDisplayCreateOfficeForm] = useState<boolean>(false);
     let history = useHistory();
     const firebaseContext: IFirebaseContext = useContext(FirebaseContext);
+
 
     if (!firebaseContext.firebase.auth().currentUser) {
         history.push("/");
@@ -40,7 +45,7 @@ export default function CreatePortfolio() {
                 </Button>
             )
         } else {
-            return (null);
+            return null;
         }
     }
 
@@ -49,11 +54,32 @@ export default function CreatePortfolio() {
     }
 
     function AddPortfolio(props: AddPortfolioProps): JSX.Element | null {
-
         async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+            event.preventDefault();
             setDisplayCreateOfficeButton(true);
-            // TODO: API call to create portfolio
-        }
+            const timestamp = new Date();
+
+
+            axios.post(ApiEndPoints.createPortfolio
+                 + firebaseContext.firebase.auth().currentUser?.uid,
+                {
+                    portfolio_id: portfolio_id,
+                    user_id: [firebaseContext.firebase.auth().currentUser?.uid],
+                    tag: portfolioTag,
+                    regions: [],
+                    created_on: timestamp.toDateString(),
+                    updated_on: timestamp.toDateString(),
+                })
+                .then(function (response){
+                    console.log(response);
+                })
+                .catch(function (error){
+                    console.log(error);
+                })
+
+            }
+
+
 
         if (props.visible) {
             return (
@@ -91,7 +117,7 @@ export default function CreatePortfolio() {
                 </Form>
             )
         } else {
-            return (null);
+            return null;
         }
     }
 
@@ -101,24 +127,68 @@ export default function CreatePortfolio() {
 
     function AddOfficeForm(props: CreateOfficeFormProps): JSX.Element | null {
 
-        // TODO: fetch actual available regions from API
         let dropDownItems = [];
-        const regionOptions = ["default", "emea", "na", "sa", "apac"];
+        const regionOptions = ["default", "emea", "na", "sa", "apac", "ground0"];
+
 
         const onTargetSelect = (selected: string) => {
-            setSelectedRegion(selected);
+
+            //TODO: display available regions from api
+            axios.get(ApiEndPoints.getAllRegionsForUser + firebaseContext.firebase.auth().currentUser?.uid)
+                .then((regions) => {
+                    let existingRegions = regions.data;
+                    console.log(existingRegions);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+
+            axios.post(ApiEndPoints.createRegion
+                + firebaseContext.firebase.auth().currentUser?.uid + '/'
+                + portfolio_id + '/'
+                + firebaseContext.firebase.auth().currentUser?.uid,
+                {
+                    "name":selected,
+                    "region_id":region_id,
+                    "portfolio_id":portfolio_id,
+                    "user_id":[firebaseContext.firebase.auth().currentUser?.uid],
+                    "offices":[]
+                })
+                .then(function (response){
+                    console.log(response);
+                })
+                .catch(function (error){
+                    console.log(error);
+                })
         }
 
         for (let i = 0; i < regionOptions.length; i++) {
             dropDownItems.push(<Dropdown.Item key={regionOptions[i]} eventKey={i.toString()} onSelect={() => onTargetSelect(regionOptions[i])}>{regionOptions[i]}</Dropdown.Item>)
         }
 
-        function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-            // TODO: API call to create office
-            const selectedRegionTag = selectedRegion;
-            console.log(selectedRegionTag);
-        }
+        function handleSubmit() {
 
+            axios.post(ApiEndPoints.createOffice
+                + region_id + '/'
+                + portfolio_id + '/'
+                + firebaseContext.firebase.auth().currentUser?.uid,
+                {
+                    region_id: region_id,
+                    portfolio_id: portfolio_id,
+                    account_id: firebaseContext.firebase.auth().currentUser?.uid,
+                    office_id: office_id,
+                    user_id: [firebaseContext.firebase.auth().currentUser?.uid],
+                    name: officeTag,
+                })
+                .then(function (response){
+                    console.log(response);
+                })
+                .catch(function (error){
+                    //get existing region_id?
+                    console.log(error);
+                })
+
+        }
 
 
         if (props.visible) {
@@ -168,7 +238,7 @@ export default function CreatePortfolio() {
                 </Form>
             )
         } else {
-            return (null);
+            return null;
         }
     }
 
