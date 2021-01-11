@@ -53,6 +53,7 @@ export default function Account() {
                 user.delete().then(function () {
                     alert("Account deleted")
                     Auth.setLoggedIn(false);
+                    localStorage.setItem("isLoggedIn", JSON.stringify(false));
                     history.push("/");
                     // User deleted.
                     
