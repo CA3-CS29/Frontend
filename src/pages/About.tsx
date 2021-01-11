@@ -1,6 +1,8 @@
 import React from 'react';
 import {COLORS} from "../colors";
 import {Col, Container, Row} from "react-bootstrap";
+import * as rs from "../Responsive";
+import landingPicture from "../media/landingPicture.jpg";
 
 export default function About() {
     return (
@@ -11,8 +13,19 @@ export default function About() {
                 padding: 0,
                 backgroundColor: COLORS.accent,
             }}>
-            <Row className="responsiveRow">
-                <Col className="bodyColumn">
+            <Row style={{
+                boxSizing: "border-box",
+                display: "flex",
+                flexWrap: "wrap",
+                margin: 0,
+                height: "100%",
+                flexDirection: [rs.IsPhone(), rs.IsTabletPortrait()].some(Boolean) ? "column" : "row",
+                }}>
+                <Col style={{
+                    boxSizing: "border-box",
+                    padding: "2em",
+                    flex: [rs.IsPhone(), rs.IsTabletPortrait()].some(Boolean) ? "40%" : "70%",
+                    }}>
                     <Container>
                         <Row>
                             <h1 className="bigText"
@@ -45,8 +58,14 @@ export default function About() {
                     }}>
                     </Row>
                 </Col>
-
-                <Col className="leavesColumn"> </Col>
+                <Col style={{
+                    boxSizing: "border-box",
+                    padding: 0,
+                    background: "url(" + landingPicture + ") center no-repeat",
+                    backgroundSize: "cover",
+                    height: "100%",
+                    flex: [rs.IsPhone(), rs.IsTabletPortrait()].some(Boolean) ? "60%" : "30%",
+                }}> </Col>
             </Row>
         </Container>
     );

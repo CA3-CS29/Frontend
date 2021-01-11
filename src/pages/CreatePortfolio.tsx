@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Button, Container, Dropdown, DropdownButton, Form, Row } from 'react-bootstrap';
 import { COLORS } from '../colors';
-import './Responsive.css'
 import '../App.css';
 import { useHistory } from 'react-router-dom';
 import { FirebaseContext, IFirebaseContext } from '../FirebaseContext';
@@ -113,7 +112,7 @@ export default function CreatePortfolio() {
                             marginTop: "1em",
                         }}>
                         Create
-                            </Button>
+                    </Button>
                 </Form>
             )
         } else {
@@ -234,7 +233,7 @@ export default function CreatePortfolio() {
                             marginTop: "1em",
                         }}>
                         Create
-                            </Button>
+                    </Button>
                 </Form>
             )
         } else {
@@ -250,21 +249,19 @@ export default function CreatePortfolio() {
                 padding: 0,
                 backgroundColor: COLORS.accent,
             }}>
-            <Row className="responsiveRow">
-                <Container>
-                    <Row>
-                        <h1 className="bigText"
-                            style={{
-                                color: COLORS.darkText,
-                            }}>
-                            Create Portfolio
-                            </h1>
-                    </Row>
-                    <AddPortfolio visible={!displayCreateOfficeButton} />
-                    <AddOfficeButton shouldRender={displayCreateOfficeButton && !displayCreateOfficeForm} />
-                    <AddOfficeForm visible={displayCreateOfficeForm} />
-                </Container>
-            </Row>
+            <Container>
+                <Row>
+                    <h1 className="bigText"
+                        style={{
+                            color: COLORS.darkText,
+                        }}>
+                        Create Portfolio
+                        </h1>
+                </Row>
+                <AddPortfolio visible={!displayCreateOfficeButton} />
+                <AddOfficeButton shouldRender={displayCreateOfficeButton && !displayCreateOfficeForm} />
+                <AddOfficeForm visible={displayCreateOfficeForm} />
+            </Container>
         </Container>
     );
 }

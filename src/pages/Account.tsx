@@ -1,12 +1,10 @@
 import React, { useContext} from 'react';
 import { COLORS } from '../colors';
-import './Responsive.css'
 import '../App.css';
 import { useHistory } from 'react-router-dom';
 import { FirebaseContext, IFirebaseContext } from '../FirebaseContext';
 import {Container, Row, Button } from 'react-bootstrap';
 import { AuthContext } from '../App';
-
 
 
 export default function Account() {
@@ -73,86 +71,83 @@ export default function Account() {
                 padding: 0,
                 backgroundColor: COLORS.accent,
             }}>
-            <Row className="responsiveRow">
-                <Container>
-                    <Row>
-                        <h1 className="bigText"
-                            style={{
-                                color: COLORS.darkText,
-                            }}>
-                            Your Account
-                            </h1>
-                    </Row>
-                    <hr></hr>
-                    <Row>
-                        <h2 className="MediumText"
-                            style={{
-                                color: COLORS.darkText,
-                            }}>
-                            Your Email
-                        </h2>
-                    </Row>
-                    <Row>
-                        
-                        <p className="SmallText"
-                            style={{
-                                color: COLORS.darkText,
-                            }}>
-                            {emailString}
-                        </p>
-                    </Row>
+            <Container>
+                <Row>
+                    <h1 className="bigText"
+                        style={{
+                            color: COLORS.darkText,
+                        }}>
+                        Your Account
+                        </h1>
+                </Row>
+                <hr/>
+                <Row>
+                    <h2 className="MediumText"
+                        style={{
+                            color: COLORS.darkText,
+                        }}>
+                        Your Email
+                    </h2>
+                </Row>
+                <Row>
+
+                    <p className="SmallText"
+                        style={{
+                            color: COLORS.darkText,
+                        }}>
+                        {emailString}
+                    </p>
+                </Row>
 
 
-                    <hr></hr>
-                    <Row>
-                        <h2 className="MediumText"
-                            style={{
-                                color: COLORS.darkText,
-                            }}>
-                            Password
-                        </h2>
-                    </Row>
-                    <Row>
-                        <Button
-                            className="Button"
-                            style={{
-                                color: COLORS.darkText,
-                                backgroundColor: COLORS.secondaryAccent,
-                                borderColor: COLORS.secondaryAccent,
-                                fontFamily: "lato",
-                                fontSize: "1.5vw",
-                            }}
-                            onClick={sendResetEmail} >
-                            Change Password
-                            </Button>
-                    </Row>
+                <hr/>
+                <Row>
+                    <h2 className="MediumText"
+                        style={{
+                            color: COLORS.darkText,
+                        }}>
+                        Password
+                    </h2>
+                </Row>
+                <Row>
+                    <Button
+                        className="Button"
+                        style={{
+                            color: COLORS.darkText,
+                            backgroundColor: COLORS.secondaryAccent,
+                            borderColor: COLORS.secondaryAccent,
+                            fontFamily: "lato",
+                            fontSize: "1.5vw",
+                        }}
+                        onClick={sendResetEmail} >
+                        Change Password
+                        </Button>
+                </Row>
 
-                    <hr></hr>
-                    <Row>
-                        <h2 className="MediumText"
-                            style={{
-                                color: COLORS.darkText,
-                            }}>
-                            Delete Your Account
-                        </h2>
-                    </Row>
-                    <Row>
-                        <Button
-                            className="Button"
-                            style={{
-                                color: COLORS.darkText,
-                                backgroundColor: COLORS.secondaryAccent,
-                                borderColor: COLORS.secondaryAccent,
-                                fontFamily: "lato",
-                                fontSize: "1.5vw",
-                            }}
-                            onClick={deleteAccount} >
-                            Delete Account
-                            </Button>
-                    </Row>
-
-                </Container>
-            </Row>
+                <hr/>
+                <Row>
+                    <h2 className="MediumText"
+                        style={{
+                            color: COLORS.darkText,
+                        }}>
+                        Delete Your Account
+                    </h2>
+                </Row>
+                <Row>
+                    <Button
+                        className="Button"
+                        style={{
+                            color: COLORS.darkText,
+                            backgroundColor: COLORS.secondaryAccent,
+                            borderColor: COLORS.secondaryAccent,
+                            fontFamily: "lato",
+                            fontSize: "1.5vw",
+                        }}
+                        onClick={deleteAccount} >
+                        Delete Account
+                        </Button>
+                </Row>
+            </Container>
         </Container>
     );
 }
