@@ -1,13 +1,15 @@
 import React, { useContext } from 'react';
 import { COLORS } from '../colors';
 import './Landing.css';
-import './Responsive.css'
+import * as rs from '../Responsive';
+import landingPicture from '../media/landingPicture.jpg'
 
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import { useHistory } from 'react-router-dom';
 import { FirebaseContext, IFirebaseContext } from '../FirebaseContext';
+
 
 export default function Landing() {
     let history = useHistory();
@@ -23,11 +25,22 @@ export default function Landing() {
             fluid
             className="Landing"
             style={{
-                padding: 0,
                 backgroundColor: COLORS.accent,
+                padding: 0,
             }}>
-            <Row className="responsiveRow">
-                <Col className="bodyColumn">
+            <Row style={{
+                boxSizing: "border-box",
+                display: "flex",
+                flexWrap: "wrap",
+                margin: 0,
+                height: "100%",
+                flexDirection: [rs.IsPhone(), rs.IsTabletPortrait()].some(Boolean) ? "column" : "row",
+                }}>
+                <Col style={{
+                    boxSizing: "border-box",
+                    padding: "2em",
+                    flex: [rs.IsPhone(), rs.IsTabletPortrait()].some(Boolean) ? "40%" : "70%",
+                    }}>
                     <Container>
                         <Row>
                             <h1 className="bigText"
@@ -63,8 +76,6 @@ export default function Landing() {
                                 as={Link} to="/login" >
                                 Log in
                             </Button>
-                        {/* </Col>
-                        <Col style={{ flex: "50%" }}> */}
                             <Button
                                 className="Button"
                                 size="lg"
@@ -80,7 +91,14 @@ export default function Landing() {
                     </Row>
                 </Col>
 
-                <Col className="leavesColumn"> </Col>
+                <Col style={{
+                    boxSizing: "border-box",
+                    padding: 0,
+                    background: "url(" + landingPicture + ") center no-repeat",
+                    backgroundSize: "cover",
+                    height: "100%",
+                    flex: [rs.IsPhone(), rs.IsTabletPortrait()].some(Boolean) ? "60%" : "30%",
+                }}> </Col>
             </Row>
         </Container>
     );

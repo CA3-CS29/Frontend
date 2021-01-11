@@ -1,8 +1,10 @@
 import React, {useContext, useState} from 'react';
 import '../App.css';
 
-import './Responsive.css'
 import {COLORS} from '../colors';
+import * as rs from "../Responsive";
+import landingPicture from "../media/landingPicture.jpg";
+
 import axios from 'axios';
 import {Button, Col, Container, Form, Row} from 'react-bootstrap';
 import {FirebaseContext, IFirebaseContext} from "../FirebaseContext";
@@ -46,8 +48,19 @@ export default function SignUp() {
                 padding: 0,
                 backgroundColor: COLORS.accent,
             }}>
-            <Row className="responsiveRow">
-                <Col className="bodyColumn">
+            <Row style={{
+                boxSizing: "border-box",
+                display: "flex",
+                flexWrap: "wrap",
+                margin: 0,
+                height: "100%",
+                flexDirection: [rs.IsPhone(), rs.IsTabletPortrait()].some(Boolean) ? "column" : "row",
+                }}>
+                <Col style={{
+                    boxSizing: "border-box",
+                    padding: "2em",
+                    flex: [rs.IsPhone(), rs.IsTabletPortrait()].some(Boolean) ? "40%" : "70%",
+                    }}>
                     <Container>
                         <Row>
                             <h1 className="bigText"
@@ -108,7 +121,15 @@ export default function SignUp() {
                         </Form>
                     </Container>
                 </Col>
-                <Col className="leavesColumn"> </Col>
+
+                <Col style={{
+                    boxSizing: "border-box",
+                    padding: 0,
+                    background: "url(" + landingPicture + ") center no-repeat",
+                    backgroundSize: "cover",
+                    height: "100%",
+                    flex: [rs.IsPhone(), rs.IsTabletPortrait()].some(Boolean) ? "60%" : "30%",
+                }}> </Col>
             </Row>
         </Container>);
 }

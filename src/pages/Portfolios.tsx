@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import { COLORS } from '../colors';
-import './Responsive.css'
 import '../App.css';
 import { useHistory } from 'react-router-dom';
 import { FirebaseContext, IFirebaseContext } from '../FirebaseContext';
