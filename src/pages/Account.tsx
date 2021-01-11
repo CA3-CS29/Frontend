@@ -12,9 +12,11 @@ export default function Account() {
     const firebaseContext: IFirebaseContext = useContext(FirebaseContext);
     const Auth = useContext(AuthContext);
 
-    if (!firebaseContext.firebase.auth().currentUser) {
-        history.push("/");
-    }
+    firebaseContext.firebase.auth().onAuthStateChanged(function (user) {
+        if (!user) {
+            history.push("/");
+        }
+    });
 
     var user = firebaseContext.firebase.auth().currentUser;
     var auth = firebaseContext.firebase.auth();

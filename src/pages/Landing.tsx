@@ -15,9 +15,11 @@ export default function Landing() {
     let history = useHistory();
     const firebaseContext: IFirebaseContext = useContext(FirebaseContext);
 
-    if (firebaseContext.firebase.auth().currentUser) {
-        history.push("/portfolios");
-    }
+    firebaseContext.firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
+            history.push("/portfolios");
+        }
+    });
 
 
     return (

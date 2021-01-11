@@ -61,6 +61,7 @@ function ButtonsLoggedIn(){
                 onClick={() => {
                     firebaseContext.firebase.auth().signOut().then(function () {
                         Auth.setLoggedIn(false);
+                        localStorage.setItem("isLoggedIn", JSON.stringify(false));
                         alert("Sign-out successful.")
 
                         // Sign-out successful.

@@ -18,10 +18,15 @@ export default function LogIn(props: { user: any; onLogin: (arg0: any) => void; 
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const firebaseContext: IFirebaseContext = useContext(FirebaseContext);
-    if (firebaseContext.firebase.auth().currentUser) {
-        history.push("/");
-        Auth.setLoggedIn(true);
-    }
+
+
+    firebaseContext.firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
+            history.push("/");
+            Auth.setLoggedIn(true);
+        }
+    });
+    
 
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -29,6 +34,7 @@ export default function LogIn(props: { user: any; onLogin: (arg0: any) => void; 
         try {
             await firebaseContext.firebase.auth().signInWithEmailAndPassword(email, password);
             Auth.setLoggedIn(true);
+            localStorage.setItem("isLoggedIn", JSON.stringify(true));
             history.push("/");
         } catch (error) {
             alert(error);
