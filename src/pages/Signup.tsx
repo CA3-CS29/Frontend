@@ -21,9 +21,13 @@ export default function SignUp() {
 
     const Auth = useContext(AuthContext);
 
-    if (firebaseContext.firebase.auth().currentUser) {
-        history.push("/");
-    }
+    firebaseContext.firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
+            history.push("/");
+            Auth.setLoggedIn(true);
+        }
+    });
+    
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -34,6 +38,7 @@ export default function SignUp() {
                 url: ApiEndPoints.createAccount + firebaseContext.firebase.auth().currentUser?.uid,
             });
             Auth.setLoggedIn(true);
+            localStorage.setItem("isLoggedIn", JSON.stringify(true));
             history.push("/");
         } catch (error) {
             alert(error);

@@ -19,10 +19,11 @@ export default function CreatePortfolio() {
     let history = useHistory();
     const firebaseContext: IFirebaseContext = useContext(FirebaseContext);
 
-
-    if (!firebaseContext.firebase.auth().currentUser) {
-        history.push("/");
-    }
+    firebaseContext.firebase.auth().onAuthStateChanged(function (user) {
+        if (!user) {
+            history.push("/");
+        }
+    });
 
     interface OfficeButtonProps {
         shouldRender: boolean

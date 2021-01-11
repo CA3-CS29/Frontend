@@ -11,10 +11,13 @@ export default function Portfolios() {
     const firebaseContext: IFirebaseContext = useContext(FirebaseContext);
 
 
-    if (!firebaseContext.firebase.auth().currentUser) {
-        history.push("/");
-    }
+    firebaseContext.firebase.auth().onAuthStateChanged(function (user) {
+        if (!user) {
+            history.push("/");
+        }
+    });
 
+    
 
 
     return (

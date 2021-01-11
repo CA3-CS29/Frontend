@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import {COLORS} from './colors';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
@@ -19,6 +19,7 @@ export const AuthContext = React.createContext({
     isLoggedIn: false,
     setLoggedIn: function setLoggedIn(params:boolean) {
         this.isLoggedIn = params;
+        localStorage.setItem("isLoggedIn", JSON.stringify(params));
     }
 });
 
@@ -28,15 +29,25 @@ function App() {
     
     const [isLoggedIn, setLoggedIn] = useState(false);
 
+    useEffect(() => {
+        const loggedInUser = localStorage.getItem("isLoggedIn");
+        if (loggedInUser) {
+            const foundUser = JSON.parse(loggedInUser);
+            setLoggedIn(foundUser);
+        }
+    }, [])
+
     
     return (
         <AuthContext.Provider value={{ isLoggedIn, setLoggedIn }}>
             <FirebaseProvider>
+                
                 <Router>
                     <div className="App" style={{
                         color: COLORS.darkText,
                         backgroundColor: "white",
                     }}>
+                        
 
                         {isLoggedIn ?
                             
