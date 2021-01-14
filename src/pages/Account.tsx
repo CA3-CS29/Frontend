@@ -1,10 +1,12 @@
-import React, { useContext} from 'react';
-import { COLORS } from '../colors';
+import React, {useContext} from 'react';
+import {COLORS} from '../colors';
 import '../App.css';
-import { useHistory } from 'react-router-dom';
-import { FirebaseContext, IFirebaseContext } from '../FirebaseContext';
-import {Container, Row, Button } from 'react-bootstrap';
-import { AuthContext } from '../App';
+import {useHistory} from 'react-router-dom';
+import {FirebaseContext, IFirebaseContext} from '../FirebaseContext';
+import {Button, Container, Row} from 'react-bootstrap';
+import {AuthContext} from '../App';
+import axios from "axios";
+import {ApiEndPoints} from "../ApiEndpoints";
 
 
 export default function Account() {
@@ -18,11 +20,10 @@ export default function Account() {
         }
     });
 
-    var user = firebaseContext.firebase.auth().currentUser;
-    var auth = firebaseContext.firebase.auth();
-    var emailString;
+    let user = firebaseContext.firebase.auth().currentUser;
+    const auth = firebaseContext.firebase.auth();
+    let emailString;
     let email: string | null;
-    
 
     if (user != null) {
         email = user.email;
@@ -30,36 +31,33 @@ export default function Account() {
     }
 
     const sendResetEmail = (event: { preventDefault: () => void; }) => {
-        if(email){
+        if (email) {
             event.preventDefault();
             auth.sendPasswordResetEmail(email).then(() => {
-                    alert("Check your email for a password reset link")
-                // Email sent.
-                })
+                alert("Check your email for a password reset link")
+            })
                 .catch(() => {
-                    // An error happened.
                     alert("Error")
                 });
         }
     };
 
-
-
     const deleteAccount = (event: { preventDefault: () => void; }) => {
         user = firebaseContext.firebase.auth().currentUser;
-        if(window.confirm("Are you sure you want to delete this account?")){
+        if (window.confirm("Are you sure you want to delete this account?")) {
             if (user) {
                 event.preventDefault();
                 user.delete().then(function () {
+                    axios({
+                        method: 'post',
+                        url: ApiEndPoints.deleteAccount + firebaseContext.firebase.auth().currentUser?.uid,
+                    });
                     alert("Account deleted")
                     Auth.setLoggedIn(false);
                     localStorage.setItem("isLoggedIn", JSON.stringify(false));
                     history.push("/");
-                    // User deleted.
-                    
                 }).catch(function (error) {
-                    // An error happened.
-                    alert("Error")
+                    alert(error)
                 });
             }
         }
@@ -81,7 +79,7 @@ export default function Account() {
                             color: COLORS.darkText,
                         }}>
                         Your Account
-                        </h1>
+                    </h1>
                 </Row>
                 <hr/>
                 <Row>
@@ -95,9 +93,9 @@ export default function Account() {
                 <Row>
 
                     <p className="SmallText"
-                        style={{
-                            color: COLORS.darkText,
-                        }}>
+                       style={{
+                           color: COLORS.darkText,
+                       }}>
                         {emailString}
                     </p>
                 </Row>
@@ -122,9 +120,9 @@ export default function Account() {
                             fontFamily: "lato",
                             fontSize: "1.5vw",
                         }}
-                        onClick={sendResetEmail} >
+                        onClick={sendResetEmail}>
                         Change Password
-                        </Button>
+                    </Button>
                 </Row>
 
                 <hr/>
@@ -146,9 +144,9 @@ export default function Account() {
                             fontFamily: "lato",
                             fontSize: "1.5vw",
                         }}
-                        onClick={deleteAccount} >
+                        onClick={deleteAccount}>
                         Delete Account
-                        </Button>
+                    </Button>
                 </Row>
             </Container>
         </Container>
