@@ -5,4 +5,5 @@ export const ApiEndPoints = {
     createRegion: "https://ca3-api.herokuapp.com/region/createRegion/",
     getAllRegionsForUser: "https://ca3-api.herokuapp.com/region/getAllRegionsForUser/",
     createOffice: "https://ca3-api.herokuapp.com/office/createOffice/",
+    getPortfolio: "https://ca3-api.herokuapp.com/portfolio/getPortfolio/"
 };

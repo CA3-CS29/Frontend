@@ -1,0 +1,274 @@
+import React, { useContext, useEffect, useState } from 'react';
+import { COLORS } from '../colors';
+import '../App.css';
+import './Portfolio.css';
+import { Link, useHistory } from 'react-router-dom';
+import axios from 'axios'
+import { ApiEndPoints } from "../ApiEndpoints";
+import { FirebaseContext, IFirebaseContext } from '../FirebaseContext';
+import { Container, Row, Col, Button, Accordion, Card } from 'react-bootstrap'
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+
+export default function Portfolio(props: { match: { params: { tag: any; }; }; }) {
+    let history = useHistory();
+    const firebaseContext: IFirebaseContext = useContext(FirebaseContext);
+
+
+    firebaseContext.firebase.auth().onAuthStateChanged(function (user) {
+        if (!user) {
+            history.push("/");
+        }
+    });
+
+    const { tag } = props.match.params;
+    // const [data, setData] = useState(Object);
+    const [status, setStatus] = useState("");
+    const [portfolioId, setPortfolioId] = useState("");
+    const [num_regions, setNum_regions] = useState(0);
+    const [regions, setRegions] = useState([Object]);
+
+    const getPortfolioURL = ApiEndPoints.getPortfolio
+        + tag + "/" + firebaseContext.firebase.auth().currentUser?.uid;
+
+
+    useEffect(() => {
+        axios.get(getPortfolioURL)
+            .then((response) => {
+                const data = response.data;
+                // setData(data);
+                console.log("Got Data");
+                console.table(data)
+
+                setStatus(data.status);
+                setPortfolioId(data.payload.portfolio_id);
+                setNum_regions(data.payload.num_regions);
+                setRegions(data.payload.regions)
+                    ;
+
+            })
+            .catch((error) => {
+                alert("Caught error")
+                console.log(error);
+            });
+    }, [getPortfolioURL])
+
+  
+
+    function RegionListItems(props: { regions: any; }) {
+        const regions = props.regions;
+        
+        return regions.map((region: { region_id: {} | null | undefined; name: React.ReactNode; offices: any; }) => (
+            <div>
+                <Card >
+                    <Accordion.Toggle as={Card.Header} eventKey="0">
+                        <Row>
+                            <Col>
+                                <p style={{
+                                    textAlign:"left",
+                                }}>
+                                    {region.name}<br></br>
+                                    {region.region_id}<br></br>
+                                </p>
+                            </Col>
+                            <Col>
+                                <div >
+                                    <Button className="Button mr-1 mt-1"
+                                        style={{
+                                            color: COLORS.darkText,
+                                            backgroundColor: COLORS.highlight,
+                                            borderColor: COLORS.highlight,
+                                            float: 'right',
+
+                                        }}
+
+                                        as={Link} to={{
+                                            pathname: "/create-office",
+                                            state: {
+                                                data: {
+                                                    region: region.name,
+                                                    regionID : region.region_id,
+                                                    portfolioID: portfolioId,
+                                                    portfolioTag: tag,
+                                                }
+                                            }
+                                        }}
+                                    >
+                                        Add Office
+                                    </Button>
+                                    <Button className="Button mr-1 mt-1"
+                                        style={{
+                                            color: COLORS.darkText,
+                                            backgroundColor: COLORS.highlight,
+                                            borderColor: COLORS.highlight,
+                                            float: 'right',
+
+                                        }}
+
+                                        // as={Link} to={{
+                                        //     pathname: "/visualise-office",
+                                        //     state: {
+                                        //         data: {
+                                        //             region: region.name,
+                                        //             regionID: region.region_id,
+                                        //             portfolioID: portfolioId,
+                                        //             portfolioTag: tag,
+                                        //         }
+                                        //     }
+                                        // }}
+                                    >
+                                        Visualise
+                                        </Button>
+                                </div>
+                            </Col>
+                        </Row>
+                    </Accordion.Toggle>
+                    <Accordion.Collapse eventKey="0">
+                        <Card.Body>
+                            
+                            <OfficeListItems offices={region.offices} region={region} />
+                            
+                        </Card.Body>
+                    </Accordion.Collapse>
+                </Card>
+            </div>)
+        )
+    }
+
+    function OfficeListItems(props: { offices: any; region: any; }) {
+        const offices = props.offices;
+        const region = props.region;
+        
+        if(offices){
+            var mappedOffices = offices.map((office: { name: React.ReactNode; office_id: any;}) => (
+                <div>
+                <Link to={{
+                    pathname: "/visualise-office",
+                    state: {
+                        data: {
+                            region: region.name,
+                            regionID: region.region_id,
+                            portfolioID: portfolioId,
+                            portfolioTag: tag,
+                            office: office.name,
+                            officeID: office.office_id
+                        }
+                    }
+                    }}
+                >
+                {office.name}
+                </Link><br></br>
+                </div>
+            
+            ))
+            
+            return mappedOffices;
+        }else{
+            return(
+                <div>
+
+                    No office here just yet
+                </div>
+            )
+        }
+
+         
+    }
+
+
+    return (
+        <Container
+            fluid
+            className="Landing"
+            style={{
+                padding: 0,
+                backgroundColor: COLORS.background,
+            }}>
+            <Container>
+                <Row>
+                    <Col>
+                        <div>
+                            <h1 className="MediumText"
+                                style={{
+                                    color: COLORS.darkText,
+                                    textAlign: "left",
+                                }}>
+                                Portfolio: {tag}
+                            </h1>
+                        </div>
+                    </Col>
+
+                    <Col>
+
+                        <div>
+                            <div >
+                                <Button className="Button mr-1 mt-1"
+                                    style={{
+                                        color: COLORS.darkText,
+                                        backgroundColor: COLORS.highlight,
+                                        borderColor: COLORS.highlight,
+                                        float: 'right',
+
+                                    }}
+
+                                // as={Link} to="/create-portfolio"
+                                >
+                                    Add Region
+                                </Button>
+                                <Button className="Button mr-1 mt-1"
+                                    style={{
+                                        color: COLORS.darkText,
+                                        backgroundColor: COLORS.highlight,
+                                        borderColor: COLORS.highlight,
+                                        float: 'right',
+
+                                    }}
+
+                                // as={Link} to="/create-portfolio"
+                                >
+                                    Visualise
+                                </Button>
+                            </div>
+                        </div>
+
+                    </Col>
+                </Row>
+                <Row>
+                   
+                        <p style={{
+                            borderRadius: '5px',
+                            padding: '21px',
+                            backgroundColor: COLORS.accent,
+                            width: '100%',
+                            textAlign:"left",
+
+                        }}>
+                            This is a paragraph about the portfolio<br></br>
+                            {status}<br></br>
+                            {portfolioId}<br></br>
+                            {num_regions}<br></br>
+
+                        </p>
+                    
+                </Row>
+
+                <Row>
+
+                    
+                    <Accordion defaultActiveKey="0" style={{
+                    width: '100%',
+                    }}>
+
+                        <RegionListItems regions={regions} />
+
+                    </Accordion>
+
+                </Row>
+            </Container>
+        </Container>
+    );
+
+
+
+}

@@ -138,9 +138,9 @@ export default function Account() {
                     <Button
                         className="Button"
                         style={{
-                            color: COLORS.darkText,
-                            backgroundColor: COLORS.secondaryAccent,
-                            borderColor: COLORS.secondaryAccent,
+                            color: COLORS.lightText,
+                            backgroundColor: "#D91212",
+                            borderColor: "#D91212",
                             fontFamily: "lato",
                             fontSize: "1.5vw",
                         }}
