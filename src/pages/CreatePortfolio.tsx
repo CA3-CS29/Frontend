@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Button, Container, Dropdown, DropdownButton, Form, Row } from 'react-bootstrap';
+import { Button, Container, Form, Row } from 'react-bootstrap';
 import { COLORS } from '../colors';
 import '../App.css';
 import { useHistory } from 'react-router-dom';
@@ -11,11 +11,16 @@ const portfolio_id = uuidv4();
 const office_id = uuidv4();
 const region_id = uuidv4();
 
+
 export default function CreatePortfolio() {
     const [portfolioTag, setPortfolioTag] = useState<string>("");
     const [officeTag, setOfficeTag] = useState<string>("");
+    const [regionTag, setRegionTag] = useState<string>("");
     const [displayCreateOfficeButton, setDisplayCreateOfficeButton] = useState<boolean>(false);
     const [displayCreateOfficeForm, setDisplayCreateOfficeForm] = useState<boolean>(false);
+    const [displayCreateRegionButton, setDisplayCreateRegionButton] = useState<boolean>(false);
+    const [displayCreateRegionForm, setDisplayCreateRegionForm] = useState<boolean>(false);
+
     let history = useHistory();
     const firebaseContext: IFirebaseContext = useContext(FirebaseContext);
 
@@ -24,6 +29,31 @@ export default function CreatePortfolio() {
             history.push("/");
         }
     });
+
+
+    interface RegionButtonProps {
+        shouldRender: boolean
+    }
+
+    function AddRegionButton(props: RegionButtonProps): JSX.Element | null {
+
+        if (props.shouldRender) {
+            return (
+                <Button className="Button"
+                        onClick={() => setDisplayCreateRegionForm(true)}
+                        style={{
+                            color: COLORS.darkText,
+                            backgroundColor: COLORS.secondaryAccent,
+                            borderColor: COLORS.secondaryAccent,
+                            marginTop: "1em",
+                        }}>
+                    Add region
+                </Button>
+            )
+        } else {
+            return null;
+        }
+    }
 
     interface OfficeButtonProps {
         shouldRender: boolean
@@ -34,13 +64,13 @@ export default function CreatePortfolio() {
         if (props.shouldRender) {
             return (
                 <Button className="Button"
-                    onClick={() => setDisplayCreateOfficeForm(true)}
-                    style={{
-                        color: COLORS.darkText,
-                        backgroundColor: COLORS.secondaryAccent,
-                        borderColor: COLORS.secondaryAccent,
-                        marginTop: "1em",
-                    }}>
+                        onClick={() => setDisplayCreateOfficeForm(true)}
+                        style={{
+                            color: COLORS.darkText,
+                            backgroundColor: COLORS.secondaryAccent,
+                            borderColor: COLORS.secondaryAccent,
+                            marginTop: "1em",
+                        }}>
                     Add office
                 </Button>
             )
@@ -49,6 +79,8 @@ export default function CreatePortfolio() {
         }
     }
 
+
+
     interface AddPortfolioProps {
         visible: boolean
     }
@@ -56,12 +88,12 @@ export default function CreatePortfolio() {
     function AddPortfolio(props: AddPortfolioProps): JSX.Element | null {
         async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
             event.preventDefault();
-            setDisplayCreateOfficeButton(true);
+            setDisplayCreateRegionButton(true);
             const timestamp = new Date();
 
 
             axios.post(ApiEndPoints.createPortfolio
-                 + firebaseContext.firebase.auth().currentUser?.uid,
+                + firebaseContext.firebase.auth().currentUser?.uid,
                 {
                     portfolio_id: portfolio_id,
                     user_id: [firebaseContext.firebase.auth().currentUser?.uid],
@@ -77,8 +109,7 @@ export default function CreatePortfolio() {
                     console.log(error);
                 })
 
-            }
-
+        }
 
 
         if (props.visible) {
@@ -86,10 +117,10 @@ export default function CreatePortfolio() {
                 <Form onSubmit={handleSubmit}>
                     <Form.Row>
                         <Form.Group controlId="portfolioCreate"
-                            style={{
-                                margin: "auto",
-                                marginBottom: "1em",
-                            }}
+                                    style={{
+                                        margin: "auto",
+                                        marginBottom: "1em",
+                                    }}
                         >
                             <Form.Label>Portfolio Name</Form.Label>
                             <Form.Control
@@ -105,13 +136,86 @@ export default function CreatePortfolio() {
                     </Form.Row>
 
                     <Button className="Button"
-                        type="submit"
-                        style={{
-                            color: COLORS.darkText,
-                            backgroundColor: COLORS.secondaryAccent,
-                            borderColor: COLORS.secondaryAccent,
-                            marginTop: "1em",
-                        }}>
+                            type="submit"
+                            style={{
+                                color: COLORS.darkText,
+                                backgroundColor: COLORS.secondaryAccent,
+                                borderColor: COLORS.secondaryAccent,
+                                marginTop: "1em",
+                            }}>
+                        Create
+                    </Button>
+                </Form>
+            )
+        } else {
+            return null;
+        }
+    }
+
+    interface CreateRegionFormProps {
+        visible: boolean
+    }
+
+    function AddRegionForm(props: CreateRegionFormProps): JSX.Element | null {
+
+        async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+            event.preventDefault();
+            setDisplayCreateOfficeButton(true);
+            setDisplayCreateRegionButton(false);
+            setDisplayCreateRegionForm(false);
+            axios.post(ApiEndPoints.createRegion
+                + firebaseContext.firebase.auth().currentUser?.uid + '/'
+                + portfolio_id + '/'
+                + firebaseContext.firebase.auth().currentUser?.uid,
+                {
+                    "name":regionTag,
+                    "region_id":region_id,
+                    "portfolio_id":portfolio_id,
+                    "user_id":[firebaseContext.firebase.auth().currentUser?.uid],
+                    "offices":[]
+                })
+                .then(function (response){
+                    console.log(response);
+                })
+                .catch(function (error){
+                    console.log(error);
+                })
+
+        }
+
+
+        if (props.visible) {
+            return (
+                <Form onSubmit={handleSubmit}>
+
+                    <Form.Row>
+                        <Form.Group controlId="portfolioCreate"
+                                    style={{
+                                        margin: "auto",
+                                        marginBottom: "1em",
+                                    }}
+                        >
+                            <Form.Label>Create new region</Form.Label>
+                            <Form.Control
+                                autoFocus
+                                type="text"
+                                placeholder="Enter region name"
+                                value={regionTag}
+                                onChange={event => setRegionTag(event.target.value)}
+                            />
+                            <Form.Text className="text-muted">
+                            </Form.Text>
+                        </Form.Group>
+                    </Form.Row>
+
+                    <Button className="Button"
+                            type="submit"
+                            style={{
+                                color: COLORS.darkText,
+                                backgroundColor: COLORS.secondaryAccent,
+                                borderColor: COLORS.secondaryAccent,
+                                marginTop: "1em",
+                            }}>
                         Create
                     </Button>
                 </Form>
@@ -127,47 +231,8 @@ export default function CreatePortfolio() {
 
     function AddOfficeForm(props: CreateOfficeFormProps): JSX.Element | null {
 
-        let dropDownItems = [];
-        const regionOptions = ["default", "emea", "na", "sa", "apac", "ground0"];
-
-
-        const onTargetSelect = (selected: string) => {
-
-            //TODO: display available regions from api
-            axios.get(ApiEndPoints.getAllRegionsForUser + firebaseContext.firebase.auth().currentUser?.uid)
-                .then((regions) => {
-                    let existingRegions = regions.data;
-                    console.log(existingRegions);
-                })
-                .catch(function (error) {
-                    console.log(error);
-                })
-
-            axios.post(ApiEndPoints.createRegion
-                + firebaseContext.firebase.auth().currentUser?.uid + '/'
-                + portfolio_id + '/'
-                + firebaseContext.firebase.auth().currentUser?.uid,
-                {
-                    "name":selected,
-                    "region_id":region_id,
-                    "portfolio_id":portfolio_id,
-                    "user_id":[firebaseContext.firebase.auth().currentUser?.uid],
-                    "offices":[]
-                })
-                .then(function (response){
-                    console.log(response);
-                })
-                .catch(function (error){
-                    console.log(error);
-                })
-        }
-
-        for (let i = 0; i < regionOptions.length; i++) {
-            dropDownItems.push(<Dropdown.Item key={regionOptions[i]} eventKey={i.toString()} onSelect={() => onTargetSelect(regionOptions[i])}>{regionOptions[i]}</Dropdown.Item>)
-        }
-
-        function handleSubmit() {
-
+        async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+            event.preventDefault();
             axios.post(ApiEndPoints.createOffice
                 + region_id + '/'
                 + portfolio_id + '/'
@@ -190,27 +255,16 @@ export default function CreatePortfolio() {
 
         }
 
-
         if (props.visible) {
             return (
                 <Form onSubmit={handleSubmit}>
 
-                    <DropdownButton
-                        id="regionDropdownButton"
-                        title="Select Region"
-                        style={{
-                            margin: "auto",
-                            marginBottom: "1em",
-                        }}>
-                        {dropDownItems}
-                    </DropdownButton>
-
                     <Form.Row>
                         <Form.Group controlId="portfolioCreate"
-                            style={{
-                                margin: "auto",
-                                marginBottom: "1em",
-                            }}
+                                    style={{
+                                        margin: "auto",
+                                        marginBottom: "1em",
+                                    }}
                         >
                             <Form.Label>Office Name</Form.Label>
                             <Form.Control
@@ -226,13 +280,13 @@ export default function CreatePortfolio() {
                     </Form.Row>
 
                     <Button className="Button"
-                        type="submit"
-                        style={{
-                            color: COLORS.darkText,
-                            backgroundColor: COLORS.secondaryAccent,
-                            borderColor: COLORS.secondaryAccent,
-                            marginTop: "1em",
-                        }}>
+                            type="submit"
+                            style={{
+                                color: COLORS.darkText,
+                                backgroundColor: COLORS.secondaryAccent,
+                                borderColor: COLORS.secondaryAccent,
+                                marginTop: "1em",
+                            }}>
                         Create
                     </Button>
                 </Form>
@@ -241,6 +295,8 @@ export default function CreatePortfolio() {
             return null;
         }
     }
+
+
 
     return (
         <Container
@@ -257,9 +313,11 @@ export default function CreatePortfolio() {
                             color: COLORS.darkText,
                         }}>
                         Create Portfolio
-                        </h1>
+                    </h1>
                 </Row>
-                <AddPortfolio visible={!displayCreateOfficeButton} />
+                <AddPortfolio visible={!displayCreateRegionButton && !displayCreateOfficeButton} />
+                <AddRegionButton shouldRender={displayCreateRegionButton && !displayCreateRegionForm} />
+                <AddRegionForm visible={displayCreateRegionForm} />
                 <AddOfficeButton shouldRender={displayCreateOfficeButton && !displayCreateOfficeForm} />
                 <AddOfficeForm visible={displayCreateOfficeForm} />
             </Container>
