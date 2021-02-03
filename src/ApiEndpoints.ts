@@ -1,9 +1,11 @@
+const baseUrl = "https://ca3-api.herokuapp.com/";
+
 export const ApiEndPoints = {
-    createAccount: "https://ca3-api.herokuapp.com/account/createAccount/",
-    deleteAccount: "https://ca3-api.herokuapp.com/account/delete/",
-    createPortfolio: "https://ca3-api.herokuapp.com/portfolio/createPortfolio/",
-    createRegion: "https://ca3-api.herokuapp.com/region/createRegion/",
-    getAllRegionsForUser: "https://ca3-api.herokuapp.com/region/getAllRegionsForUser/",
-    createOffice: "https://ca3-api.herokuapp.com/office/createOffice/",
-    getPortfolio: "https://ca3-api.herokuapp.com/portfolio/getPortfolio/"
+    createAccount: baseUrl + "account/createAccount/",
+    deleteAccount: baseUrl + "account/delete/",
+    createPortfolio: baseUrl + "portfolio/createPortfolio/",
+    getPortfolio: baseUrl + "portfolio/getPortfolio/",
+    createRegion: baseUrl + "region/createRegion/",
+    getAllRegionsForUser: baseUrl + "region/getAllRegionsForUser/",
+    createOffice: baseUrl + "office/createOffice/",
 };
