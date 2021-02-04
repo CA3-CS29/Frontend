@@ -34,7 +34,7 @@ export default function Portfolios() {
                     borderColor: COLORS.highlight,
                 }}
 
-                as={Link} to="/portfolio/yolo swafegadf"
+                as={Link} to="/portfolio/Yeet"
             >
                 portfolio
             </Button>

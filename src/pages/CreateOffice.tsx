@@ -39,7 +39,7 @@ export default function CreateOffice(props: { match: { params: { region: any; };
             axios.post(URL,
                 {
                     office_id: office_id,
-                    user_id: [firebaseContext.firebase.auth().currentUser?.uid],
+                    user_id: firebaseContext.firebase.auth().currentUser?.uid,
                     region_id: regionID,
                     name: officeTag,
                     num_entries: 0,

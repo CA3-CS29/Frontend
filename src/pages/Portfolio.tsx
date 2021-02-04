@@ -11,7 +11,7 @@ import { Container, Row, Col, Button, Accordion, Card } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
-export default function Portfolio(props: { match: { params: { tag: any; }; }; }) {
+export default function Portfolio(props: { match: { params: { tag: string; }; }; }) {
     let history = useHistory();
     const firebaseContext: IFirebaseContext = useContext(FirebaseContext);
 
@@ -22,12 +22,36 @@ export default function Portfolio(props: { match: { params: { tag: any; }; }; })
         }
     });
 
+    interface Office {
+        name: string,
+        office_id: string,
+    };
+
+    interface Region {
+        region_id: string,
+        portfolio_id: string,
+        user_id: string,
+        name: string,
+        num_offices: number,
+        offices: Office[],
+    };
+
     const { tag } = props.match.params;
     // const [data, setData] = useState(Object);
     const [status, setStatus] = useState("");
     const [portfolioId, setPortfolioId] = useState("");
     const [num_regions, setNum_regions] = useState(0);
-    const [regions, setRegions] = useState([Object]);
+    const [regions, setRegions] = useState([{
+        region_id: "",
+        portfolio_id: "",
+        user_id: "",
+        name: "",
+        num_offices: 0,
+        offices: [{
+            name: "",
+            office_id: "",
+        }],
+    }]);
 
     const getPortfolioURL = ApiEndPoints.getPortfolio
         + tag + "/" + firebaseContext.firebase.auth().currentUser?.uid;
@@ -39,7 +63,8 @@ export default function Portfolio(props: { match: { params: { tag: any; }; }; })
                 const data = response.data;
                 // setData(data);
                 console.log("Got Data");
-                console.table(data)
+                console.log(getPortfolioURL);
+                console.table(data);
 
                 setStatus(data.status);
                 setPortfolioId(data.payload.portfolio_id);
@@ -56,17 +81,17 @@ export default function Portfolio(props: { match: { params: { tag: any; }; }; })
 
   
 
-    function RegionListItems(props: { regions: any; }) {
+    function RegionListItems(props: { regions: Region[]; }) {
         const regions = props.regions;
         
-        return regions.map((region: { region_id: {} | null | undefined; name: React.ReactNode; offices: any; }) => (
+        const listOfRegions = regions.map((region) =>
             <div>
                 <Card >
                     <Accordion.Toggle as={Card.Header} eventKey="0">
                         <Row>
                             <Col>
                                 <p style={{
-                                    textAlign:"left",
+                                    textAlign: "left",
                                 }}>
                                     {region.name}<br></br>
                                     {region.region_id}<br></br>
@@ -88,7 +113,7 @@ export default function Portfolio(props: { match: { params: { tag: any; }; }; })
                                             state: {
                                                 data: {
                                                     region: region.name,
-                                                    regionID : region.region_id,
+                                                    regionID: region.region_id,
                                                     portfolioID: portfolioId,
                                                     portfolioTag: tag,
                                                 }
@@ -105,18 +130,6 @@ export default function Portfolio(props: { match: { params: { tag: any; }; }; })
                                             float: 'right',
 
                                         }}
-
-                                        // as={Link} to={{
-                                        //     pathname: "/visualise-office",
-                                        //     state: {
-                                        //         data: {
-                                        //             region: region.name,
-                                        //             regionID: region.region_id,
-                                        //             portfolioID: portfolioId,
-                                        //             portfolioTag: tag,
-                                        //         }
-                                        //     }
-                                        // }}
                                     >
                                         Visualise
                                         </Button>
@@ -126,44 +139,51 @@ export default function Portfolio(props: { match: { params: { tag: any; }; }; })
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="0">
                         <Card.Body>
-                            
-                            <OfficeListItems offices={region.offices} region={region} />
-                            
+
+                            <OfficeListItems region={region} />
+
                         </Card.Body>
                     </Accordion.Collapse>
                 </Card>
-            </div>)
+            </div>
         )
+
+
+        return (
+            <div>{listOfRegions}</div>
+        );
     }
 
-    function OfficeListItems(props: { offices: any; region: any; }) {
-        const offices = props.offices;
+    function OfficeListItems(props: { region: Region; }) {
+        const offices = props.region.offices;
         const region = props.region;
         
         if(offices){
-            var mappedOffices = offices.map((office: { name: React.ReactNode; office_id: any;}) => (
+
+            const mappedOffices = offices.map((office) => 
                 <div>
-                <Link to={{
-                    pathname: "/visualise-office",
-                    state: {
-                        data: {
-                            region: region.name,
-                            regionID: region.region_id,
-                            portfolioID: portfolioId,
-                            portfolioTag: tag,
-                            office: office.name,
-                            officeID: office.office_id
+                    <Link to={{
+                        pathname: "/visualise-office",
+                        state: {
+                            data: {
+                                region: region.name,
+                                regionID: region.region_id,
+                                portfolioID: portfolioId,
+                                portfolioTag: tag,
+                                office: office,
+                            }
                         }
-                    }
-                    }}
-                >
-                {office.name}
-                </Link><br></br>
+                        }}
+                    >
+                    {office.name}
+                    </Link><br></br>
                 </div>
             
-            ))
+            )
             
-            return mappedOffices;
+            return (
+                <div>{mappedOffices}</div>
+            );
         }else{
             return(
                 <div>
