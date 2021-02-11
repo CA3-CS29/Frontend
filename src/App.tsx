@@ -14,6 +14,7 @@ import CreatePortfolio from './pages/CreatePortfolio';
 import CreateOffice from './pages/CreateOffice';
 import Portfolios from './pages/Portfolios';
 import Portfolio from './pages/Portfolio';
+import VisualiseOffice from './pages/VisualiseOffice';
 import Account from './pages/Account';
 
 export const AuthContext = React.createContext({
@@ -64,6 +65,7 @@ function App() {
                             <Route path="/create-portfolio" exact component={CreatePortfolio}/>
                             <Route path="/create-office/" exact component={CreateOffice}/>
                             <Route path="/account" exact component={Account}/>
+                            <Route path="/visualise-office" exact component={VisualiseOffice}/>
                         </Switch>
 
                     </div>

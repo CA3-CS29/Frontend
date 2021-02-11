@@ -12,7 +12,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import AddEntry from "./AddEntry";
 
 
-export default function Portfolio(props: { match: { params: { tag: string; }; }; }) {
+export default function Portfolio(props: { match: { params: { tag: string } } }) {
     let history = useHistory();
     const firebaseContext: IFirebaseContext = useContext(FirebaseContext);
     const [userID, setUserID] = useState("");
