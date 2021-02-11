@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css';
-import { COLORS } from './colors';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import {COLORS} from './colors';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 
-import { FirebaseProvider } from "./FirebaseContext";
+import {FirebaseProvider} from "./FirebaseContext";
 import HeaderLoggedOut from './pages/HeaderLoggedOut';
 import HeaderLoggedIn from './pages/HeaderLoggedIn';
 import Landing from './pages/Landing';
@@ -14,9 +14,7 @@ import CreatePortfolio from './pages/CreatePortfolio';
 import CreateOffice from './pages/CreateOffice';
 import Portfolios from './pages/Portfolios';
 import Portfolio from './pages/Portfolio';
-import VisualiseOffice from './pages/VisualiseOffice';
 import Account from './pages/Account';
-
 
 export const AuthContext = React.createContext({
     isLoggedIn: false,
@@ -39,7 +37,7 @@ function App() {
     }, [])
 
     return (
-        <AuthContext.Provider value={{ isLoggedIn, setLoggedIn }}>
+        <AuthContext.Provider value={{isLoggedIn, setLoggedIn}}>
             <FirebaseProvider>
 
                 <Router>
@@ -50,23 +48,22 @@ function App() {
 
                         {isLoggedIn ?
 
-                            <HeaderLoggedIn logoText="CA3" />
+                            <HeaderLoggedIn logoText="CA3"/>
                             :
-                            <HeaderLoggedOut logoText="CA3" />
+                            <HeaderLoggedOut logoText="CA3"/>
 
                         }
 
                         <Switch>
-                            <Route path="/" exact component={Landing} />
-                            <Route path="/about" exact component={About} />
-                            <Route path="/login" exact component={Login} />
-                            <Route path="/signup" exact component={Signup} />
-                            <Route path="/portfolios" exact component={Portfolios} />
-                            <Route path="/portfolio/:tag" exact component={Portfolio} />
-                            <Route path="/create-portfolio" exact component={CreatePortfolio} />
+                            <Route path="/" exact component={Landing}/>
+                            <Route path="/about" exact component={About}/>
+                            <Route path="/login" exact component={Login}/>
+                            <Route path="/signup" exact component={Signup}/>
+                            <Route path="/portfolios" exact component={Portfolios}/>
+                            <Route path="/portfolio/:tag" exact component={Portfolio}/>
+                            <Route path="/create-portfolio" exact component={CreatePortfolio}/>
                             <Route path="/create-office/" exact component={CreateOffice}/>
-                            <Route path="/account" exact component={Account} />
-                            <Route path="/visualise-office" exact component={VisualiseOffice}/>
+                            <Route path="/account" exact component={Account}/>
                         </Switch>
 
                     </div>

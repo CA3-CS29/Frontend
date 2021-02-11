@@ -23,8 +23,6 @@ function ButtonsLoggedIn(){
 
     return(
         <div>
-            
-
             <Button className="Button mr-1"
                 style={{
                     color: COLORS.darkText,

@@ -8,4 +8,5 @@ export const ApiEndPoints = {
     createRegion: baseUrl + "region/createRegion/",
     getAllRegionsForUser: baseUrl + "region/getAllRegionsForUser/",
     createOffice: baseUrl + "office/createOffice/",
+    createEntry: baseUrl + "entry/createEntry/",
 };

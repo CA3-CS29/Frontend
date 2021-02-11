@@ -1,31 +1,43 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { COLORS } from '../colors';
+import React, {useContext, useEffect, useState} from 'react';
+import {COLORS} from '../colors';
 import '../App.css';
 import './Portfolio.css';
-import { Link, useHistory } from 'react-router-dom';
+import {Link, useHistory} from 'react-router-dom';
 import axios from 'axios'
-import { ApiEndPoints } from "../ApiEndpoints";
-import { FirebaseContext, IFirebaseContext } from '../FirebaseContext';
-import { Container, Row, Col, Button, Accordion, Card } from 'react-bootstrap'
+import {ApiEndPoints} from "../ApiEndpoints";
+import {FirebaseContext, IFirebaseContext} from '../FirebaseContext';
+import {Accordion, Button, Card, Col, Container, ListGroup, Row} from 'react-bootstrap'
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import AddEntry from "./AddEntry";
 
 
 export default function Portfolio(props: { match: { params: { tag: string; }; }; }) {
     let history = useHistory();
     const firebaseContext: IFirebaseContext = useContext(FirebaseContext);
-
+    const [userID, setUserID] = useState("");
 
     firebaseContext.firebase.auth().onAuthStateChanged(function (user) {
         if (!user) {
             history.push("/");
+        } else {
+            setUserID(user.uid);
         }
     });
+
+    interface Entry {
+        entry_id: string,
+        tag: string,
+        consumption: number,
+        source: string,
+        info: string,
+    }
 
     interface Office {
         name: string,
         office_id: string,
-    };
+        entries: Entry[],
+    }
 
     interface Region {
         region_id: string,
@@ -34,34 +46,21 @@ export default function Portfolio(props: { match: { params: { tag: string; }; };
         name: string,
         num_offices: number,
         offices: Office[],
-    };
+    }
 
-    const { tag } = props.match.params;
-    // const [data, setData] = useState(Object);
+    const {tag} = props.match.params;
     const [status, setStatus] = useState("");
     const [portfolioId, setPortfolioId] = useState("");
     const [num_regions, setNum_regions] = useState(0);
-    const [regions, setRegions] = useState([{
-        region_id: "",
-        portfolio_id: "",
-        user_id: "",
-        name: "",
-        num_offices: 0,
-        offices: [{
-            name: "",
-            office_id: "",
-        }],
-    }]);
+    const [regions, setRegions] = useState([]);
 
     const getPortfolioURL = ApiEndPoints.getPortfolio
         + tag + "/" + firebaseContext.firebase.auth().currentUser?.uid;
-
 
     useEffect(() => {
         axios.get(getPortfolioURL)
             .then((response) => {
                 const data = response.data;
-                // setData(data);
                 console.log("Got Data");
                 console.log(getPortfolioURL);
                 console.table(data);
@@ -69,9 +68,7 @@ export default function Portfolio(props: { match: { params: { tag: string; }; };
                 setStatus(data.status);
                 setPortfolioId(data.payload.portfolio_id);
                 setNum_regions(data.payload.num_regions);
-                setRegions(data.payload.regions)
-                    ;
-
+                setRegions(data.payload.regions);
             })
             .catch((error) => {
                 alert("Caught error")
@@ -79,123 +76,154 @@ export default function Portfolio(props: { match: { params: { tag: string; }; };
             });
     }, [getPortfolioURL])
 
-  
 
     function RegionListItems(props: { regions: Region[]; }) {
         const regions = props.regions;
-        
+
         const listOfRegions = regions.map((region) =>
-            <div>
-                <Card >
-                    <Accordion.Toggle as={Card.Header} eventKey="0">
-                        <Row>
-                            <Col>
-                                <p style={{
-                                    textAlign: "left",
-                                }}>
-                                    {region.name}<br></br>
-                                    {region.region_id}<br></br>
-                                </p>
-                            </Col>
-                            <Col>
-                                <div >
-                                    <Button className="Button mr-1 mt-1"
-                                        style={{
-                                            color: COLORS.darkText,
-                                            backgroundColor: COLORS.highlight,
-                                            borderColor: COLORS.highlight,
-                                            float: 'right',
-
-                                        }}
-
-                                        as={Link} to={{
-                                            pathname: "/create-office",
-                                            state: {
-                                                data: {
-                                                    region: region.name,
-                                                    regionID: region.region_id,
-                                                    portfolioID: portfolioId,
-                                                    portfolioTag: tag,
-                                                }
+            <Card key={region.region_id}>
+                <Accordion.Toggle as={Card.Header} eventKey="0">
+                    <Row>
+                        <Col style={{textAlign: "left"}}>
+                            <h4>{region.name}</h4>
+                            {region.region_id}
+                        </Col>
+                        <Col>
+                            <div>
+                                <Button
+                                    className="Button mr-1 mt-1"
+                                    style={{
+                                        color: COLORS.darkText,
+                                        backgroundColor: COLORS.highlight,
+                                        borderColor: COLORS.highlight,
+                                        float: 'right',
+                                    }}
+                                    as={Link}
+                                    to={{
+                                        pathname: "/create-office",
+                                        state: {
+                                            data: {
+                                                region: region.name,
+                                                regionID: region.region_id,
+                                                portfolioID: portfolioId,
+                                                portfolioTag: tag,
                                             }
-                                        }}
-                                    >
-                                        Add Office
-                                    </Button>
-                                    <Button className="Button mr-1 mt-1"
-                                        style={{
-                                            color: COLORS.darkText,
-                                            backgroundColor: COLORS.highlight,
-                                            borderColor: COLORS.highlight,
-                                            float: 'right',
+                                        }
+                                    }}
+                                >
+                                    Add Office
+                                </Button>
+                                <Button
+                                    className="Button mr-1 mt-1"
+                                    style={{
+                                        color: COLORS.darkText,
+                                        backgroundColor: COLORS.highlight,
+                                        borderColor: COLORS.highlight,
+                                        float: 'right',
+                                    }}
+                                >
+                                    Visualise
+                                </Button>
+                            </div>
+                        </Col>
+                    </Row>
+                </Accordion.Toggle>
+                <Accordion.Collapse eventKey="0">
+                    <Card.Body style={{padding: 5}}>
 
-                                        }}
-                                    >
-                                        Visualise
-                                        </Button>
-                                </div>
-                            </Col>
-                        </Row>
-                    </Accordion.Toggle>
-                    <Accordion.Collapse eventKey="0">
-                        <Card.Body>
+                        <OfficeListItems region={region}/>
 
-                            <OfficeListItems region={region} />
-
-                        </Card.Body>
-                    </Accordion.Collapse>
-                </Card>
-            </div>
+                    </Card.Body>
+                </Accordion.Collapse>
+            </Card>
         )
-
-
-        return (
-            <div>{listOfRegions}</div>
-        );
+        return <div>{listOfRegions}</div>
     }
 
-    function OfficeListItems(props: { region: Region; }) {
+    function OfficeListItems(props: { region: Region }) {
         const offices = props.region.offices;
         const region = props.region;
-        
-        if(offices){
 
-            const mappedOffices = offices.map((office) => 
-                <div>
-                    <Link to={{
-                        pathname: "/visualise-office",
-                        state: {
-                            data: {
-                                region: region.name,
-                                regionID: region.region_id,
-                                portfolioID: portfolioId,
-                                portfolioTag: tag,
-                                office: office,
-                            }
-                        }
-                        }}
-                    >
-                    {office.name}
-                    </Link><br></br>
-                </div>
-            
-            )
-            
-            return (
-                <div>{mappedOffices}</div>
+        if (offices) {
+            const mappedOffices = offices.map((office: Office) =>
+                <ListGroup.Item key={office.office_id} style={{paddingTop: 0}}>
+                    <Accordion defaultActiveKey="0" style={{width: '100%'}}>
+                        <Row>
+                            <Accordion.Toggle
+                                as={Col}
+                                eventKey="0"
+                                style={{paddingTop: 12}}
+                            >
+                                <h5 style={{textAlign: "left"}}>
+                                    {office.name}
+                                </h5>
+                            </Accordion.Toggle>
+                            <Col xs="auto" style={{paddingTop: 12}}>
+                                <Button
+                                    className="Button mr-1"
+                                    style={{
+                                        color: COLORS.darkText,
+                                        backgroundColor: COLORS.highlight,
+                                        borderColor: COLORS.highlight,
+                                        float: "right",
+                                    }}
+                                    as={Link}
+                                    to={{
+                                        pathname: "/visualise-office",
+                                        state: {
+                                            data: {
+                                                region: region.name,
+                                                regionID: region.region_id,
+                                                portfolioID: portfolioId,
+                                                portfolioTag: tag,
+                                                office: office,
+                                            }
+                                        }
+                                    }}
+                                >
+                                    Visualise
+                                </Button>
+                                <AddEntry
+                                    accountID={userID}
+                                    portfolioID={portfolioId}
+                                    regionID={region.region_id}
+                                    officeID={office.office_id}
+                                    officeTag={office.name}
+                                />
+                            </Col>
+                        </Row>
+                        <Accordion.Collapse eventKey="0">
+
+                            <EntryListItems office={office}/>
+
+                        </Accordion.Collapse>
+                    </Accordion>
+                </ListGroup.Item>
             );
-        }else{
-            return(
-                <div>
-
-                    No office here just yet
-                </div>
-            )
+            return <ListGroup variant="flush">{mappedOffices}</ListGroup>
+        } else {
+            return <div>No office here just yet</div>
         }
-
-         
     }
 
+    function EntryListItems(props: { office: Office }) {
+        if (props.office.entries && props.office.entries.length > 0) {
+            const mappedEntries = props.office.entries.map((entry: Entry) =>
+                <ListGroup.Item key={entry.entry_id}>
+                    <Row>
+                        <Col>entry.tag</Col>
+                        <Col>entry.consumption</Col>
+                        <Col>entry.source</Col>
+                        <Col>entry.info</Col>
+                        {/*TODO: Update this once we have entries in the database*/}
+                    </Row>
+                </ListGroup.Item>
+            );
+            return <ListGroup variant="flush">{mappedEntries}</ListGroup>
+        } else {
+            return <div>No entries in this office yet</div>
+        }
+    }
 
     return (
         <Container
@@ -206,89 +234,63 @@ export default function Portfolio(props: { match: { params: { tag: string; }; };
                 backgroundColor: COLORS.background,
             }}>
             <Container>
-                <Row>
+                <Row style={{paddingTop: 10, paddingBottom: 10}}>
                     <Col>
-                        <div>
-                            <h1 className="MediumText"
-                                style={{
-                                    color: COLORS.darkText,
-                                    textAlign: "left",
-                                }}>
-                                Portfolio: {tag}
-                            </h1>
-                        </div>
+                        <h1 className="MediumText" style={{color: COLORS.darkText, textAlign: "left"}}>
+                            {tag}
+                        </h1>
                     </Col>
-
-                    <Col>
-
-                        <div>
-                            <div >
-                                <Button className="Button mr-1 mt-1"
-                                    style={{
-                                        color: COLORS.darkText,
-                                        backgroundColor: COLORS.highlight,
-                                        borderColor: COLORS.highlight,
-                                        float: 'right',
-
-                                    }}
-
-                                // as={Link} to="/create-portfolio"
-                                >
-                                    Add Region
-                                </Button>
-                                <Button className="Button mr-1 mt-1"
-                                    style={{
-                                        color: COLORS.darkText,
-                                        backgroundColor: COLORS.highlight,
-                                        borderColor: COLORS.highlight,
-                                        float: 'right',
-
-                                    }}
-
-                                // as={Link} to="/create-portfolio"
-                                >
-                                    Visualise
-                                </Button>
-                            </div>
-                        </div>
+                    <Col xs="auto">
+                        <Button
+                            className="Button mr-1 mt-1"
+                            style={{
+                                color: COLORS.darkText,
+                                backgroundColor: COLORS.highlight,
+                                borderColor: COLORS.highlight,
+                                float: 'right',
+                            }}
+                            // as={Link} to="/create-portfolio"
+                        >
+                            Add Region
+                        </Button>
+                        <Button
+                            className="Button mr-1 mt-1"
+                            style={{
+                                color: COLORS.darkText,
+                                backgroundColor: COLORS.highlight,
+                                borderColor: COLORS.highlight,
+                                float: 'right',
+                            }}
+                            // as={Link} to="/create-portfolio"
+                        >
+                            Visualise
+                        </Button>
 
                     </Col>
                 </Row>
                 <Row>
-                   
-                        <p style={{
-                            borderRadius: '5px',
-                            padding: '21px',
-                            backgroundColor: COLORS.accent,
+                    <Card
+                        style={{
+                            padding: 21,
+                            marginBottom: 20,
                             width: '100%',
-                            textAlign:"left",
-
-                        }}>
-                            This is a paragraph about the portfolio<br></br>
-                            {status}<br></br>
-                            {portfolioId}<br></br>
-                            {num_regions}<br></br>
-
-                        </p>
-                    
+                            textAlign: "left",
+                        }}
+                    >
+                        This is a paragraph about the portfolio<br/>
+                        Status: {status}<br/>
+                        Portfolio ID: {portfolioId}<br/>
+                        Number of regions: {num_regions}<br/>
+                    </Card>
                 </Row>
-
                 <Row>
-
-                    
-                    <Accordion defaultActiveKey="0" style={{
-                    width: '100%',
-                    }}>
-
-                        <RegionListItems regions={regions} />
-
+                    <Accordion defaultActiveKey="0" style={{width: '100%'}}>
+                        <RegionListItems regions={regions}/>
                     </Accordion>
-
                 </Row>
             </Container>
         </Container>
     );
-
 
 
 }
