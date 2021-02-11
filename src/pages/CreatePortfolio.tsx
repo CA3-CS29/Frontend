@@ -96,8 +96,9 @@ export default function CreatePortfolio() {
                 + firebaseContext.firebase.auth().currentUser?.uid,
                 {
                     portfolio_id: portfolio_id,
-                    user_id: [firebaseContext.firebase.auth().currentUser?.uid],
+                    user_id: firebaseContext.firebase.auth().currentUser?.uid,
                     tag: portfolioTag,
+                    numRegions: 0,
                     regions: [],
                     created_on: timestamp.toDateString(),
                     updated_on: timestamp.toDateString(),
@@ -171,7 +172,7 @@ export default function CreatePortfolio() {
                     "name":regionTag,
                     "region_id":region_id,
                     "portfolio_id":portfolio_id,
-                    "user_id":[firebaseContext.firebase.auth().currentUser?.uid],
+                    "user_id":firebaseContext.firebase.auth().currentUser?.uid,
                     "offices":[]
                 })
                 .then(function (response){
@@ -242,7 +243,7 @@ export default function CreatePortfolio() {
                     portfolio_id: portfolio_id,
                     account_id: firebaseContext.firebase.auth().currentUser?.uid,
                     office_id: office_id,
-                    user_id: [firebaseContext.firebase.auth().currentUser?.uid],
+                    user_id: firebaseContext.firebase.auth().currentUser?.uid,
                     name: officeTag,
                 })
                 .then(function (response){
