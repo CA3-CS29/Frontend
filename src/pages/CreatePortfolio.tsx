@@ -1,13 +1,12 @@
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import {Button, Container, Form, Row} from 'react-bootstrap';
 import {COLORS} from '../colors';
 import '../App.css';
-import {FirebaseContext, IFirebaseContext} from '../FirebaseContext';
 import axios from "axios";
 import {ApiEndPoints} from "../ApiEndpoints";
 import {v4 as uuidv4} from 'uuid';
 import {AlertInfo, AlertViewer} from "./Alerts";
-import {AuthContext} from "../App";
+import {useAuthStore} from "../App";
 
 const portfolio_id = uuidv4();
 const office_id = uuidv4();
@@ -25,25 +24,10 @@ export default function CreatePortfolio() {
     const [displayCreateRegionButton, setDisplayCreateRegionButton] = useState<boolean>(false);
     const [displayCreateRegionForm, setDisplayCreateRegionForm] = useState<boolean>(false);
 
-    const firebaseContext: IFirebaseContext = useContext(FirebaseContext);
+    const user = useAuthStore(state => state.user);
 
-    const Auth = useContext(AuthContext);
-
-    firebaseContext.firebase.auth().onAuthStateChanged(function (user) {
-        if (!user) {
-            Auth.setLoggedIn(false);
-            localStorage.setItem("isLoggedIn", JSON.stringify(false));
-        }
-    });
-
-
-    interface RegionButtonProps {
-        shouldRender: boolean
-    }
-
-    function AddRegionButton(props: RegionButtonProps): JSX.Element | null {
-
-        if (props.shouldRender) {
+    function AddRegionButton(props: { visible: boolean }): JSX.Element | null {
+        if (props.visible) {
             return (
                 <Button
                     className="Button"
@@ -59,17 +43,12 @@ export default function CreatePortfolio() {
                 </Button>
             )
         } else {
-            return null;
+            return null
         }
     }
 
-    interface OfficeButtonProps {
-        shouldRender: boolean
-    }
-
-    function AddOfficeButton(props: OfficeButtonProps): JSX.Element | null {
-
-        if (props.shouldRender) {
+    function AddOfficeButton(props: { visible: boolean }): JSX.Element | null {
+        if (props.visible) {
             return (
                 <Button
                     className="Button"
@@ -85,27 +64,21 @@ export default function CreatePortfolio() {
                 </Button>
             )
         } else {
-            return null;
+            return null
         }
     }
 
-
-    interface AddPortfolioProps {
-        visible: boolean
-    }
-
-    function AddPortfolio(props: AddPortfolioProps): JSX.Element | null {
+    function AddPortfolio(props: { visible: boolean }): JSX.Element | null {
         async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
             event.preventDefault();
             setDisplayCreateRegionButton(true);
             const timestamp = new Date();
 
-
-            axios.post(ApiEndPoints.createPortfolio
-                + firebaseContext.firebase.auth().currentUser?.uid,
+            axios.post(
+                ApiEndPoints.createPortfolio + user?.uid,
                 {
                     portfolio_id: portfolio_id,
-                    user_id: firebaseContext.firebase.auth().currentUser?.uid,
+                    user_id: user?.uid,
                     tag: portfolioTag,
                     numRegions: 0,
                     regions: [],
@@ -120,9 +93,7 @@ export default function CreatePortfolio() {
                     setAlerts(oldAlerts => [...oldAlerts, errorAlert]);
                     console.log(error);
                 })
-
         }
-
 
         if (props.visible) {
             return (
@@ -147,7 +118,6 @@ export default function CreatePortfolio() {
                             </Form.Text>
                         </Form.Group>
                     </Form.Row>
-
                     <Button
                         className="Button"
                         type="submit"
@@ -163,30 +133,23 @@ export default function CreatePortfolio() {
                 </Form>
             )
         } else {
-            return null;
+            return null
         }
     }
 
-    interface CreateRegionFormProps {
-        visible: boolean
-    }
-
-    function AddRegionForm(props: CreateRegionFormProps): JSX.Element | null {
-
+    function AddRegionForm(props: { visible: boolean }): JSX.Element | null {
         async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
             event.preventDefault();
             setDisplayCreateOfficeButton(true);
             setDisplayCreateRegionButton(false);
             setDisplayCreateRegionForm(false);
-            axios.post(ApiEndPoints.createRegion
-                + firebaseContext.firebase.auth().currentUser?.uid + '/'
-                + portfolio_id + '/'
-                + firebaseContext.firebase.auth().currentUser?.uid,
+            axios.post(
+                ApiEndPoints.createRegion + user?.uid + '/' + portfolio_id + '/' + user?.uid,
                 {
                     "name": regionTag,
                     "region_id": region_id,
                     "portfolio_id": portfolio_id,
-                    "user_id": firebaseContext.firebase.auth().currentUser?.uid,
+                    "user_id": user?.uid,
                     "offices": []
                 })
                 .then(function (response) {
@@ -237,28 +200,21 @@ export default function CreatePortfolio() {
                 </Form>
             )
         } else {
-            return null;
+            return null
         }
     }
 
-    interface CreateOfficeFormProps {
-        visible: boolean
-    }
-
-    function AddOfficeForm(props: CreateOfficeFormProps): JSX.Element | null {
-
+    function AddOfficeForm(props: { visible: boolean }): JSX.Element | null {
         async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
             event.preventDefault();
-            axios.post(ApiEndPoints.createOffice
-                + region_id + '/'
-                + portfolio_id + '/'
-                + firebaseContext.firebase.auth().currentUser?.uid,
+            axios.post(
+                ApiEndPoints.createOffice + region_id + '/' + portfolio_id + '/' + user?.uid,
                 {
                     region_id: region_id,
                     portfolio_id: portfolio_id,
-                    account_id: firebaseContext.firebase.auth().currentUser?.uid,
+                    account_id: user?.uid,
                     office_id: office_id,
-                    user_id: firebaseContext.firebase.auth().currentUser?.uid,
+                    user_id: user?.uid,
                     name: officeTag,
                 })
                 .then(function (response) {
@@ -303,16 +259,16 @@ export default function CreatePortfolio() {
                             backgroundColor: COLORS.secondaryAccent,
                             borderColor: COLORS.secondaryAccent,
                             marginTop: "1em",
-                        }}>
+                        }}
+                    >
                         Create
                     </Button>
                 </Form>
             )
         } else {
-            return null;
+            return null
         }
     }
-
 
     return (
         <Container
@@ -334,11 +290,11 @@ export default function CreatePortfolio() {
                     </h1>
                 </Row>
                 <AddPortfolio visible={!displayCreateRegionButton && !displayCreateOfficeButton}/>
-                <AddRegionButton shouldRender={displayCreateRegionButton && !displayCreateRegionForm}/>
+                <AddRegionButton visible={displayCreateRegionButton && !displayCreateRegionForm}/>
                 <AddRegionForm visible={displayCreateRegionForm}/>
-                <AddOfficeButton shouldRender={displayCreateOfficeButton && !displayCreateOfficeForm}/>
+                <AddOfficeButton visible={displayCreateOfficeButton && !displayCreateOfficeForm}/>
                 <AddOfficeForm visible={displayCreateOfficeForm}/>
             </Container>
         </Container>
-    );
+    )
 }

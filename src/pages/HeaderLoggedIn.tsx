@@ -1,10 +1,8 @@
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import '../App.css';
 import {COLORS} from '../colors';
 import './Header.css'
-import {FirebaseContext, IFirebaseContext} from "../FirebaseContext";
 import {Link} from 'react-router-dom';
-import {AuthContext} from '../App';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Navbar from 'react-bootstrap/Navbar'
@@ -12,15 +10,15 @@ import Nav from 'react-bootstrap/Nav'
 import Button from 'react-bootstrap/Button'
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar'
 import {AlertInfo, AlertViewer} from "./Alerts";
+import {useAuthStore} from "../App";
 
 
 export default function HeaderLoggedIn(props: { logoText: string }) {
     const [alerts, setAlerts] = useState<AlertInfo[]>([]);
 
-    function ButtonsLoggedIn() {
-        const firebaseContext: IFirebaseContext = useContext(FirebaseContext);
-        const Auth = useContext(AuthContext);
+    const firebase = useAuthStore(state => state.firebase);
 
+    function ButtonsLoggedIn() {
         return (
             <div>
                 <Button
@@ -55,11 +53,9 @@ export default function HeaderLoggedIn(props: { logoText: string }) {
 
                     }}
                     onClick={() => {
-                        firebaseContext.firebase.auth()
+                        firebase.auth()
                             .signOut()
                             .then(() => {
-                                Auth.setLoggedIn(false);
-                                localStorage.setItem("isLoggedIn", JSON.stringify(false));
                                 alert("Successfully signed out."); /* Push custom alert to landing page? */
                             })
                             .catch((error) => {
@@ -108,7 +104,4 @@ export default function HeaderLoggedIn(props: { logoText: string }) {
             <AlertViewer alerts={alerts}/>
         </>
     )
-
 }
-
-

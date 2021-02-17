@@ -1,32 +1,24 @@
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import {COLORS} from '../colors';
 import '../App.css';
-import {FirebaseContext, IFirebaseContext} from '../FirebaseContext';
 import {Button, Container, Row} from 'react-bootstrap';
-import {AuthContext} from '../App';
+import {useAuthStore} from '../App';
 import axios from "axios";
 import {ApiEndPoints} from "../ApiEndpoints";
 import {AlertInfo, AlertViewer} from "./Alerts";
 
 
 export default function Account() {
-    const firebaseContext: IFirebaseContext = useContext(FirebaseContext);
-    const Auth = useContext(AuthContext);
+
+    const user = useAuthStore(state => state.user);
+    const firebase = useAuthStore(state => state.firebase);
 
     const [alerts, setAlerts] = useState<AlertInfo[]>([]);
 
-    firebaseContext.firebase.auth().onAuthStateChanged(function (user) {
-        if (!user) {
-            Auth.setLoggedIn(false);
-            localStorage.setItem("isLoggedIn", JSON.stringify(false));
-        }
-    });
-
-    let user = firebaseContext.firebase.auth().currentUser;
-    const auth = firebaseContext.firebase.auth();
     let emailString;
     let email: string | null;
 
+    // this condition is probably redundant
     if (user != null) {
         email = user.email;
         emailString = user.email;
@@ -35,7 +27,7 @@ export default function Account() {
     const sendResetEmail = (event: { preventDefault: () => void; }) => {
         if (email) {
             event.preventDefault();
-            auth.sendPasswordResetEmail(email)
+            firebase.auth().sendPasswordResetEmail(email)
                 .then(() => {
                     const successAlert: AlertInfo = {
                         variant: "success",
@@ -52,29 +44,28 @@ export default function Account() {
     };
 
     const deleteAccount = (event: { preventDefault: () => void; }) => {
-        user = firebaseContext.firebase.auth().currentUser;
         if (window.confirm("Are you sure you want to delete this account?")) { /* Replace with alert? */
+            // this condition is probably redundant
             if (user) {
                 event.preventDefault();
-                user.delete().then(function () {
-                    axios({
-                        method: 'post',
-                        url: ApiEndPoints.deleteAccount + firebaseContext.firebase.auth().currentUser?.uid,
+                user
+                    .delete()
+                    .then(function () {
+                        axios({
+                            method: 'post',
+                            url: ApiEndPoints.deleteAccount + user?.uid,
+                        });
+                        const successAlert: AlertInfo = {variant: "success", text: "Account deleted"};
+                        setAlerts([...alerts, successAlert]);
+                    })
+                    .catch((error) => {
+                        const errorAlert: AlertInfo = {variant: "danger", text: error.toString()};
+                        setAlerts([...alerts, errorAlert]);
+                        console.log(error);
                     });
-                    const successAlert: AlertInfo = {variant: "success", text: "Account deleted"};
-                    setAlerts([...alerts, successAlert]);
-
-                    Auth.setLoggedIn(false);
-                    localStorage.setItem("isLoggedIn", JSON.stringify(false));
-                }).catch((error) => {
-                    const errorAlert: AlertInfo = {variant: "danger", text: error.toString()};
-                    setAlerts([...alerts, errorAlert]);
-                    console.log(error);
-                });
             }
         }
     }
-
 
     return (
         <Container
@@ -168,5 +159,5 @@ export default function Account() {
                 </Row>
             </Container>
         </Container>
-    );
+    )
 }

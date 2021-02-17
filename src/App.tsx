@@ -2,9 +2,7 @@ import React, {useEffect, useState} from 'react';
 import './App.css';
 import {COLORS} from './colors';
 import {BrowserRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
-
-
-import {FirebaseProvider} from "./FirebaseContext";
+import create from "zustand";
 import HeaderLoggedOut from './pages/HeaderLoggedOut';
 import HeaderLoggedIn from './pages/HeaderLoggedIn';
 import Landing from './pages/Landing';
@@ -17,32 +15,52 @@ import Portfolios from './pages/Portfolios';
 import Portfolio from './pages/Portfolio';
 import VisualiseOffice from './pages/VisualiseOffice';
 import Account from './pages/Account';
+import firebase from "firebase";
 
-export const AuthContext = React.createContext({
-    isLoggedIn: false,
-    setLoggedIn: function setLoggedIn(params: boolean) {
-        this.isLoggedIn = params;
-        localStorage.setItem("isLoggedIn", JSON.stringify(params));
-    }
-});
 
-function App() {
+const firebaseConfig = {
+    apiKey: "AIzaSyAxmxwscM4xp7aFYrSUvktm1-QRjZboAoY",
+    authDomain: "ca3-frontend.firebaseapp.com",
+    databaseURL: "https://ca3-frontend.firebaseio.com",
+    projectId: "ca3-frontend",
+    storageBucket: "ca3-frontend.appspot.com",
+    messagingSenderId: "182285255213",
+    appId: "1:182285255213:web:39d2868c5f88e0a445aea4",
+}
 
-    const [isLoggedIn, setLoggedIn] = useState(false);
+if (firebase.apps.length === 0) {
+    const firebaseApp = firebase.initializeApp(firebaseConfig);
+    firebaseApp.auth().setPersistence(
+        process.env.NODE_ENV === "test" ?
+            firebase.auth.Auth.Persistence.NONE
+            :
+            firebase.auth.Auth.Persistence.LOCAL)
+}
+
+type AuthStore = {
+    firebase: firebase.app.App,
+    user: firebase.User | null,
+}
+
+export const useAuthStore = create<AuthStore>(set => ({
+    firebase: firebase.app(),
+    user: null,
+}))
+
+export default function App() {
+    const user = useAuthStore(state => state.user);
     const [authChecked, setAuthChecked] = useState(false);
 
     useEffect(() => {
-        const loggedInUser = localStorage.getItem("isLoggedIn");
-        if (loggedInUser) {
-            const foundUser = JSON.parse(loggedInUser);
-            setLoggedIn(foundUser);
-        }
-        setAuthChecked(true);
+        firebase.app().auth().onAuthStateChanged((user) => {
+            useAuthStore.setState({user: user});
+            setAuthChecked(true);
+        })
     }, [])
 
     function Body() {
         if (authChecked) {
-            if (isLoggedIn) {
+            if (user) {
                 return (
                     <>
                         <HeaderLoggedIn logoText="CA3"/>
@@ -85,22 +103,16 @@ function App() {
     }
 
     return (
-        <AuthContext.Provider value={{isLoggedIn, setLoggedIn}}>
-            <FirebaseProvider>
-                <Router>
-                    <div
-                        className="App"
-                        style={{
-                            color: COLORS.darkText,
-                            backgroundColor: "white",
-                        }}
-                    >
-                        <Body/>
-                    </div>
-                </Router>
-            </FirebaseProvider>
-        </AuthContext.Provider>
-    );
+        <Router>
+            <div
+                className="App"
+                style={{
+                    color: COLORS.darkText,
+                    backgroundColor: "white",
+                }}
+            >
+                <Body/>
+            </div>
+        </Router>
+    )
 }
-
-export default App;
