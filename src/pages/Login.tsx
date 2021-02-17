@@ -1,38 +1,26 @@
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import '../App.css';
 import {COLORS} from '../colors';
 import * as rs from "../Responsive";
 import landingPicture from "../media/landingPicture.jpg";
 
 import {Button, Col, Container, Form, Row} from 'react-bootstrap';
-import {FirebaseContext, IFirebaseContext} from "../FirebaseContext";
-import {AuthContext} from '../App';
 import {AlertInfo, AlertViewer} from "./Alerts";
+import {useAuthStore} from "../App";
 
 
 export default function LogIn(props: { user: any; onLogin: (arg0: any) => void; }) {
-
-    const Auth = useContext(AuthContext);
-
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
-    const firebaseContext: IFirebaseContext = useContext(FirebaseContext);
 
-    firebaseContext.firebase.auth().onAuthStateChanged(function (user) {
-        if (user) {
-            Auth.setLoggedIn(true);
-            localStorage.setItem("isLoggedIn", JSON.stringify(true));
-        }
-    });
+    const firebase = useAuthStore(state => state.firebase);
 
     const [alerts, setAlerts] = useState<AlertInfo[]>([]);
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         try {
-            await firebaseContext.firebase.auth().signInWithEmailAndPassword(email, password);
-            // Auth.setLoggedIn(true);
-            // localStorage.setItem("isLoggedIn", JSON.stringify(true));
+            await firebase.auth().signInWithEmailAndPassword(email, password);
         } catch (error) {
             const errorAlert: AlertInfo = {variant: "danger", text: error.toString()};
             setAlerts([...alerts, errorAlert]);
@@ -145,5 +133,6 @@ export default function LogIn(props: { user: any; onLogin: (arg0: any) => void; 
                     }}
                 />
             </Row>
-        </Container>);
+        </Container>
+    )
 }

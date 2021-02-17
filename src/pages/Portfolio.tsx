@@ -1,33 +1,21 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {COLORS} from '../colors';
 import '../App.css';
 import './Portfolio.css';
 import {Link} from 'react-router-dom';
 import axios from 'axios'
 import {ApiEndPoints} from "../ApiEndpoints";
-import {FirebaseContext, IFirebaseContext} from '../FirebaseContext';
 import {Accordion, Button, Card, Col, Container, ListGroup, Row} from 'react-bootstrap'
 import {AlertInfo, AlertViewer} from "./Alerts";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AddEntry from "./AddEntry";
-import {AuthContext} from "../App";
+import {useAuthStore} from "../App";
+import firebase from "firebase";
 
 
 export default function Portfolio(props: { match: { params: { tag: string } } }) {
-    const firebaseContext: IFirebaseContext = useContext(FirebaseContext);
-    const [userID, setUserID] = useState("");
-
-    const Auth = useContext(AuthContext);
-
-    firebaseContext.firebase.auth().onAuthStateChanged(function (user) {
-        if (!user) {
-            Auth.setLoggedIn(false);
-            localStorage.setItem("isLoggedIn", JSON.stringify(false));
-        } else {
-            setUserID(user.uid);
-        }
-    });
+    const user = useAuthStore(state => state.user) as firebase.User;
 
     interface Entry {
         entry_id: string,
@@ -60,8 +48,7 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
 
     const [alerts, setAlerts] = useState<AlertInfo[]>([]);
 
-    const getPortfolioURL = ApiEndPoints.getPortfolio
-        + tag + "/" + firebaseContext.firebase.auth().currentUser?.uid;
+    const getPortfolioURL = ApiEndPoints.getPortfolio + tag + "/" + user?.uid;
 
     useEffect(() => {
         axios.get(getPortfolioURL)
@@ -84,7 +71,7 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
     }, [getPortfolioURL])
 
 
-    function RegionListItems(props: { regions: Region[]; }) {
+    function RegionListItems(props: { regions: Region[] }) {
         const regions = props.regions;
 
         const listOfRegions = regions.map((region) =>
@@ -191,7 +178,7 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                                     Visualise
                                 </Button>
                                 <AddEntry
-                                    accountID={userID}
+                                    accountID={user.uid}
                                     portfolioID={portfolioId}
                                     regionID={region.region_id}
                                     officeID={office.office_id}
@@ -298,7 +285,5 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                 </Row>
             </Container>
         </Container>
-    );
-
-
+    )
 }

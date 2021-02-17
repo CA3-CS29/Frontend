@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import '../App.css';
 
 import {COLORS} from '../colors';
@@ -7,41 +7,27 @@ import landingPicture from "../media/landingPicture.jpg";
 
 import axios from 'axios';
 import {Button, Col, Container, Form, Row} from 'react-bootstrap';
-import {FirebaseContext, IFirebaseContext} from "../FirebaseContext";
-import {useHistory} from "react-router-dom";
 import {ApiEndPoints} from "../ApiEndpoints";
-import { AuthContext } from '../App';
 import {AlertInfo, AlertViewer} from "./Alerts";
+import {useAuthStore} from "../App";
 
 
 export default function SignUp() {
-    let history = useHistory();
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
-    const firebaseContext: IFirebaseContext = useContext(FirebaseContext);
 
-    const Auth = useContext(AuthContext);
-
-    firebaseContext.firebase.auth().onAuthStateChanged(function (user) {
-        if (user) {
-            history.push("/");
-            Auth.setLoggedIn(true);
-        }
-    });
+    const firebase = useAuthStore(state => state.firebase);
 
     const [alerts, setAlerts] = useState<AlertInfo[]>([]);
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         try {
-            await firebaseContext.firebase.auth().createUserWithEmailAndPassword(email, password);
+            await firebase.auth().createUserWithEmailAndPassword(email, password);
             axios({
                 method: 'post',
-                url: ApiEndPoints.createAccount + firebaseContext.firebase.auth().currentUser?.uid,
+                url: ApiEndPoints.createAccount + firebase.auth().currentUser?.uid,
             });
-            Auth.setLoggedIn(true);
-            localStorage.setItem("isLoggedIn", JSON.stringify(true));
-            history.push("/");
         } catch (error) {
             const errorAlert: AlertInfo = {variant: "danger", text: error.toString()}
             setAlerts([...alerts, errorAlert]);
@@ -56,37 +42,44 @@ export default function SignUp() {
             style={{
                 padding: 0,
                 backgroundColor: COLORS.accent,
-            }}>
-            <Row style={{
-                boxSizing: "border-box",
-                display: "flex",
-                flexWrap: "wrap",
-                margin: 0,
-                height: "100%",
-                flexDirection: [rs.IsPhone(), rs.IsTabletPortrait()].some(Boolean) ? "column" : "row",
-                }}>
-                <Col style={{
+            }}
+        >
+            <Row
+                style={{
                     boxSizing: "border-box",
-                    padding: "2em",
-                    flex: [rs.IsPhone(), rs.IsTabletPortrait()].some(Boolean) ? "40%" : "70%",
-                    }}>
+                    display: "flex",
+                    flexWrap: "wrap",
+                    margin: 0,
+                    height: "100%",
+                    flexDirection: [rs.IsPhone(), rs.IsTabletPortrait()].some(Boolean) ? "column" : "row",
+                }}
+            >
+                <Col
+                    style={{
+                        boxSizing: "border-box",
+                        padding: "2em",
+                        flex: [rs.IsPhone(), rs.IsTabletPortrait()].some(Boolean) ? "40%" : "70%",
+                    }}
+                >
                     <Container>
                         <AlertViewer alerts={alerts}/>
                         <Row>
                             <h1 className="bigText"
                                 style={{
                                     color: COLORS.darkText,
-                                }}>
+                                }}
+                            >
                                 Welcome
                             </h1>
                         </Row>
                         <Form onSubmit={handleSubmit}>
                             <Form.Row>
-                                <Form.Group controlId="signupEmail"
-                                            style={{
-                                                margin: "auto",
-                                                marginBottom: "1em",
-                                            }}
+                                <Form.Group
+                                    controlId="signupEmail"
+                                    style={{
+                                        margin: "auto",
+                                        marginBottom: "1em",
+                                    }}
                                 >
                                     <Form.Label>Email</Form.Label>
                                     <Form.Control
@@ -100,13 +93,13 @@ export default function SignUp() {
                                     </Form.Text>
                                 </Form.Group>
                             </Form.Row>
-
                             <Form.Row>
-                                <Form.Group controlId="signupPassword"
-                                            style={{
-                                                margin: "auto",
-                                                marginBottom: "1em",
-                                            }}
+                                <Form.Group
+                                    controlId="signupPassword"
+                                    style={{
+                                        margin: "auto",
+                                        marginBottom: "1em",
+                                    }}
                                 >
                                     <Form.Label>Password</Form.Label>
                                     <Form.Control
@@ -117,29 +110,30 @@ export default function SignUp() {
                                     />
                                 </Form.Group>
                             </Form.Row>
-
-                            <Button className="Button"
-                                    type="submit"
-                                    style={{
-                                        color: COLORS.darkText,
-                                        backgroundColor: COLORS.secondaryAccent,
-                                        borderColor: COLORS.secondaryAccent,
-                                        marginTop: "1em",
-                                    }}>
+                            <Button
+                                className="Button"
+                                type="submit"
+                                style={{
+                                    color: COLORS.darkText,
+                                    backgroundColor: COLORS.secondaryAccent,
+                                    borderColor: COLORS.secondaryAccent,
+                                    marginTop: "1em",
+                                }}>
                                 Sign up
                             </Button>
                         </Form>
                     </Container>
                 </Col>
-
-                <Col style={{
-                    boxSizing: "border-box",
-                    padding: 0,
-                    background: "url(" + landingPicture + ") center no-repeat",
-                    backgroundSize: "cover",
-                    height: "100%",
-                    flex: [rs.IsPhone(), rs.IsTabletPortrait()].some(Boolean) ? "60%" : "30%",
-                }}> </Col>
+                <Col
+                    style={{
+                        boxSizing: "border-box",
+                        padding: 0,
+                        background: "url(" + landingPicture + ") center no-repeat",
+                        backgroundSize: "cover",
+                        height: "100%",
+                        flex: [rs.IsPhone(), rs.IsTabletPortrait()].some(Boolean) ? "60%" : "30%",
+                    }}
+                />
             </Row>
         </Container>);
 }

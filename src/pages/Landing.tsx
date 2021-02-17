@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {COLORS} from '../colors';
 import './Landing.css';
 import * as rs from '../Responsive';
@@ -6,23 +6,9 @@ import landingPicture from '../media/landingPicture.jpg'
 
 import {Button, Col, Container, Row} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
-import {FirebaseContext, IFirebaseContext} from '../FirebaseContext';
-import {AuthContext} from "../App";
 
 
 export default function Landing() {
-    const firebaseContext: IFirebaseContext = useContext(FirebaseContext);
-
-    const Auth = useContext(AuthContext);
-
-    firebaseContext.firebase.auth().onAuthStateChanged(function (user) {
-        if (user) {
-            Auth.setLoggedIn(false);
-            localStorage.setItem("isLoggedIn", JSON.stringify(false));
-        }
-    });
-
-
     return (
         <Container
             fluid
@@ -117,5 +103,5 @@ export default function Landing() {
                 />
             </Row>
         </Container>
-    );
+    )
 }

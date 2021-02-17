@@ -63,7 +63,8 @@ export default function AddEntry(
                     borderColor: COLORS.highlight,
                     float: "right",
                 }}
-                onClick={handleShow}>
+                onClick={handleShow}
+            >
                 Add Entry
             </Button>
 
@@ -79,11 +80,12 @@ export default function AddEntry(
                 <Modal.Body>
                     <Form id="create-entry-form" onSubmit={handleSubmit}>
                         <Form.Row>
-                            <Form.Group controlId="entryCreate"
-                                        style={{
-                                            margin: "auto",
-                                            marginBottom: "1em",
-                                        }}
+                            <Form.Group
+                                controlId="entryCreate"
+                                style={{
+                                    margin: "auto",
+                                    marginBottom: "1em",
+                                }}
                             >
                                 <Form.Label>Name</Form.Label>
                                 <Form.Control

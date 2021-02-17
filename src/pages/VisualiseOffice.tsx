@@ -1,9 +1,7 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {COLORS} from '../colors';
 import '../App.css';
 import './Portfolio.css';
-import {useHistory} from 'react-router-dom';
-import {FirebaseContext, IFirebaseContext} from '../FirebaseContext';
 import {Container, Row, Tab, Tabs} from 'react-bootstrap'
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -12,29 +10,19 @@ import BarChart from "../charts/BarChart";
 import BubbleChart from "../charts/BubbleChart";
 
 export default function VisualiseOffice(
-    // props: {
-    //     location: {
-    //         state: {
-    //             region: string,
-    //             regionID: string,
-    //             portfolio: string,
-    //             portfolioID: string,
-    //             office: string,
-    //             officeID: string,
-    //         }
-    //     }
-    // }
-) {
-
-    let history = useHistory();
-    const firebaseContext: IFirebaseContext = useContext(FirebaseContext);
-
-
-    firebaseContext.firebase.auth().onAuthStateChanged(function (user) {
-        if (!user) {
-            history.push("/");
+    props: {
+        location: {
+            state: {
+                region: string,
+                regionID: string,
+                portfolio: string,
+                portfolioID: string,
+                office: string,
+                officeID: string,
+            }
         }
-    });
+    }) {
+    console.log(props);
 
     const entries = [
         {tag: "Bricks", consumption: 113, source: "Defra 2015", info: "Assuming 2.3 kg per brick."},
@@ -67,7 +55,8 @@ export default function VisualiseOffice(
                             style={{
                                 color: COLORS.darkText,
                                 textAlign: "left",
-                            }}>
+                            }}
+                        >
                             {/*Portfolio: {portfolioTag}*/}
                             Glasgow Office
                         </h1>
@@ -97,5 +86,5 @@ export default function VisualiseOffice(
                 </Row>
             </Container>
         </Container>
-    );
+    )
 }

@@ -1,8 +1,8 @@
-import React, {} from 'react';
+import React from 'react';
 import '../App.css';
-import { COLORS } from '../colors';
+import {COLORS} from '../colors';
 import './Header.css'
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Navbar from 'react-bootstrap/Navbar'
@@ -10,22 +10,17 @@ import Nav from 'react-bootstrap/Nav'
 import Button from 'react-bootstrap/Button'
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar'
 
-interface HeaderProps {
-    logoText: string;
-     
-}
 
-function ButtonsLoggedOut(){
-    return(
+function ButtonsLoggedOut() {
+    return (
         <div>
-            <Button className="Button mr-1"
+            <Button
+                className="Button mr-1"
                 style={{
                     color: COLORS.darkText,
                     backgroundColor: COLORS.highlight,
                     borderColor: COLORS.highlight,
-
                 }}
-
                 as={Link} to="/about"
             >
                 About
@@ -34,16 +29,17 @@ function ButtonsLoggedOut(){
     )
 }
 
-export default function HeaderLoggedOut(props: HeaderProps) {
-    
+export default function HeaderLoggedOut(props: { logoText: string }) {
     return (
-        <Navbar style={{
-            backgroundColor: COLORS.primary,
-            color: COLORS.lightText,
-            fontFamily: 'Lato',
-            height: 45,
-        }}
-            className="Header">
+        <Navbar
+            style={{
+                backgroundColor: COLORS.primary,
+                color: COLORS.lightText,
+                fontFamily: 'Lato',
+                height: 45,
+            }}
+            className="Header"
+        >
             <Nav className="mr-auto">
                 <Navbar.Brand
                     style={{
@@ -56,23 +52,14 @@ export default function HeaderLoggedOut(props: HeaderProps) {
                 >
                     {props.logoText}
                 </Navbar.Brand>
-
             </Nav>
-
-
             <ButtonToolbar>
 
-                <ButtonsLoggedOut />
+                <ButtonsLoggedOut/>
 
             </ButtonToolbar>
-
-
         </Navbar>
     )
-// }
-            
-   
-    
 }
 
 
