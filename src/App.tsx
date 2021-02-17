@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import './App.css';
 import {COLORS} from './colors';
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import {BrowserRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
+
 
 import {FirebaseProvider} from "./FirebaseContext";
 import HeaderLoggedOut from './pages/HeaderLoggedOut';
@@ -28,6 +29,7 @@ export const AuthContext = React.createContext({
 function App() {
 
     const [isLoggedIn, setLoggedIn] = useState(false);
+    const [authChecked, setAuthChecked] = useState(false);
 
     useEffect(() => {
         const loggedInUser = localStorage.getItem("isLoggedIn");
@@ -35,39 +37,65 @@ function App() {
             const foundUser = JSON.parse(loggedInUser);
             setLoggedIn(foundUser);
         }
+        setAuthChecked(true);
     }, [])
+
+    function Body() {
+        if (authChecked) {
+            if (isLoggedIn) {
+                return (
+                    <>
+                        <HeaderLoggedIn logoText="CA3"/>
+                        <Switch>
+                            <Redirect exact from="/" to="/portfolios"/>
+                            <Route exact path="/about" component={About}/>
+                            <Redirect exact from="/login" to="/portfolios"/>
+                            <Redirect exact from="/signup" to="/portfolios"/>
+                            <Route exact path="/portfolios" component={Portfolios}/>
+                            <Route exact path="/portfolio/:tag" component={Portfolio}/>
+                            <Route exact path="/create-portfolio" component={CreatePortfolio}/>
+                            <Route exact path="/create-office/" component={CreateOffice}/>
+                            <Route exact path="/account" component={Account}/>
+                            <Route exact path="/visualise-office" component={VisualiseOffice}/>
+                        </Switch>
+                    </>
+                )
+            } else {
+                return (
+                    <>
+                        <HeaderLoggedOut logoText="CA3"/>
+                        <Switch>
+                            <Route exact path="/" component={Landing}/>
+                            <Route exact path="/about" component={About}/>
+                            <Route exact path="/login" component={Login}/>
+                            <Route exact path="/signup" component={Signup}/>
+                            <Redirect exact from="/portfolios" to="/"/>
+                            <Redirect exact from="/portfolio/:tag" to="/"/>
+                            <Redirect exact from="/create-portfolio" to="/"/>
+                            <Redirect exact from="/create-office" to="/"/>
+                            <Redirect exact from="/account" to="/"/>
+                            <Redirect exact from="/visualise-office" to="/"/>
+                        </Switch>
+                    </>
+                )
+            }
+        } else {
+            return <></>
+        }
+    }
 
     return (
         <AuthContext.Provider value={{isLoggedIn, setLoggedIn}}>
             <FirebaseProvider>
-
                 <Router>
-                    <div className="App" style={{
-                        color: COLORS.darkText,
-                        backgroundColor: "white",
-                    }}>
-
-                        {isLoggedIn ?
-
-                            <HeaderLoggedIn logoText="CA3"/>
-                            :
-                            <HeaderLoggedOut logoText="CA3"/>
-
-                        }
-
-                        <Switch>
-                            <Route path="/" exact component={Landing}/>
-                            <Route path="/about" exact component={About}/>
-                            <Route path="/login" exact component={Login}/>
-                            <Route path="/signup" exact component={Signup}/>
-                            <Route path="/portfolios" exact component={Portfolios}/>
-                            <Route path="/portfolio/:tag" exact component={Portfolio}/>
-                            <Route path="/create-portfolio" exact component={CreatePortfolio}/>
-                            <Route path="/create-office/" exact component={CreateOffice}/>
-                            <Route path="/account" exact component={Account}/>
-                            <Route path="/visualise-office" exact component={VisualiseOffice}/>
-                        </Switch>
-
+                    <div
+                        className="App"
+                        style={{
+                            color: COLORS.darkText,
+                            backgroundColor: "white",
+                        }}
+                    >
+                        <Body/>
                     </div>
                 </Router>
             </FirebaseProvider>

@@ -1,18 +1,22 @@
-import React, { useContext, useState } from 'react';
-import { Button, Container, Form, Row } from 'react-bootstrap';
-import { COLORS } from '../colors';
+import React, {useContext, useState} from 'react';
+import {Button, Container, Form, Row} from 'react-bootstrap';
+import {COLORS} from '../colors';
 import '../App.css';
-import { useHistory } from 'react-router-dom';
-import { FirebaseContext, IFirebaseContext } from '../FirebaseContext';
+import {FirebaseContext, IFirebaseContext} from '../FirebaseContext';
 import axios from "axios";
 import {ApiEndPoints} from "../ApiEndpoints";
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
+import {AlertInfo, AlertViewer} from "./Alerts";
+import {AuthContext} from "../App";
+
 const portfolio_id = uuidv4();
 const office_id = uuidv4();
 const region_id = uuidv4();
 
 
 export default function CreatePortfolio() {
+    const [alerts, setAlerts] = useState<AlertInfo[]>([]);
+
     const [portfolioTag, setPortfolioTag] = useState<string>("");
     const [officeTag, setOfficeTag] = useState<string>("");
     const [regionTag, setRegionTag] = useState<string>("");
@@ -21,12 +25,14 @@ export default function CreatePortfolio() {
     const [displayCreateRegionButton, setDisplayCreateRegionButton] = useState<boolean>(false);
     const [displayCreateRegionForm, setDisplayCreateRegionForm] = useState<boolean>(false);
 
-    let history = useHistory();
     const firebaseContext: IFirebaseContext = useContext(FirebaseContext);
+
+    const Auth = useContext(AuthContext);
 
     firebaseContext.firebase.auth().onAuthStateChanged(function (user) {
         if (!user) {
-            history.push("/");
+            Auth.setLoggedIn(false);
+            localStorage.setItem("isLoggedIn", JSON.stringify(false));
         }
     });
 
@@ -39,14 +45,16 @@ export default function CreatePortfolio() {
 
         if (props.shouldRender) {
             return (
-                <Button className="Button"
-                        onClick={() => setDisplayCreateRegionForm(true)}
-                        style={{
-                            color: COLORS.darkText,
-                            backgroundColor: COLORS.secondaryAccent,
-                            borderColor: COLORS.secondaryAccent,
-                            marginTop: "1em",
-                        }}>
+                <Button
+                    className="Button"
+                    onClick={() => setDisplayCreateRegionForm(true)}
+                    style={{
+                        color: COLORS.darkText,
+                        backgroundColor: COLORS.secondaryAccent,
+                        borderColor: COLORS.secondaryAccent,
+                        marginTop: "1em",
+                    }}
+                >
                     Add region
                 </Button>
             )
@@ -63,14 +71,16 @@ export default function CreatePortfolio() {
 
         if (props.shouldRender) {
             return (
-                <Button className="Button"
-                        onClick={() => setDisplayCreateOfficeForm(true)}
-                        style={{
-                            color: COLORS.darkText,
-                            backgroundColor: COLORS.secondaryAccent,
-                            borderColor: COLORS.secondaryAccent,
-                            marginTop: "1em",
-                        }}>
+                <Button
+                    className="Button"
+                    onClick={() => setDisplayCreateOfficeForm(true)}
+                    style={{
+                        color: COLORS.darkText,
+                        backgroundColor: COLORS.secondaryAccent,
+                        borderColor: COLORS.secondaryAccent,
+                        marginTop: "1em",
+                    }}
+                >
                     Add office
                 </Button>
             )
@@ -78,7 +88,6 @@ export default function CreatePortfolio() {
             return null;
         }
     }
-
 
 
     interface AddPortfolioProps {
@@ -103,10 +112,12 @@ export default function CreatePortfolio() {
                     created_on: timestamp.toDateString(),
                     updated_on: timestamp.toDateString(),
                 })
-                .then(function (response){
+                .then(function (response) {
                     console.log(response);
                 })
-                .catch(function (error){
+                .catch(function (error) {
+                    const errorAlert: AlertInfo = {variant: "danger", text: error.toString()};
+                    setAlerts(oldAlerts => [...oldAlerts, errorAlert]);
                     console.log(error);
                 })
 
@@ -117,11 +128,12 @@ export default function CreatePortfolio() {
             return (
                 <Form onSubmit={handleSubmit}>
                     <Form.Row>
-                        <Form.Group controlId="portfolioCreate"
-                                    style={{
-                                        margin: "auto",
-                                        marginBottom: "1em",
-                                    }}
+                        <Form.Group
+                            controlId="portfolioCreate"
+                            style={{
+                                margin: "auto",
+                                marginBottom: "1em",
+                            }}
                         >
                             <Form.Label>Portfolio Name</Form.Label>
                             <Form.Control
@@ -136,14 +148,16 @@ export default function CreatePortfolio() {
                         </Form.Group>
                     </Form.Row>
 
-                    <Button className="Button"
-                            type="submit"
-                            style={{
-                                color: COLORS.darkText,
-                                backgroundColor: COLORS.secondaryAccent,
-                                borderColor: COLORS.secondaryAccent,
-                                marginTop: "1em",
-                            }}>
+                    <Button
+                        className="Button"
+                        type="submit"
+                        style={{
+                            color: COLORS.darkText,
+                            backgroundColor: COLORS.secondaryAccent,
+                            borderColor: COLORS.secondaryAccent,
+                            marginTop: "1em",
+                        }}
+                    >
                         Create
                     </Button>
                 </Form>
@@ -169,32 +183,32 @@ export default function CreatePortfolio() {
                 + portfolio_id + '/'
                 + firebaseContext.firebase.auth().currentUser?.uid,
                 {
-                    "name":regionTag,
-                    "region_id":region_id,
-                    "portfolio_id":portfolio_id,
-                    "user_id":firebaseContext.firebase.auth().currentUser?.uid,
-                    "offices":[]
+                    "name": regionTag,
+                    "region_id": region_id,
+                    "portfolio_id": portfolio_id,
+                    "user_id": firebaseContext.firebase.auth().currentUser?.uid,
+                    "offices": []
                 })
-                .then(function (response){
+                .then(function (response) {
                     console.log(response);
                 })
-                .catch(function (error){
+                .catch(function (error) {
+                    const errorAlert: AlertInfo = {variant: "danger", text: error.toString()};
+                    setAlerts(oldAlerts => [...oldAlerts, errorAlert]);
                     console.log(error);
                 })
-
         }
-
 
         if (props.visible) {
             return (
                 <Form onSubmit={handleSubmit}>
-
                     <Form.Row>
-                        <Form.Group controlId="portfolioCreate"
-                                    style={{
-                                        margin: "auto",
-                                        marginBottom: "1em",
-                                    }}
+                        <Form.Group
+                            controlId="portfolioCreate"
+                            style={{
+                                margin: "auto",
+                                marginBottom: "1em",
+                            }}
                         >
                             <Form.Label>Create new region</Form.Label>
                             <Form.Control
@@ -208,15 +222,16 @@ export default function CreatePortfolio() {
                             </Form.Text>
                         </Form.Group>
                     </Form.Row>
-
-                    <Button className="Button"
-                            type="submit"
-                            style={{
-                                color: COLORS.darkText,
-                                backgroundColor: COLORS.secondaryAccent,
-                                borderColor: COLORS.secondaryAccent,
-                                marginTop: "1em",
-                            }}>
+                    <Button
+                        className="Button"
+                        type="submit"
+                        style={{
+                            color: COLORS.darkText,
+                            backgroundColor: COLORS.secondaryAccent,
+                            borderColor: COLORS.secondaryAccent,
+                            marginTop: "1em",
+                        }}
+                    >
                         Create
                     </Button>
                 </Form>
@@ -246,26 +261,27 @@ export default function CreatePortfolio() {
                     user_id: firebaseContext.firebase.auth().currentUser?.uid,
                     name: officeTag,
                 })
-                .then(function (response){
+                .then(function (response) {
                     console.log(response);
                 })
-                .catch(function (error){
+                .catch(function (error) {
                     //get existing region_id?
+                    const errorAlert: AlertInfo = {variant: "danger", text: error.toString()};
+                    setAlerts(oldAlerts => [...oldAlerts, errorAlert]);
                     console.log(error);
                 })
-
         }
 
         if (props.visible) {
             return (
                 <Form onSubmit={handleSubmit}>
-
                     <Form.Row>
-                        <Form.Group controlId="portfolioCreate"
-                                    style={{
-                                        margin: "auto",
-                                        marginBottom: "1em",
-                                    }}
+                        <Form.Group
+                            controlId="portfolioCreate"
+                            style={{
+                                margin: "auto",
+                                marginBottom: "1em",
+                            }}
                         >
                             <Form.Label>Office Name</Form.Label>
                             <Form.Control
@@ -279,15 +295,15 @@ export default function CreatePortfolio() {
                             </Form.Text>
                         </Form.Group>
                     </Form.Row>
-
-                    <Button className="Button"
-                            type="submit"
-                            style={{
-                                color: COLORS.darkText,
-                                backgroundColor: COLORS.secondaryAccent,
-                                borderColor: COLORS.secondaryAccent,
-                                marginTop: "1em",
-                            }}>
+                    <Button
+                        className="Button"
+                        type="submit"
+                        style={{
+                            color: COLORS.darkText,
+                            backgroundColor: COLORS.secondaryAccent,
+                            borderColor: COLORS.secondaryAccent,
+                            marginTop: "1em",
+                        }}>
                         Create
                     </Button>
                 </Form>
@@ -296,7 +312,6 @@ export default function CreatePortfolio() {
             return null;
         }
     }
-
 
 
     return (
@@ -308,19 +323,21 @@ export default function CreatePortfolio() {
                 backgroundColor: COLORS.accent,
             }}>
             <Container>
+                <AlertViewer alerts={alerts}/>
                 <Row>
                     <h1 className="bigText"
                         style={{
                             color: COLORS.darkText,
-                        }}>
+                        }}
+                    >
                         Create Portfolio
                     </h1>
                 </Row>
-                <AddPortfolio visible={!displayCreateRegionButton && !displayCreateOfficeButton} />
-                <AddRegionButton shouldRender={displayCreateRegionButton && !displayCreateRegionForm} />
-                <AddRegionForm visible={displayCreateRegionForm} />
-                <AddOfficeButton shouldRender={displayCreateOfficeButton && !displayCreateOfficeForm} />
-                <AddOfficeForm visible={displayCreateOfficeForm} />
+                <AddPortfolio visible={!displayCreateRegionButton && !displayCreateOfficeButton}/>
+                <AddRegionButton shouldRender={displayCreateRegionButton && !displayCreateRegionForm}/>
+                <AddRegionForm visible={displayCreateRegionForm}/>
+                <AddOfficeButton shouldRender={displayCreateOfficeButton && !displayCreateOfficeForm}/>
+                <AddOfficeForm visible={displayCreateOfficeForm}/>
             </Container>
         </Container>
     );
