@@ -61,8 +61,6 @@ docker-build:
     - openstack
   services:
     - name: docker:19.03.8-dind
-  only:
-    - master
   before_script:
     - docker login -u _ -p $HEROKU_API_KEY registry.heroku.com
   script:
