@@ -11,6 +11,7 @@ import {FirebaseContext, IFirebaseContext} from "../FirebaseContext";
 import {useHistory} from "react-router-dom";
 import {ApiEndPoints} from "../ApiEndpoints";
 import { AuthContext } from '../App';
+import {AlertInfo, AlertViewer} from "./Alerts";
 
 
 export default function SignUp() {
@@ -27,7 +28,8 @@ export default function SignUp() {
             Auth.setLoggedIn(true);
         }
     });
-    
+
+    const [alerts, setAlerts] = useState<AlertInfo[]>([]);
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -41,7 +43,9 @@ export default function SignUp() {
             localStorage.setItem("isLoggedIn", JSON.stringify(true));
             history.push("/");
         } catch (error) {
-            alert(error);
+            const errorAlert: AlertInfo = {variant: "danger", text: error.toString()}
+            setAlerts([...alerts, errorAlert]);
+            console.log(error)
         }
     }
 
@@ -67,6 +71,7 @@ export default function SignUp() {
                     flex: [rs.IsPhone(), rs.IsTabletPortrait()].some(Boolean) ? "40%" : "70%",
                     }}>
                     <Container>
+                        <AlertViewer alerts={alerts}/>
                         <Row>
                             <h1 className="bigText"
                                 style={{

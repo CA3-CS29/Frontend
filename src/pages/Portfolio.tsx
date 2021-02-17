@@ -2,24 +2,28 @@ import React, {useContext, useEffect, useState} from 'react';
 import {COLORS} from '../colors';
 import '../App.css';
 import './Portfolio.css';
-import {Link, useHistory} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import axios from 'axios'
 import {ApiEndPoints} from "../ApiEndpoints";
 import {FirebaseContext, IFirebaseContext} from '../FirebaseContext';
 import {Accordion, Button, Card, Col, Container, ListGroup, Row} from 'react-bootstrap'
+import {AlertInfo, AlertViewer} from "./Alerts";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AddEntry from "./AddEntry";
+import {AuthContext} from "../App";
 
 
 export default function Portfolio(props: { match: { params: { tag: string } } }) {
-    let history = useHistory();
     const firebaseContext: IFirebaseContext = useContext(FirebaseContext);
     const [userID, setUserID] = useState("");
 
+    const Auth = useContext(AuthContext);
+
     firebaseContext.firebase.auth().onAuthStateChanged(function (user) {
         if (!user) {
-            history.push("/");
+            Auth.setLoggedIn(false);
+            localStorage.setItem("isLoggedIn", JSON.stringify(false));
         } else {
             setUserID(user.uid);
         }
@@ -54,6 +58,8 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
     const [num_regions, setNum_regions] = useState(0);
     const [regions, setRegions] = useState([]);
 
+    const [alerts, setAlerts] = useState<AlertInfo[]>([]);
+
     const getPortfolioURL = ApiEndPoints.getPortfolio
         + tag + "/" + firebaseContext.firebase.auth().currentUser?.uid;
 
@@ -71,7 +77,8 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                 setRegions(data.payload.regions);
             })
             .catch((error) => {
-                alert("Caught error")
+                const errorAlert: AlertInfo = {variant: "danger", text: error.toString()}
+                setAlerts(oldAlerts => [...oldAlerts, errorAlert]);
                 console.log(error);
             });
     }, [getPortfolioURL])
@@ -234,6 +241,7 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                 backgroundColor: COLORS.background,
             }}>
             <Container>
+                <AlertViewer alerts={alerts}/>
                 <Row style={{paddingTop: 10, paddingBottom: 10}}>
                     <Col>
                         <h1 className="MediumText" style={{color: COLORS.darkText, textAlign: "left"}}>

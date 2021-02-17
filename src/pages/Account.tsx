@@ -1,22 +1,24 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {COLORS} from '../colors';
 import '../App.css';
-import {useHistory} from 'react-router-dom';
 import {FirebaseContext, IFirebaseContext} from '../FirebaseContext';
 import {Button, Container, Row} from 'react-bootstrap';
 import {AuthContext} from '../App';
 import axios from "axios";
 import {ApiEndPoints} from "../ApiEndpoints";
+import {AlertInfo, AlertViewer} from "./Alerts";
 
 
 export default function Account() {
-    let history = useHistory();
     const firebaseContext: IFirebaseContext = useContext(FirebaseContext);
     const Auth = useContext(AuthContext);
 
+    const [alerts, setAlerts] = useState<AlertInfo[]>([]);
+
     firebaseContext.firebase.auth().onAuthStateChanged(function (user) {
         if (!user) {
-            history.push("/");
+            Auth.setLoggedIn(false);
+            localStorage.setItem("isLoggedIn", JSON.stringify(false));
         }
     });
 
@@ -33,18 +35,25 @@ export default function Account() {
     const sendResetEmail = (event: { preventDefault: () => void; }) => {
         if (email) {
             event.preventDefault();
-            auth.sendPasswordResetEmail(email).then(() => {
-                alert("Check your email for a password reset link")
-            })
-                .catch(() => {
-                    alert("Error")
+            auth.sendPasswordResetEmail(email)
+                .then(() => {
+                    const successAlert: AlertInfo = {
+                        variant: "success",
+                        text: "Check your email for a password reset link"
+                    };
+                    setAlerts([...alerts, successAlert]);
+                })
+                .catch((error) => {
+                    const errorAlert: AlertInfo = {variant: "danger", text: error.toString()};
+                    setAlerts([...alerts, errorAlert]);
+                    console.log(error);
                 });
         }
     };
 
     const deleteAccount = (event: { preventDefault: () => void; }) => {
         user = firebaseContext.firebase.auth().currentUser;
-        if (window.confirm("Are you sure you want to delete this account?")) {
+        if (window.confirm("Are you sure you want to delete this account?")) { /* Replace with alert? */
             if (user) {
                 event.preventDefault();
                 user.delete().then(function () {
@@ -52,12 +61,15 @@ export default function Account() {
                         method: 'post',
                         url: ApiEndPoints.deleteAccount + firebaseContext.firebase.auth().currentUser?.uid,
                     });
-                    alert("Account deleted")
+                    const successAlert: AlertInfo = {variant: "success", text: "Account deleted"};
+                    setAlerts([...alerts, successAlert]);
+
                     Auth.setLoggedIn(false);
                     localStorage.setItem("isLoggedIn", JSON.stringify(false));
-                    history.push("/");
-                }).catch(function (error) {
-                    alert(error)
+                }).catch((error) => {
+                    const errorAlert: AlertInfo = {variant: "danger", text: error.toString()};
+                    setAlerts([...alerts, errorAlert]);
+                    console.log(error);
                 });
             }
         }
@@ -71,13 +83,16 @@ export default function Account() {
             style={{
                 padding: 0,
                 backgroundColor: COLORS.accent,
-            }}>
+            }}
+        >
             <Container>
+                <AlertViewer alerts={alerts}/>
                 <Row>
                     <h1 className="bigText"
                         style={{
                             color: COLORS.darkText,
-                        }}>
+                        }}
+                    >
                         Your Account
                     </h1>
                 </Row>
@@ -86,27 +101,28 @@ export default function Account() {
                     <h2 className="MediumText"
                         style={{
                             color: COLORS.darkText,
-                        }}>
+                        }}
+                    >
                         Your Email
                     </h2>
                 </Row>
                 <Row>
-
-                    <p className="SmallText"
-                       style={{
-                           color: COLORS.darkText,
-                       }}>
+                    <p
+                        className="SmallText"
+                        style={{
+                            color: COLORS.darkText,
+                        }}
+                    >
                         {emailString}
                     </p>
                 </Row>
-
-
                 <hr/>
                 <Row>
                     <h2 className="MediumText"
                         style={{
                             color: COLORS.darkText,
-                        }}>
+                        }}
+                    >
                         Password
                     </h2>
                 </Row>
@@ -120,17 +136,18 @@ export default function Account() {
                             fontFamily: "lato",
                             fontSize: "1.5vw",
                         }}
-                        onClick={sendResetEmail}>
+                        onClick={sendResetEmail}
+                    >
                         Change Password
                     </Button>
                 </Row>
-
                 <hr/>
                 <Row>
                     <h2 className="MediumText"
                         style={{
                             color: COLORS.darkText,
-                        }}>
+                        }}
+                    >
                         Delete Your Account
                     </h2>
                 </Row>
@@ -144,7 +161,8 @@ export default function Account() {
                             fontFamily: "lato",
                             fontSize: "1.5vw",
                         }}
-                        onClick={deleteAccount}>
+                        onClick={deleteAccount}
+                    >
                         Delete Account
                     </Button>
                 </Row>
