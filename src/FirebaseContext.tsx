@@ -13,7 +13,6 @@ const firebaseConfig = {
 };
 
 if (!firebase.apps.length) {
-    console.log("API key: " + process.env.REACT_APP_API_KEY);
     firebase.initializeApp(firebaseConfig);
 }
 
