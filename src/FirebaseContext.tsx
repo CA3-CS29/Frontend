@@ -3,13 +3,13 @@ import React from 'react';
 
 // Firebase configuration loaded from env variables
 const firebaseConfig = {
-    apiKey: process.env.REACT_APP_API_KEY,
-    authDomain: process.env.REACT_APP_AUTH_DOMAIN,
-    databaseURL: process.env.REACT_APP_DB_URL,
-    projectId: process.env.REACT_APP_PROJECT_ID,
-    storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
-    messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
-    appId: process.env.REACT_APP_APP_ID,
+    apiKey: "AIzaSyAxmxwscM4xp7aFYrSUvktm1-QRjZboAoY",
+    authDomain: "ca3-frontend.firebaseapp.com",
+    databaseURL: "https://ca3-frontend.firebaseio.com",
+    projectId: "ca3-frontend",
+    storageBucket: "ca3-frontend.appspot.com",
+    messagingSenderId: "182285255213",
+    appId: "1:182285255213:web:39d2868c5f88e0a445aea4",
 };
 
 if (!firebase.apps.length) {
