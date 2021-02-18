@@ -5,8 +5,10 @@ export const ApiEndPoints = {
     deleteAccount: baseUrl + "account/delete/",
     createPortfolio: baseUrl + "portfolio/createPortfolio/",
     getPortfolio: baseUrl + "portfolio/getPortfolio/",
+    getAllPortfolios: baseUrl +"portfolio/getAllByUserId/",
     createRegion: baseUrl + "region/createRegion/",
     getAllRegionsForUser: baseUrl + "region/getAllRegionsForUser/",
     createOffice: baseUrl + "office/createOffice/",
     createEntry: baseUrl + "entry/createEntry/",
+    
 };
