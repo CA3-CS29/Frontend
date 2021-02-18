@@ -10,7 +10,6 @@ import About from './pages/About'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import CreatePortfolio from './pages/CreatePortfolio';
-import CreateOffice from './pages/CreateOffice';
 import Portfolios from './pages/Portfolios';
 import Portfolio from './pages/Portfolio';
 import VisualiseOffice from './pages/VisualiseOffice';
@@ -72,7 +71,6 @@ export default function App() {
                             <Route exact path="/portfolios" component={Portfolios}/>
                             <Route exact path="/portfolio/:tag" component={Portfolio}/>
                             <Route exact path="/create-portfolio" component={CreatePortfolio}/>
-                            <Route exact path="/create-office/" component={CreateOffice}/>
                             <Route exact path="/account" component={Account}/>
                             <Route exact path="/visualise-office" component={VisualiseOffice}/>
                         </Switch>
@@ -90,7 +88,6 @@ export default function App() {
                             <Redirect exact from="/portfolios" to="/"/>
                             <Redirect exact from="/portfolio/:tag" to="/"/>
                             <Redirect exact from="/create-portfolio" to="/"/>
-                            <Redirect exact from="/create-office" to="/"/>
                             <Redirect exact from="/account" to="/"/>
                             <Redirect exact from="/visualise-office" to="/"/>
                         </Switch>

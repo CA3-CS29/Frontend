@@ -10,12 +10,15 @@ import {AlertInfo, AlertViewer} from "./Alerts";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AddEntry from "./AddEntry";
+import AddRegion from "./AddRegion";
+import AddOffice from "./AddOffice";
 import {useAuthStore} from "../App";
 import firebase from "firebase";
 
 
 export default function Portfolio(props: { match: { params: { tag: string } } }) {
     const user = useAuthStore(state => state.user) as firebase.User;
+    const [dataRetrieved, setDataRetrieved] = useState(false);
 
     interface Entry {
         entry_id: string,
@@ -43,7 +46,7 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
     const {tag} = props.match.params;
     const [status, setStatus] = useState("");
     const [portfolioId, setPortfolioId] = useState("");
-    const [num_regions, setNum_regions] = useState(0);
+    const [numRegions, setNumRegions] = useState(0);
     const [regions, setRegions] = useState([]);
 
     const [alerts, setAlerts] = useState<AlertInfo[]>([]);
@@ -60,8 +63,9 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
 
                 setStatus(data.status);
                 setPortfolioId(data.payload.portfolio_id);
-                setNum_regions(data.payload.num_regions);
+                setNumRegions(data.payload.num_regions);
                 setRegions(data.payload.regions);
+                setDataRetrieved(true);
             })
             .catch((error) => {
                 const errorAlert: AlertInfo = {variant: "danger", text: error.toString()}
@@ -84,29 +88,11 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                         </Col>
                         <Col>
                             <div>
-                                <Button
-                                    className="Button mr-1 mt-1"
-                                    style={{
-                                        color: COLORS.darkText,
-                                        backgroundColor: COLORS.highlight,
-                                        borderColor: COLORS.highlight,
-                                        float: 'right',
-                                    }}
-                                    as={Link}
-                                    to={{
-                                        pathname: "/create-office",
-                                        state: {
-                                            data: {
-                                                region: region.name,
-                                                regionID: region.region_id,
-                                                portfolioID: portfolioId,
-                                                portfolioTag: tag,
-                                            }
-                                        }
-                                    }}
-                                >
-                                    Add Office
-                                </Button>
+                                <AddOffice
+                                    accountID={user.uid}
+                                    portfolioID={portfolioId}
+                                    regionID={region.region_id}
+                                    />
                                 <Button
                                     className="Button mr-1 mt-1"
                                     style={{
@@ -219,6 +205,66 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
         }
     }
 
+    function Body(){
+        if(dataRetrieved){
+            return(
+                <Container>
+                    <AlertViewer alerts={alerts} />
+                    <Row style={{ paddingTop: 10, paddingBottom: 10 }}>
+                        <Col>
+                            <h1 className="MediumText" style={{ color: COLORS.darkText, textAlign: "left" }}>
+                                {tag}
+                            </h1>
+                        </Col>
+                        <Col xs="auto">
+                            <AddRegion
+                                accountID={user.uid}
+                                portfolioID={portfolioId}
+                            />
+                            <Button
+                                className="Button mr-1 mt-1"
+                                style={{
+                                    color: COLORS.darkText,
+                                    backgroundColor: COLORS.highlight,
+                                    borderColor: COLORS.highlight,
+                                    float: 'right',
+                                }}
+                            // as={Link} to="/create-portfolio"
+                            >
+                                Visualise
+                        </Button>
+
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Card
+                            style={{
+                                padding: 21,
+                                marginBottom: 20,
+                                width: '100%',
+                                textAlign: "left",
+                            }}
+                        >
+                            This is a paragraph about the portfolio<br />
+                        Status: {status}<br />
+                        Portfolio ID: {portfolioId}<br />
+                        Number of regions: {numRegions}<br />
+                        </Card>
+                    </Row>
+                    <Row>
+                        <Accordion defaultActiveKey="0" style={{ width: '100%' }}>
+                            <RegionListItems regions={regions} />
+                        </Accordion>
+                    </Row>
+                </Container>
+            )
+        }else{
+            return(
+                <></>
+            )
+        }
+    }
+
     return (
         <Container
             fluid
@@ -227,63 +273,7 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                 padding: 0,
                 backgroundColor: COLORS.background,
             }}>
-            <Container>
-                <AlertViewer alerts={alerts}/>
-                <Row style={{paddingTop: 10, paddingBottom: 10}}>
-                    <Col>
-                        <h1 className="MediumText" style={{color: COLORS.darkText, textAlign: "left"}}>
-                            {tag}
-                        </h1>
-                    </Col>
-                    <Col xs="auto">
-                        <Button
-                            className="Button mr-1 mt-1"
-                            style={{
-                                color: COLORS.darkText,
-                                backgroundColor: COLORS.highlight,
-                                borderColor: COLORS.highlight,
-                                float: 'right',
-                            }}
-                            // as={Link} to="/create-portfolio"
-                        >
-                            Add Region
-                        </Button>
-                        <Button
-                            className="Button mr-1 mt-1"
-                            style={{
-                                color: COLORS.darkText,
-                                backgroundColor: COLORS.highlight,
-                                borderColor: COLORS.highlight,
-                                float: 'right',
-                            }}
-                            // as={Link} to="/create-portfolio"
-                        >
-                            Visualise
-                        </Button>
-
-                    </Col>
-                </Row>
-                <Row>
-                    <Card
-                        style={{
-                            padding: 21,
-                            marginBottom: 20,
-                            width: '100%',
-                            textAlign: "left",
-                        }}
-                    >
-                        This is a paragraph about the portfolio<br/>
-                        Status: {status}<br/>
-                        Portfolio ID: {portfolioId}<br/>
-                        Number of regions: {num_regions}<br/>
-                    </Card>
-                </Row>
-                <Row>
-                    <Accordion defaultActiveKey="0" style={{width: '100%'}}>
-                        <RegionListItems regions={regions}/>
-                    </Accordion>
-                </Row>
-            </Container>
+            <Body/>
         </Container>
     )
 }
