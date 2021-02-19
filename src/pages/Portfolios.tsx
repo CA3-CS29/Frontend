@@ -10,6 +10,7 @@ import firebase from "firebase";
 import {AlertInfo, AlertViewer} from "./Alerts";
 import './Portfolios.css';
 import Pluralize from 'pluralize';
+import {Portfolio} from "../Interfaces";
 
 export default function Portfolios() {
     const user = useAuthStore(state => state.user) as firebase.User;
@@ -34,50 +35,45 @@ export default function Portfolios() {
             }));
     }, [getAllByTagURL])
 
-    function PortfolioListItems(props: { portfolios: any }) {
+    function PortfolioListItems(props: { portfolios: Portfolio[] }) {
         const portfolios = props.portfolios;
 
         if (portfolios.length !== 0) {
-            return portfolios.map((portfolio: {
-                    tag: string;
-                    num_regions: number;
-                    portfolio_id: string;
-                }) => (
-                    <ListGroup
-                        key={portfolio.portfolio_id}
-                        className="mb-1"
-                        style={{
-                            padding: 5,
-                            width: '100%'
-                        }}
-                    >
-                        <ListGroup.Item
-                            style={{
-                                color: COLORS.darkText,
-                                backgroundColor: "#F7F7F7",
-                                borderColor: "#F7F7F7"
-                            }}
-                            as={Link} to={"portfolio/" + portfolio.tag}>
-                            <Row>
-                                <Col style={{textAlign: 'left'}}>
-                                    {portfolio.tag}
-                                </Col>
-                                <Col style={{textAlign: 'right'}}>
-                                    <Badge
-                                        style={{
-                                            fontFamily: "Lato",
-                                            color: COLORS.darkText,
-                                            backgroundColor: COLORS.secondaryAccent,
-                                        }}
-                                    >
-                                        {Pluralize("Region", portfolio.num_regions, true)}
-                                    </Badge>
-                                </Col>
-                            </Row>
-                        </ListGroup.Item>
-                    </ListGroup>
+            return <>{
+                portfolios.map((portfolio: Portfolio) => (
+                        <ListGroup
+                            key={portfolio.portfolio_id}
+                            className="mb-1"
+                            style={{padding: 5, width: '100%'}}
+                        >
+                            <ListGroup.Item
+                                style={{
+                                    color: COLORS.darkText,
+                                    backgroundColor: "#F7F7F7",
+                                    borderColor: "#F7F7F7"
+                                }}
+                                as={Link} to={"portfolio/" + portfolio.tag}>
+                                <Row>
+                                    <Col style={{textAlign: 'left'}}>
+                                        {portfolio.tag}
+                                    </Col>
+                                    <Col style={{textAlign: 'right'}}>
+                                        <Badge
+                                            style={{
+                                                fontFamily: "Lato",
+                                                color: COLORS.darkText,
+                                                backgroundColor: COLORS.secondaryAccent,
+                                            }}
+                                        >
+                                            {Pluralize("Region", portfolio.num_regions, true)}
+                                        </Badge>
+                                    </Col>
+                                </Row>
+                            </ListGroup.Item>
+                        </ListGroup>
+                    )
                 )
-            )
+            }</>
         } else {
             return (
                 <Col>

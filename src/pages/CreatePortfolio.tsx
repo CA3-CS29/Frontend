@@ -85,10 +85,12 @@ export default function CreatePortfolio() {
                     created_on: timestamp.toDateString(),
                     updated_on: timestamp.toDateString(),
                 })
-                .then(function (response) {
+                .then(response => {
+                    const successAlert: AlertInfo = {variant: "success", text: `Portfolio ${portfolioTag} created`};
+                    setAlerts(oldAlerts => [...oldAlerts, successAlert]);
                     console.log(response);
                 })
-                .catch(function (error) {
+                .catch(error => {
                     const errorAlert: AlertInfo = {variant: "danger", text: error.toString()};
                     setAlerts(oldAlerts => [...oldAlerts, errorAlert]);
                     console.log(error);
@@ -152,10 +154,15 @@ export default function CreatePortfolio() {
                     "user_id": user?.uid,
                     "offices": []
                 })
-                .then(function (response) {
+                .then(response => {
+                    const successAlert: AlertInfo = {
+                        variant: "success",
+                        text: `Region ${regionTag} added to portfolio ${portfolioTag}`
+                    };
+                    setAlerts(oldAlerts => [...oldAlerts, successAlert]);
                     console.log(response);
                 })
-                .catch(function (error) {
+                .catch(error => {
                     const errorAlert: AlertInfo = {variant: "danger", text: error.toString()};
                     setAlerts(oldAlerts => [...oldAlerts, errorAlert]);
                     console.log(error);
@@ -217,10 +224,15 @@ export default function CreatePortfolio() {
                     user_id: user?.uid,
                     name: officeTag,
                 })
-                .then(function (response) {
+                .then(response => {
+                    const successAlert: AlertInfo = {
+                        variant: "success",
+                        text: `Office ${officeTag} added to region ${regionTag}`
+                    };
+                    setAlerts(oldAlerts => [...oldAlerts, successAlert]);
                     console.log(response);
                 })
-                .catch(function (error) {
+                .catch(error => {
                     //get existing region_id?
                     const errorAlert: AlertInfo = {variant: "danger", text: error.toString()};
                     setAlerts(oldAlerts => [...oldAlerts, errorAlert]);

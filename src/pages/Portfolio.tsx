@@ -14,34 +14,12 @@ import AddRegion from "./AddRegion";
 import AddOffice from "./AddOffice";
 import {useAuthStore} from "../App";
 import firebase from "firebase";
+import {Entry, Office, Region} from "../Interfaces";
 
 
 export default function Portfolio(props: { match: { params: { tag: string } } }) {
     const user = useAuthStore(state => state.user) as firebase.User;
     const [dataRetrieved, setDataRetrieved] = useState(false);
-
-    interface Entry {
-        entry_id: string,
-        tag: string,
-        consumption: number,
-        source: string,
-        info: string,
-    }
-
-    interface Office {
-        name: string,
-        office_id: string,
-        entries: Entry[],
-    }
-
-    interface Region {
-        region_id: string,
-        portfolio_id: string,
-        user_id: string,
-        name: string,
-        num_offices: number,
-        offices: Office[],
-    }
 
     const {tag} = props.match.params;
     const [status, setStatus] = useState("");
@@ -54,70 +32,83 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
     const getPortfolioURL = ApiEndPoints.getPortfolio + tag + "/" + user?.uid;
 
     useEffect(() => {
+        console.log("Sending request:", getPortfolioURL);
         axios.get(getPortfolioURL)
             .then((response) => {
                 const data = response.data;
-                console.log("Got Data");
-                console.log(getPortfolioURL);
-                console.table(data);
+                console.log(data);
 
                 setStatus(data.status);
-                setPortfolioId(data.payload.portfolio_id);
-                setNumRegions(data.payload.num_regions);
-                setRegions(data.payload.regions);
+                if (data.payload) {
+                    setPortfolioId(data.payload.portfolio_id);
+                    setNumRegions(data.payload.num_regions);
+                    setRegions(data.payload.regions);
+                } else {
+                    const noPortfolioAlert: AlertInfo = {
+                        variant: "danger",
+                        text: `There is no portfolio named "${tag}"`
+                    };
+                    setAlerts(oldAlerts => [...oldAlerts, noPortfolioAlert]);
+                }
                 setDataRetrieved(true);
             })
             .catch((error) => {
-                const errorAlert: AlertInfo = {variant: "danger", text: error.toString()}
+                const errorAlert: AlertInfo = {variant: "danger", text: error.toString()};
                 setAlerts(oldAlerts => [...oldAlerts, errorAlert]);
                 console.log(error);
             });
-    }, [getPortfolioURL])
+    }, [getPortfolioURL, tag])
 
 
     function RegionListItems(props: { regions: Region[] }) {
         const regions = props.regions;
 
-        const listOfRegions = regions.map((region) =>
-            <Card key={region.region_id}>
-                <Accordion.Toggle as={Card.Header} eventKey="0">
-                    <Row>
-                        <Col style={{textAlign: "left"}}>
-                            <h4>{region.name}</h4>
-                            {region.region_id}
-                        </Col>
-                        <Col>
-                            <div>
-                                <AddOffice
-                                    accountID={user.uid}
-                                    portfolioID={portfolioId}
-                                    regionID={region.region_id}
+        return <>
+            {regions.map((region) =>
+                <Card key={region.region_id}>
+                    <Card.Header style={{paddingTop: 0, paddingBottom: 0}}>
+                        <Row>
+                            <Accordion.Toggle
+                                as={Col}
+                                eventKey="0"
+                                style={{textAlign: "left", paddingTop: 12, paddingBottom: 12}}
+                            >
+                                <h4>{region.name}</h4>
+                                {region.region_id}
+                            </Accordion.Toggle>
+                            <Col xs="auto" style={{paddingTop: 12, paddingBottom: 12}}>
+                                <div>
+                                    <AddOffice
+                                        accountID={user.uid}
+                                        portfolioID={portfolioId}
+                                        regionID={region.region_id}
+                                        setAlerts={setAlerts}
                                     />
-                                <Button
-                                    className="Button mr-1 mt-1"
-                                    style={{
-                                        color: COLORS.darkText,
-                                        backgroundColor: COLORS.highlight,
-                                        borderColor: COLORS.highlight,
-                                        float: 'right',
-                                    }}
-                                >
-                                    Visualise
-                                </Button>
-                            </div>
-                        </Col>
-                    </Row>
-                </Accordion.Toggle>
-                <Accordion.Collapse eventKey="0">
-                    <Card.Body style={{padding: 5}}>
+                                    <Button
+                                        className="Button mr-1 mt-1"
+                                        style={{
+                                            color: COLORS.darkText,
+                                            backgroundColor: COLORS.highlight,
+                                            borderColor: COLORS.highlight,
+                                            float: 'right',
+                                        }}
+                                    >
+                                        Visualise
+                                    </Button>
+                                </div>
+                            </Col>
+                        </Row>
+                    </Card.Header>
+                    <Accordion.Collapse eventKey="0">
+                        <Card.Body style={{padding: 5}}>
 
-                        <OfficeListItems region={region}/>
+                            <OfficeListItems region={region}/>
 
-                    </Card.Body>
-                </Accordion.Collapse>
-            </Card>
-        )
-        return <div>{listOfRegions}</div>
+                        </Card.Body>
+                    </Accordion.Collapse>
+                </Card>
+            )}
+        </>
     }
 
     function OfficeListItems(props: { region: Region }) {
@@ -150,15 +141,7 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                                     as={Link}
                                     to={{
                                         pathname: "/visualise-office",
-                                        state: {
-                                            data: {
-                                                region: region.name,
-                                                regionID: region.region_id,
-                                                portfolioID: portfolioId,
-                                                portfolioTag: tag,
-                                                office: office,
-                                            }
-                                        }
+                                        state: { office: office }
                                     }}
                                 >
                                     Visualise
@@ -169,6 +152,7 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                                     regionID={region.region_id}
                                     officeID={office.office_id}
                                     officeTag={office.name}
+                                    setAlerts={setAlerts}
                                 />
                             </Col>
                         </Row>
@@ -205,14 +189,14 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
         }
     }
 
-    function Body(){
-        if(dataRetrieved){
-            return(
+    function Body() {
+        if (dataRetrieved) {
+            return (
                 <Container>
-                    <AlertViewer alerts={alerts} />
-                    <Row style={{ paddingTop: 10, paddingBottom: 10 }}>
+                    <AlertViewer alerts={alerts}/>
+                    <Row style={{paddingTop: 10, paddingBottom: 10}}>
                         <Col>
-                            <h1 className="MediumText" style={{ color: COLORS.darkText, textAlign: "left" }}>
+                            <h1 className="MediumText" style={{color: COLORS.darkText, textAlign: "left"}}>
                                 {tag}
                             </h1>
                         </Col>
@@ -220,6 +204,7 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                             <AddRegion
                                 accountID={user.uid}
                                 portfolioID={portfolioId}
+                                setAlerts={setAlerts}
                             />
                             <Button
                                 className="Button mr-1 mt-1"
@@ -229,10 +214,10 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                                     borderColor: COLORS.highlight,
                                     float: 'right',
                                 }}
-                            // as={Link} to="/create-portfolio"
+                                // as={Link} to="/create-portfolio"
                             >
                                 Visualise
-                        </Button>
+                            </Button>
 
                         </Col>
                     </Row>
@@ -245,21 +230,21 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                                 textAlign: "left",
                             }}
                         >
-                            This is a paragraph about the portfolio<br />
-                        Status: {status}<br />
-                        Portfolio ID: {portfolioId}<br />
-                        Number of regions: {numRegions}<br />
+                            This is a paragraph about the portfolio<br/>
+                            Status: {status}<br/>
+                            Portfolio ID: {portfolioId}<br/>
+                            Number of regions: {numRegions}<br/>
                         </Card>
                     </Row>
                     <Row>
-                        <Accordion defaultActiveKey="0" style={{ width: '100%' }}>
-                            <RegionListItems regions={regions} />
+                        <Accordion defaultActiveKey="0" style={{width: '100%'}}>
+                            <RegionListItems regions={regions}/>
                         </Accordion>
                     </Row>
                 </Container>
             )
-        }else{
-            return(
+        } else {
+            return (
                 <></>
             )
         }
