@@ -6,13 +6,20 @@ import axios from 'axios'
 import {Button, Form, Modal} from 'react-bootstrap'
 import {ApiEndPoints} from "../ApiEndpoints";
 import {v4 as uuidv4} from 'uuid';
+import {AlertInfo} from "./Alerts";
 
 
 const entry_id = uuidv4();
 
 export default function AddEntry(
-    props: { accountID: string, portfolioID: string, regionID: string, officeID: string, officeTag: string }
-) {
+    props: {
+        accountID: string,
+        portfolioID: string,
+        regionID: string,
+        officeID: string,
+        officeTag: string,
+        setAlerts: React.Dispatch<React.SetStateAction<AlertInfo[]>>
+    }) {
     const [show, setShow] = useState(false);
     const [entryTag, setEntryTag] = useState<string>("");
     const [consumption, setConsumption] = useState<number>(0);
@@ -24,7 +31,11 @@ export default function AddEntry(
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
-        const URL = ApiEndPoints.createEntry + props.accountID + "/" + props.portfolioID + "/" + props.regionID + "/" + props.officeID;
+        const URL = ApiEndPoints.createEntry +
+            props.accountID +
+            "/" + props.portfolioID +
+            "/" + props.regionID +
+            "/" + props.officeID;
         console.log(URL);
         axios.post(URL, {
                 "entry_id": entry_id,
@@ -45,9 +56,13 @@ export default function AddEntry(
             }
         )
             .then(function (response) {
+                const successAlert: AlertInfo = {variant: "success", text: `${entryTag} added to office`}
+                props.setAlerts(oldAlerts => [...oldAlerts, successAlert]);
                 console.log(response);
             })
             .catch(function (error) {
+                const errorAlert: AlertInfo = {variant: "danger", text: error.toString()}
+                props.setAlerts(oldAlerts => [...oldAlerts, errorAlert]);
                 console.log(error);
             })
         handleClose()
@@ -73,6 +88,7 @@ export default function AddEntry(
                 onHide={handleClose}
                 backdrop="static"
                 keyboard={false}
+                animation={false}
             >
                 <Modal.Header closeButton>
                     <Modal.Title>Add Entry</Modal.Title>
@@ -94,18 +110,18 @@ export default function AddEntry(
                                     placeholder="Entry name"
                                     value={entryTag}
                                     onChange={event => setEntryTag(event.target.value)}
+                                    required
                                 />
                                 <Form.Label>Consumption (kgCO2e)</Form.Label>
                                 <Form.Control
-                                    autoFocus
                                     type="number"
+                                    step="any"
                                     placeholder=""
-                                    // value={consumption}
                                     onChange={event => setConsumption(Number(event.target.value))}
+                                    required
                                 />
                                 <Form.Label>Further Info</Form.Label>
                                 <Form.Control
-                                    autoFocus
                                     type="text"
                                     placeholder=""
                                     value={info}

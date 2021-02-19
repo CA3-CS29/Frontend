@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
-import { COLORS } from '../colors';
+import React, {useState} from 'react';
+import {COLORS} from '../colors';
 import '../App.css';
 import './Portfolio.css';
 import axios from 'axios'
-import { Button, Form, Modal } from 'react-bootstrap'
-import { ApiEndPoints } from "../ApiEndpoints";
-import { v4 as uuidv4 } from 'uuid';
+import {Button, Form, Modal} from 'react-bootstrap'
+import {ApiEndPoints} from "../ApiEndpoints";
+import {v4 as uuidv4} from 'uuid';
+import {AlertInfo} from "./Alerts";
 
 
 const region_id = uuidv4();
 
 export default function AddRegion(
-    props: { accountID: string, portfolioID: string}
+    props: { accountID: string, portfolioID: string, setAlerts: React.Dispatch<React.SetStateAction<AlertInfo[]>> }
 ) {
     const [show, setShow] = useState(false);
     const [regionTag, setRegionTag] = useState<string>("");
@@ -21,21 +22,23 @@ export default function AddRegion(
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
-
         const URL = ApiEndPoints.createRegion + props.accountID + "/" + props.portfolioID + "/" + props.accountID;
         axios.post(URL, {
-            "region_id": region_id,
-            "portfolio_id": props.portfolioID,
-            "user_id": props.accountID,
-            "name": regionTag,
-            "num_offices": 0,
-            "offices": []
-        }
-        )
+            region_id: region_id,
+            portfolio_id: props.portfolioID,
+            user_id: props.accountID,
+            name: regionTag,
+            num_offices: 0,
+            offices: []
+        })
             .then(function (response) {
+                const successAlert: AlertInfo = {variant: "success", text: `${regionTag} added to portfolio`}
+                props.setAlerts(oldAlerts => [...oldAlerts, successAlert]);
                 console.log(response);
             })
             .catch(function (error) {
+                const errorAlert: AlertInfo = {variant: "danger", text: error.toString()}
+                props.setAlerts(oldAlerts => [...oldAlerts, errorAlert]);
                 console.log(error);
             })
         handleClose()
@@ -60,6 +63,7 @@ export default function AddRegion(
                 onHide={handleClose}
                 backdrop="static"
                 keyboard={false}
+                animation={false}
             >
                 <Modal.Header closeButton>
                     <Modal.Title>Add Region</Modal.Title>
@@ -82,7 +86,7 @@ export default function AddRegion(
                                     value={regionTag}
                                     onChange={event => setRegionTag(event.target.value)}
                                 />
-                                
+
                                 <Form.Text className="text-muted">
                                 </Form.Text>
                             </Form.Group>
@@ -99,5 +103,5 @@ export default function AddRegion(
                 </Modal.Footer>
             </Modal>
         </>
-    );
+    )
 }

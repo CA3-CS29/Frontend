@@ -8,20 +8,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import BarChart from "../charts/BarChart";
 import BubbleChart from "../charts/BubbleChart";
+import {Office} from "../Interfaces";
 
-export default function VisualiseOffice(
-    props: {
-        location: {
-            state: {
-                region: string,
-                regionID: string,
-                portfolio: string,
-                portfolioID: string,
-                office: string,
-                officeID: string,
-            }
-        }
-    }) {
+export default function VisualiseOffice(props: { location: { state: { office: Office } } }) {
     console.log(props);
 
     const entries = [
