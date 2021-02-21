@@ -27,18 +27,6 @@ export default function HeaderLoggedIn(props: { logoText: string }) {
                         color: COLORS.darkText,
                         backgroundColor: COLORS.highlight,
                         borderColor: COLORS.highlight,
-
-                    }}
-                    as={Link} to="/create-portfolio"
-                >
-                    Create Portfolio
-                </Button>
-                <Button
-                    className="Button mr-1"
-                    style={{
-                        color: COLORS.darkText,
-                        backgroundColor: COLORS.highlight,
-                        borderColor: COLORS.highlight,
                     }}
                     as={Link} to="/account"
                 >
