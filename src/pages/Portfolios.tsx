@@ -102,8 +102,8 @@ export default function Portfolios() {
                                 className="Button mr-1"
                                 style={{
                                     color: COLORS.darkText,
-                                    backgroundColor: COLORS.highlight,
-                                    borderColor: COLORS.highlight,
+                                    backgroundColor: "#e5e4df",
+                                    borderColor: "#e5e4df",
 
                                 }}
                                 as={Link} to="/create-portfolio"

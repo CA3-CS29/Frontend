@@ -88,8 +88,8 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                                         className="Button mr-1 mt-1"
                                         style={{
                                             color: COLORS.darkText,
-                                            backgroundColor: COLORS.highlight,
-                                            borderColor: COLORS.highlight,
+                                            backgroundColor: "#ccf9ce",
+                                            borderColor: "#ccf9ce",
                                             float: 'right',
                                         }}
                                     >
@@ -130,12 +130,20 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                                 </h5>
                             </Accordion.Toggle>
                             <Col xs="auto" style={{paddingTop: 12}}>
+                                <AddEntry
+                                    accountID={user.uid}
+                                    portfolioID={portfolioId}
+                                    regionID={region.region_id}
+                                    officeID={office.office_id}
+                                    officeTag={office.name}
+                                    setAlerts={setAlerts}
+                                />
                                 <Button
                                     className="Button mr-1"
                                     style={{
                                         color: COLORS.darkText,
-                                        backgroundColor: COLORS.highlight,
-                                        borderColor: COLORS.highlight,
+                                        backgroundColor: "#ccf9ce",
+                                        borderColor: "#ccf9ce",
                                         float: "right",
                                     }}
                                     as={Link}
@@ -146,14 +154,7 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                                 >
                                     Visualise
                                 </Button>
-                                <AddEntry
-                                    accountID={user.uid}
-                                    portfolioID={portfolioId}
-                                    regionID={region.region_id}
-                                    officeID={office.office_id}
-                                    officeTag={office.name}
-                                    setAlerts={setAlerts}
-                                />
+                                
                             </Col>
                         </Row>
                         <Accordion.Collapse eventKey="0">
@@ -210,8 +211,8 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                                 className="Button mr-1 mt-1"
                                 style={{
                                     color: COLORS.darkText,
-                                    backgroundColor: COLORS.highlight,
-                                    borderColor: COLORS.highlight,
+                                    backgroundColor: "#ccf9ce",
+                                    borderColor: "#ccf9ce",
                                     float: 'right',
                                 }}
                                 // as={Link} to="/create-portfolio"

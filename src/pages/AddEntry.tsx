@@ -74,9 +74,8 @@ export default function AddEntry(
                 className="Button mr-1"
                 style={{
                     color: COLORS.darkText,
-                    backgroundColor: COLORS.highlight,
-                    borderColor: COLORS.highlight,
-                    float: "right",
+                    backgroundColor: "#e5e4df",
+                    borderColor: "#e5e4df",
                 }}
                 onClick={handleShow}
             >
