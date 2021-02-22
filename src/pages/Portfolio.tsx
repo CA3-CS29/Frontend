@@ -270,6 +270,7 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
             fluid
             className="Landing"
             style={{
+                overflowY: 'scroll',
                 padding: 0,
                 backgroundColor: COLORS.background,
             }}>
