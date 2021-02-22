@@ -3,7 +3,7 @@ export interface Entry {
     tag: string,
     consumption: number,
     source: string,
-    info: string,
+    further_info: string,
 }
 
 export interface Office {

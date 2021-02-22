@@ -5,7 +5,7 @@ import './Portfolio.css';
 import {Link} from 'react-router-dom';
 import axios from 'axios'
 import {ApiEndPoints} from "../ApiEndpoints";
-import {Accordion, Button, Card, Col, Container, ListGroup, Row} from 'react-bootstrap'
+import {Accordion, Button, Card, Col, Container, ListGroup, Row, Table} from 'react-bootstrap'
 import {AlertInfo, AlertViewer} from "./Alerts";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -76,27 +76,29 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                                 <h4>{region.name}</h4>
                                 {region.region_id}
                             </Accordion.Toggle>
-                            <Col xs="auto" style={{paddingTop: 12, paddingBottom: 12}}>
-                                <div>
-                                    <AddOffice
-                                        accountID={user.uid}
-                                        portfolioID={portfolioId}
-                                        regionID={region.region_id}
-                                        setAlerts={setAlerts}
-                                    />
-                                    <Button
-                                        className="Button mr-1 mt-1"
-                                        style={{
-                                            color: COLORS.darkText,
-                                            backgroundColor: "#ccf9ce",
-                                            borderColor: "#ccf9ce",
-                                            float: 'right',
-                                        }}
-                                    >
-                                        Visualise
-                                    </Button>
-                                </div>
-                            </Col>
+                            <Accordion.Collapse eventKey={region.region_id}>
+                                <Col xs="auto" style={{paddingTop: 12, paddingBottom: 12}}>
+                                    <div>
+                                        <AddOffice
+                                            accountID={user.uid}
+                                            portfolioID={portfolioId}
+                                            regionID={region.region_id}
+                                            setAlerts={setAlerts}
+                                        />
+                                        <Button
+                                            className="Button mr-1 mt-1"
+                                            style={{
+                                                color: COLORS.darkText,
+                                                backgroundColor: "#ccf9ce",
+                                                borderColor: "#ccf9ce",
+                                                float: 'right',
+                                            }}
+                                        >
+                                            Visualise
+                                        </Button>
+                                    </div>
+                                </Col>
+                            </Accordion.Collapse>
                         </Row>
                     </Card.Header>
                     <Accordion.Collapse eventKey={region.region_id}>
@@ -118,46 +120,51 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
         if (offices) {
             const mappedOffices = offices.map((office: Office) =>
                 <ListGroup.Item key={office.office_id} style={{paddingTop: 0}}>
-                    <Row>
-                        <Accordion.Toggle
-                            as={Col}
-                            eventKey={office.office_id}
-                            style={{paddingTop: 12}}
-                        >
+                    <Accordion.Toggle
+                        as={Row}
+                        eventKey={office.office_id}
+                        style={{paddingTop: 12}}
+                    >
+                        <Col>
                             <h5 style={{textAlign: "left"}}>
                                 {office.name}
                             </h5>
-                        </Accordion.Toggle>
-                        <Col xs="auto" style={{paddingTop: 12}}>
-                            <AddEntry
-                                accountID={user.uid}
-                                portfolioID={portfolioId}
-                                regionID={region.region_id}
-                                officeID={office.office_id}
-                                officeTag={office.name}
-                                setAlerts={setAlerts}
-                            />
-                            <Button
-                                className="Button mr-1"
-                                style={{
-                                    color: COLORS.darkText,
-                                    backgroundColor: "#ccf9ce",
-                                    borderColor: "#ccf9ce",
-                                    float: "right",
-                                }}
-                                as={Link}
-                                to={{
-                                    pathname: "/visualise-office",
-                                    state: {office: office}
-                                }}
-                            >
-                                Visualise
-                            </Button>
-
                         </Col>
-                    </Row>
+                        <Accordion.Collapse eventKey={office.office_id}>
+                            <Col xs="auto">
+                                <AddEntry
+                                    accountID={user.uid}
+                                    portfolioID={portfolioId}
+                                    regionID={region.region_id}
+                                    officeID={office.office_id}
+                                    officeTag={office.name}
+                                    setAlerts={setAlerts}
+                                />
+                                <Button
+                                    className="Button mr-1"
+                                    style={{
+                                        color: COLORS.darkText,
+                                        backgroundColor: "#ccf9ce",
+                                        borderColor: "#ccf9ce",
+                                        float: "right",
+                                    }}
+                                    as={Link}
+                                    to={{
+                                        pathname: "/visualise-office",
+                                        state: {office: office}
+                                    }}
+                                >
+                                    Visualise
+                                </Button>
+                            </Col>
+                        </Accordion.Collapse>
+                    </Accordion.Toggle>
                     <Accordion.Collapse eventKey={office.office_id}>
-                        <EntryListItems office={office}/>
+                        <>
+                            <hr/>
+                            <EntryListItems office={office}/>
+
+                        </>
                     </Accordion.Collapse>
                 </ListGroup.Item>
             );
@@ -170,17 +177,28 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
     function EntryListItems(props: { office: Office }) {
         if (props.office.entries && props.office.entries.length > 0) {
             const mappedEntries = props.office.entries.map((entry: Entry) =>
-                <ListGroup.Item key={entry.entry_id}>
-                    <Row>
-                        <Col>entry.tag</Col>
-                        <Col>entry.consumption</Col>
-                        <Col>entry.source</Col>
-                        <Col>entry.info</Col>
-                        {/*TODO: Update this once we have entries in the database*/}
-                    </Row>
-                </ListGroup.Item>
+                <tr key={entry.entry_id}>
+                    <td>{entry.tag}</td>
+                    <td>{entry.consumption}</td>
+                    <td>{entry.source}</td>
+                    <td>{entry.further_info}</td>
+                </tr>
             );
-            return <ListGroup variant="flush">{mappedEntries}</ListGroup>
+            return (
+                <Table hover borderless responsive>
+                    <thead>
+                    <tr>
+                        <th>Entry</th>
+                        <th>Consumption (kgCO2e)</th>
+                        <th>Source</th>
+                        <th>Further Information</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {mappedEntries}
+                    </tbody>
+                </Table>
+            )
         } else {
             return <div>No entries in this office yet</div>
         }
