@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {Button, Container, Form, Row} from 'react-bootstrap';
 import {COLORS} from '../colors';
 import '../App.css';
+import {useHistory} from 'react-router-dom';
 import axios from "axios";
 import {ApiEndPoints} from "../ApiEndpoints";
 import {v4 as uuidv4} from 'uuid';
@@ -25,6 +26,9 @@ export default function CreatePortfolio() {
     const [displayCreateRegionForm, setDisplayCreateRegionForm] = useState<boolean>(false);
 
     const user = useAuthStore(state => state.user);
+
+    let history = useHistory()
+    
 
     function AddRegionButton(props: { visible: boolean }): JSX.Element | null {
         if (props.visible) {
@@ -230,7 +234,10 @@ export default function CreatePortfolio() {
                         text: `Office ${officeTag} added to region ${regionTag}`
                     };
                     setAlerts(oldAlerts => [...oldAlerts, successAlert]);
+                    history.push("/portfolios");
                     console.log(response);
+
+                
                 })
                 .catch(error => {
                     //get existing region_id?
@@ -281,6 +288,8 @@ export default function CreatePortfolio() {
             return null
         }
     }
+
+    
 
     return (
         <Container
