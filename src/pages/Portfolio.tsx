@@ -70,7 +70,7 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                         <Row>
                             <Accordion.Toggle
                                 as={Col}
-                                eventKey="0"
+                                eventKey={region.region_id}
                                 style={{textAlign: "left", paddingTop: 12, paddingBottom: 12}}
                             >
                                 <h4>{region.name}</h4>
@@ -99,11 +99,11 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                             </Col>
                         </Row>
                     </Card.Header>
-                    <Accordion.Collapse eventKey="0">
+                    <Accordion.Collapse eventKey={region.region_id}>
                         <Card.Body style={{padding: 5}}>
-
-                            <OfficeListItems region={region}/>
-
+                            <Accordion style={{width: '100%'}}>
+                                <OfficeListItems region={region}/>
+                            </Accordion>
                         </Card.Body>
                     </Accordion.Collapse>
                 </Card>
@@ -118,51 +118,47 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
         if (offices) {
             const mappedOffices = offices.map((office: Office) =>
                 <ListGroup.Item key={office.office_id} style={{paddingTop: 0}}>
-                    <Accordion defaultActiveKey="0" style={{width: '100%'}}>
-                        <Row>
-                            <Accordion.Toggle
-                                as={Col}
-                                eventKey="0"
-                                style={{paddingTop: 12}}
+                    <Row>
+                        <Accordion.Toggle
+                            as={Col}
+                            eventKey={office.office_id}
+                            style={{paddingTop: 12}}
+                        >
+                            <h5 style={{textAlign: "left"}}>
+                                {office.name}
+                            </h5>
+                        </Accordion.Toggle>
+                        <Col xs="auto" style={{paddingTop: 12}}>
+                            <AddEntry
+                                accountID={user.uid}
+                                portfolioID={portfolioId}
+                                regionID={region.region_id}
+                                officeID={office.office_id}
+                                officeTag={office.name}
+                                setAlerts={setAlerts}
+                            />
+                            <Button
+                                className="Button mr-1"
+                                style={{
+                                    color: COLORS.darkText,
+                                    backgroundColor: "#ccf9ce",
+                                    borderColor: "#ccf9ce",
+                                    float: "right",
+                                }}
+                                as={Link}
+                                to={{
+                                    pathname: "/visualise-office",
+                                    state: {office: office}
+                                }}
                             >
-                                <h5 style={{textAlign: "left"}}>
-                                    {office.name}
-                                </h5>
-                            </Accordion.Toggle>
-                            <Col xs="auto" style={{paddingTop: 12}}>
-                                <AddEntry
-                                    accountID={user.uid}
-                                    portfolioID={portfolioId}
-                                    regionID={region.region_id}
-                                    officeID={office.office_id}
-                                    officeTag={office.name}
-                                    setAlerts={setAlerts}
-                                />
-                                <Button
-                                    className="Button mr-1"
-                                    style={{
-                                        color: COLORS.darkText,
-                                        backgroundColor: "#ccf9ce",
-                                        borderColor: "#ccf9ce",
-                                        float: "right",
-                                    }}
-                                    as={Link}
-                                    to={{
-                                        pathname: "/visualise-office",
-                                        state: { office: office }
-                                    }}
-                                >
-                                    Visualise
-                                </Button>
-                                
-                            </Col>
-                        </Row>
-                        <Accordion.Collapse eventKey="0">
+                                Visualise
+                            </Button>
 
-                            <EntryListItems office={office}/>
-
-                        </Accordion.Collapse>
-                    </Accordion>
+                        </Col>
+                    </Row>
+                    <Accordion.Collapse eventKey={office.office_id}>
+                        <EntryListItems office={office}/>
+                    </Accordion.Collapse>
                 </ListGroup.Item>
             );
             return <ListGroup variant="flush">{mappedOffices}</ListGroup>
@@ -238,7 +234,7 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                         </Card>
                     </Row>
                     <Row>
-                        <Accordion defaultActiveKey="0" style={{width: '100%'}}>
+                        <Accordion style={{width: '100%'}}>
                             <RegionListItems regions={regions}/>
                         </Accordion>
                     </Row>
