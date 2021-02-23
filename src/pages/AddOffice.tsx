@@ -90,6 +90,7 @@ export default function AddOffice(
                                     placeholder="Office name"
                                     value={officeTag}
                                     onChange={event => setOfficeTag(event.target.value)}
+                                    required
                                 />
                                 <Form.Text className="text-muted">
                                 </Form.Text>

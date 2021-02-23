@@ -119,6 +119,7 @@ export default function CreatePortfolio() {
                                 placeholder="Enter portfolio name"
                                 value={portfolioTag}
                                 onChange={event => setPortfolioTag(event.target.value)}
+                                required
                             />
                             <Form.Text className="text-muted">
                             </Form.Text>
@@ -191,6 +192,7 @@ export default function CreatePortfolio() {
                                 placeholder="Enter region name"
                                 value={regionTag}
                                 onChange={event => setRegionTag(event.target.value)}
+                                required
                             />
                             <Form.Text className="text-muted">
                             </Form.Text>
@@ -265,6 +267,7 @@ export default function CreatePortfolio() {
                                 placeholder="Enter office name"
                                 value={officeTag}
                                 onChange={event => setOfficeTag(event.target.value)}
+                                required
                             />
                             <Form.Text className="text-muted">
                             </Form.Text>
