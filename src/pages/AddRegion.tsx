@@ -9,11 +9,11 @@ import {v4 as uuidv4} from 'uuid';
 import {AlertInfo} from "./Alerts";
 
 
-const region_id = uuidv4();
-
 export default function AddRegion(
     props: { accountID: string, portfolioID: string, setAlerts: React.Dispatch<React.SetStateAction<AlertInfo[]>> }
 ) {
+    const [regionID, setRegionID] = useState(uuidv4());
+
     const [show, setShow] = useState(false);
     const [regionTag, setRegionTag] = useState<string>("");
 
@@ -21,10 +21,11 @@ export default function AddRegion(
     const handleShow = () => setShow(true);
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+        setRegionID(uuidv4());
         event.preventDefault();
         const URL = ApiEndPoints.createRegion + props.accountID + "/" + props.portfolioID + "/" + props.accountID;
         axios.post(URL, {
-            region_id: region_id,
+            region_id: regionID,
             portfolio_id: props.portfolioID,
             user_id: props.accountID,
             name: regionTag,
