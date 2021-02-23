@@ -84,6 +84,7 @@ export default function AddRegion(
                                     placeholder="Region name"
                                     value={regionTag}
                                     onChange={event => setRegionTag(event.target.value)}
+                                    required
                                 />
 
                                 <Form.Text className="text-muted">
