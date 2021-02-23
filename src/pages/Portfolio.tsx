@@ -5,8 +5,9 @@ import './Portfolio.css';
 import {Link} from 'react-router-dom';
 import axios from 'axios'
 import {ApiEndPoints} from "../ApiEndpoints";
-import {Accordion, Button, Card, Col, Container, ListGroup, Row, Table} from 'react-bootstrap'
+import {Accordion, Badge, Button, Card, Col, Container, ListGroup, Row, Table} from 'react-bootstrap'
 import {AlertInfo, AlertViewer} from "./Alerts";
+import Pluralize from 'pluralize';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AddEntry from "./AddEntry";
@@ -73,7 +74,23 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                                 eventKey={region.region_id}
                                 style={{textAlign: "left", paddingTop: 12, paddingBottom: 12}}
                             >
-                                <h4>{region.name}</h4>
+                                <Row>
+                                    <h4>
+                                        {region.name}
+                                        <Badge
+                                            style={{
+                                                fontFamily: "Lato",
+                                                color: COLORS.darkText,
+                                                fontWeight: "normal",
+                                                borderStyle: "solid",
+                                                borderWidth: 1,
+                                                marginLeft: 10,
+                                            }}
+                                        >
+                                            {Pluralize("Office", region.num_offices, true)}
+                                        </Badge>
+                                    </h4>
+                                </Row>
                                 {region.region_id}
                             </Accordion.Toggle>
                             <Accordion.Collapse eventKey={region.region_id}>
@@ -126,9 +143,23 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                         style={{paddingTop: 12}}
                     >
                         <Col>
-                            <h5 style={{textAlign: "left"}}>
-                                {office.name}
-                            </h5>
+                            <Row>
+                                <h5 style={{textAlign: "left"}}>
+                                    {office.name}
+                                    <Badge
+                                        style={{
+                                            fontFamily: "Lato",
+                                            color: COLORS.darkText,
+                                            fontWeight: "normal",
+                                            borderStyle: "solid",
+                                            borderWidth: 1,
+                                            marginLeft: 10,
+                                        }}
+                                    >
+                                        {Pluralize("Entry", office.num_entries, true)}
+                                    </Badge>
+                                </h5>
+                            </Row>
                         </Col>
                         <Accordion.Collapse eventKey={office.office_id}>
                             <Col xs="auto">
