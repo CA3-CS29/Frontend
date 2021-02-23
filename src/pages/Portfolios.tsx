@@ -55,18 +55,24 @@ export default function Portfolios() {
                                 as={Link} to={"portfolio/" + portfolio.tag}>
                                 <Row>
                                     <Col style={{textAlign: 'left'}}>
-                                        {portfolio.tag}
+                                        <h5>
+                                            {portfolio.tag}
+                                        </h5>
                                     </Col>
                                     <Col style={{textAlign: 'right'}}>
-                                        <Badge
-                                            style={{
-                                                fontFamily: "Lato",
-                                                color: COLORS.darkText,
-                                                backgroundColor: COLORS.secondaryAccent,
-                                            }}
-                                        >
-                                            {Pluralize("Region", portfolio.num_regions, true)}
-                                        </Badge>
+                                        <h5>
+                                            <Badge
+                                                style={{
+                                                    fontFamily: "Lato",
+                                                    color: COLORS.darkText,
+                                                    fontWeight: "normal",
+                                                    borderStyle: "solid",
+                                                    borderWidth: 1,
+                                                }}
+                                            >
+                                                {Pluralize("Region", portfolio.num_regions, true)}
+                                            </Badge>
+                                        </h5>
                                     </Col>
                                 </Row>
                             </ListGroup.Item>
