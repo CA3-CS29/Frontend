@@ -9,8 +9,6 @@ import {v4 as uuidv4} from 'uuid';
 import {AlertInfo} from "./Alerts";
 
 
-const entry_id = uuidv4();
-
 export default function AddEntry(
     props: {
         accountID: string,
@@ -20,6 +18,8 @@ export default function AddEntry(
         officeTag: string,
         setAlerts: React.Dispatch<React.SetStateAction<AlertInfo[]>>
     }) {
+    const [entryID, setEntryID] = useState(uuidv4());
+
     const [show, setShow] = useState(false);
     const [entryTag, setEntryTag] = useState<string>("");
     const [consumption, setConsumption] = useState<number>(0);
@@ -29,8 +29,8 @@ export default function AddEntry(
     const handleShow = () => setShow(true);
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+        setEntryID(uuidv4());
         event.preventDefault();
-
         const URL = ApiEndPoints.createEntry +
             props.accountID +
             "/" + props.portfolioID +
@@ -38,21 +38,21 @@ export default function AddEntry(
             "/" + props.officeID;
         console.log(URL);
         axios.post(URL, {
-                "entry_id": entry_id,
-                "office_id": props.officeID,
-                "tag": entryTag,
-                "consumption": consumption,
-                "original": 0,
-                "converted": 0,
-                "source": "custom",
-                "units": "",
-                "level1": "",
-                "level2": "",
-                "level3": "",
-                "level4": "",
-                "further_info": info,
-                "percentage": 1.0,
-                "components": [],
+                entry_id: entryID,
+                office_id: props.officeID,
+                tag: entryTag,
+                consumption: consumption,
+                original: 0,
+                converted: 0,
+                source: "custom",
+                units: "",
+                level1: "",
+                level2: "",
+                level3: "",
+                level4: "",
+                further_info: info,
+                percentage: 1.0,
+                components: [],
             }
         )
             .then(function (response) {

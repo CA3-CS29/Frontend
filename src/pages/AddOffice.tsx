@@ -11,8 +11,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {AlertInfo} from "./Alerts";
 
 
-const office_id = uuidv4();
-
 export default function AddOffice(
     props: {
         accountID: string,
@@ -20,6 +18,8 @@ export default function AddOffice(
         regionID: string,
         setAlerts: React.Dispatch<React.SetStateAction<AlertInfo[]>>
     }) {
+    const [officeID, setOfficeID] = useState(uuidv4());
+
     const [show, setShow] = useState(false);
     const [officeTag, setOfficeTag] = useState<string>("");
 
@@ -27,10 +27,11 @@ export default function AddOffice(
     const handleShow = () => setShow(true);
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+        setOfficeID(uuidv4());
         event.preventDefault();
         const URL = ApiEndPoints.createOffice + props.regionID + "/" + props.portfolioID + "/" + props.accountID;
         axios.post(URL, {
-            office_id: office_id,
+            office_id: officeID,
             user_id: props.accountID,
             region_id: props.regionID,
             name: officeTag,
