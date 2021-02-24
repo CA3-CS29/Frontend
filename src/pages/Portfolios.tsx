@@ -139,13 +139,14 @@ export default function Portfolios() {
     return (
         <Container
             fluid
-            className="Landing"
+            className="Landing overflow-auto"
             style={{
                 padding: 0,
                 backgroundColor: COLORS.background,
             }}
         >
             <Body/>
+            <br/>
         </Container>
     )
 }
