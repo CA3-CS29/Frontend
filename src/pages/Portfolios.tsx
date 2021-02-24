@@ -96,7 +96,7 @@ export default function Portfolios() {
         if (portfoliosRetrieved) {
             return (
                 <Container>
-                    <AlertViewer alerts={alerts}/>
+                    <AlertViewer alerts={alerts} setAlerts={setAlerts}/>
                     <Row style={{paddingTop: 10, paddingBottom: 10}}>
                         <Col>
                             <h1 className="MediumText" style={{color: COLORS.darkText, textAlign: "left"}}>

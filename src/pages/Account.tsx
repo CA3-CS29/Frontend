@@ -77,7 +77,7 @@ export default function Account() {
             }}
         >
             <Container>
-                <AlertViewer alerts={alerts}/>
+                <AlertViewer alerts={alerts} setAlerts={setAlerts}/>
                 <Row>
                     <h1 className="bigText"
                         style={{

@@ -89,7 +89,7 @@ export default function HeaderLoggedIn(props: { logoText: string }) {
 
                 </ButtonToolbar>
             </Navbar>
-            <AlertViewer alerts={alerts}/>
+            <AlertViewer alerts={alerts} setAlerts={setAlerts}/>
         </>
     )
 }

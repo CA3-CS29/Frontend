@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import {Alert} from "react-bootstrap";
 
 
@@ -7,10 +7,12 @@ export interface AlertInfo {
     text: string,
 }
 
-export function AlertViewer(props: { alerts: AlertInfo[] }) {
+export function AlertViewer(
+    props: { alerts: AlertInfo[], setAlerts: React.Dispatch<React.SetStateAction<AlertInfo[]>> }
+) {
     if (props.alerts && props.alerts.length > 0) {
         const mappedAlerts = props.alerts.map((alertInfo: AlertInfo, index) =>
-            <DismissibleAlert info={alertInfo} key={index}/>
+            <DismissibleAlert info={alertInfo} setAlerts={props.setAlerts} index={index} key={index}/>
         );
         return <div>{mappedAlerts}</div>
     } else {
@@ -18,16 +20,19 @@ export function AlertViewer(props: { alerts: AlertInfo[] }) {
     }
 }
 
-function DismissibleAlert(props: { info: AlertInfo }) {
-    const [show, setShow] = useState(true);
-
-    if (show) {
-        return (
-            <Alert variant={props.info.variant} onClose={() => setShow(false)} style={{marginTop: 10}} dismissible>
-                {props.info.text}
-            </Alert>
-        )
-    } else {
-        return <></>
-    }
+function DismissibleAlert(
+    props: { info: AlertInfo, setAlerts: React.Dispatch<React.SetStateAction<AlertInfo[]>>, index: number }
+) {
+    return (
+        <Alert
+            variant={props.info.variant}
+            onClose={() => {
+                props.setAlerts(alerts => alerts.filter((alert, index) => index !== props.index));
+            }}
+            style={{marginTop: 10}}
+            dismissible
+        >
+            {props.info.text}
+        </Alert>
+    )
 }

@@ -24,7 +24,7 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
 
     const {tag} = props.match.params;
     const [status, setStatus] = useState("");
-    const [portfolioId, setPortfolioId] = useState("");
+    const [portfolioID, setPortfolioID] = useState("");
     const [numRegions, setNumRegions] = useState(0);
     const [regions, setRegions] = useState([]);
 
@@ -32,8 +32,9 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
 
     const getPortfolioURL = ApiEndPoints.getPortfolio + tag + "/" + user?.uid;
 
-    useEffect(() => {
-        console.log("Sending request:", getPortfolioURL);
+    function getPortfolio() {
+        setDataRetrieved(false);
+        console.log("Getting portfolio:", getPortfolioURL);
         axios.get(getPortfolioURL)
             .then((response) => {
                 const data = response.data;
@@ -41,7 +42,7 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
 
                 setStatus(data.status);
                 if (data.payload) {
-                    setPortfolioId(data.payload.portfolio_id);
+                    setPortfolioID(data.payload.portfolio_id);
                     setNumRegions(data.payload.num_regions);
                     setRegions(data.payload.regions);
                 } else {
@@ -58,12 +59,12 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                 setAlerts(oldAlerts => [...oldAlerts, errorAlert]);
                 console.log(error);
             });
-    }, [getPortfolioURL, tag])
+    }
 
+    useEffect(getPortfolio, [getPortfolioURL, tag])
 
     function RegionListItems(props: { regions: Region[] }) {
         const regions = props.regions;
-
         return <>
             {regions.map((region) =>
                 <Card key={region.region_id}>
@@ -72,48 +73,45 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                             <Accordion.Toggle
                                 as={Col}
                                 eventKey={region.region_id}
-                                style={{textAlign: "left", paddingTop: 12, paddingBottom: 12}}
+                                style={{cursor: "pointer", textAlign: "left", paddingTop: 12, paddingBottom: 12}}
                             >
-                                <Row>
-                                    <h4>
-                                        {region.name}
-                                        <Badge
-                                            style={{
-                                                fontFamily: "Lato",
-                                                color: COLORS.darkText,
-                                                fontWeight: "normal",
-                                                borderStyle: "solid",
-                                                borderWidth: 1,
-                                                marginLeft: 10,
-                                            }}
-                                        >
-                                            {Pluralize("Office", region.num_offices, true)}
-                                        </Badge>
-                                    </h4>
-                                </Row>
+                                <h4>
+                                    {region.name}
+                                    <Badge
+                                        style={{
+                                            fontFamily: "Lato",
+                                            color: COLORS.darkText,
+                                            fontWeight: "normal",
+                                            borderStyle: "solid",
+                                            borderWidth: 1,
+                                            marginLeft: 10,
+                                        }}
+                                    >
+                                        {Pluralize("Office", region.num_offices, true)}
+                                    </Badge>
+                                </h4>
                                 {region.region_id}
                             </Accordion.Toggle>
                             <Accordion.Collapse eventKey={region.region_id}>
                                 <Col xs="auto" style={{paddingTop: 12, paddingBottom: 12}}>
-                                    <div>
-                                        <AddOffice
-                                            accountID={user.uid}
-                                            portfolioID={portfolioId}
-                                            regionID={region.region_id}
-                                            setAlerts={setAlerts}
-                                        />
-                                        <Button
-                                            className="Button mr-1 mt-1"
-                                            style={{
-                                                color: COLORS.darkText,
-                                                backgroundColor: "#ccf9ce",
-                                                borderColor: "#ccf9ce",
-                                                float: 'right',
-                                            }}
-                                        >
-                                            Visualise
-                                        </Button>
-                                    </div>
+                                    <AddOffice
+                                        accountID={user.uid}
+                                        portfolioID={portfolioID}
+                                        regionID={region.region_id}
+                                        setAlerts={setAlerts}
+                                        onSuccess={getPortfolio}
+                                    />
+                                    <Button
+                                        className="Button mr-1 mt-1"
+                                        style={{
+                                            color: COLORS.darkText,
+                                            backgroundColor: "#ccf9ce",
+                                            borderColor: "#ccf9ce",
+                                            float: 'right',
+                                        }}
+                                    >
+                                        Visualise
+                                    </Button>
                                 </Col>
                             </Accordion.Collapse>
                         </Row>
@@ -134,42 +132,41 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
         const offices = props.region.offices;
         const region = props.region;
 
-        if (offices) {
+        if (offices && offices.length > 0) {
             const mappedOffices = offices.map((office: Office) =>
                 <ListGroup.Item key={office.office_id} style={{paddingTop: 0}}>
-                    <Accordion.Toggle
-                        as={Row}
-                        eventKey={office.office_id}
-                        style={{paddingTop: 12}}
-                    >
-                        <Col>
-                            <Row>
-                                <h5 style={{textAlign: "left"}}>
-                                    {office.name}
-                                    <Badge
-                                        style={{
-                                            fontFamily: "Lato",
-                                            color: COLORS.darkText,
-                                            fontWeight: "normal",
-                                            borderStyle: "solid",
-                                            borderWidth: 1,
-                                            marginLeft: 10,
-                                        }}
-                                    >
-                                        {Pluralize("Entry", office.num_entries, true)}
-                                    </Badge>
-                                </h5>
-                            </Row>
-                        </Col>
+                    <Row>
+                        <Accordion.Toggle
+                            as={Col}
+                            eventKey={office.office_id}
+                            style={{cursor: "pointer", textAlign: "left", paddingTop: 12}}
+                        >
+                            <h5 style={{textAlign: "left"}}>
+                                {office.name}
+                                <Badge
+                                    style={{
+                                        fontFamily: "Lato",
+                                        color: COLORS.darkText,
+                                        fontWeight: "normal",
+                                        borderStyle: "solid",
+                                        borderWidth: 1,
+                                        marginLeft: 10,
+                                    }}
+                                >
+                                    {Pluralize("Entry", office.num_entries, true)}
+                                </Badge>
+                            </h5>
+                        </Accordion.Toggle>
                         <Accordion.Collapse eventKey={office.office_id}>
                             <Col xs="auto">
                                 <AddEntry
                                     accountID={user.uid}
-                                    portfolioID={portfolioId}
+                                    portfolioID={portfolioID}
                                     regionID={region.region_id}
                                     officeID={office.office_id}
                                     officeTag={office.name}
                                     setAlerts={setAlerts}
+                                    onSuccess={getPortfolio}
                                 />
                                 <Button
                                     className="Button mr-1"
@@ -189,19 +186,18 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                                 </Button>
                             </Col>
                         </Accordion.Collapse>
-                    </Accordion.Toggle>
+                    </Row>
                     <Accordion.Collapse eventKey={office.office_id}>
                         <>
                             <hr/>
                             <EntryListItems office={office}/>
-
                         </>
                     </Accordion.Collapse>
                 </ListGroup.Item>
             );
             return <ListGroup variant="flush">{mappedOffices}</ListGroup>
         } else {
-            return <div>No office here just yet</div>
+            return <>No office here just yet</>
         }
     }
 
@@ -231,7 +227,7 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                 </Table>
             )
         } else {
-            return <div>No entries in this office yet</div>
+            return <>No entries in this office yet</>
         }
     }
 
@@ -239,7 +235,7 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
         if (dataRetrieved) {
             return (
                 <Container>
-                    <AlertViewer alerts={alerts}/>
+                    <AlertViewer alerts={alerts} setAlerts={setAlerts}/>
                     <Row style={{paddingTop: 10, paddingBottom: 10}}>
                         <Col>
                             <h1 className="MediumText" style={{color: COLORS.darkText, textAlign: "left"}}>
@@ -249,8 +245,9 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                         <Col xs="auto">
                             <AddRegion
                                 accountID={user.uid}
-                                portfolioID={portfolioId}
+                                portfolioID={portfolioID}
                                 setAlerts={setAlerts}
+                                onSuccess={getPortfolio}
                             />
                             <Button
                                 className="Button mr-1 mt-1"
@@ -278,7 +275,7 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                         >
                             This is a paragraph about the portfolio<br/>
                             Status: {status}<br/>
-                            Portfolio ID: {portfolioId}<br/>
+                            Portfolio ID: {portfolioID}<br/>
                             Number of regions: {numRegions}<br/>
                         </Card>
                     </Row>
