@@ -55,7 +55,7 @@ export default function LogIn(props: { user: any; onLogin: (arg0: any) => void; 
                     }}
                 >
                     <Container>
-                        <AlertViewer alerts={alerts}/>
+                        <AlertViewer alerts={alerts} setAlerts={setAlerts}/>
                         <Row>
                             <h1 className="bigText"
                                 style={{

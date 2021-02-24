@@ -16,7 +16,8 @@ export default function AddEntry(
         regionID: string,
         officeID: string,
         officeTag: string,
-        setAlerts: React.Dispatch<React.SetStateAction<AlertInfo[]>>
+        setAlerts: React.Dispatch<React.SetStateAction<AlertInfo[]>>,
+        onSuccess: () => any,
     }) {
     const [entryID, setEntryID] = useState(uuidv4());
 
@@ -59,6 +60,7 @@ export default function AddEntry(
                 const successAlert: AlertInfo = {variant: "success", text: `${entryTag} added to office`}
                 props.setAlerts(oldAlerts => [...oldAlerts, successAlert]);
                 console.log(response);
+                props.onSuccess();
             })
             .catch(function (error) {
                 const errorAlert: AlertInfo = {variant: "danger", text: error.toString()}

@@ -62,7 +62,7 @@ export default function SignUp() {
                     }}
                 >
                     <Container>
-                        <AlertViewer alerts={alerts}/>
+                        <AlertViewer alerts={alerts} setAlerts={setAlerts}/>
                         <Row>
                             <h1 className="bigText"
                                 style={{

@@ -16,7 +16,8 @@ export default function AddOffice(
         accountID: string,
         portfolioID: string,
         regionID: string,
-        setAlerts: React.Dispatch<React.SetStateAction<AlertInfo[]>>
+        setAlerts: React.Dispatch<React.SetStateAction<AlertInfo[]>>,
+        onSuccess: () => any,
     }) {
     const [officeID, setOfficeID] = useState(uuidv4());
 
@@ -42,6 +43,7 @@ export default function AddOffice(
                 const successAlert: AlertInfo = {variant: "success", text: `${officeTag} added to region`}
                 props.setAlerts(oldAlerts => [...oldAlerts, successAlert]);
                 console.log(response);
+                props.onSuccess();
             })
             .catch(function (error) {
                 const errorAlert: AlertInfo = {variant: "danger", text: error.toString()}

@@ -10,8 +10,12 @@ import {AlertInfo} from "./Alerts";
 
 
 export default function AddRegion(
-    props: { accountID: string, portfolioID: string, setAlerts: React.Dispatch<React.SetStateAction<AlertInfo[]>> }
-) {
+    props: {
+        accountID: string,
+        portfolioID: string,
+        setAlerts: React.Dispatch<React.SetStateAction<AlertInfo[]>>,
+        onSuccess: () => any,
+    }) {
     const [regionID, setRegionID] = useState(uuidv4());
 
     const [show, setShow] = useState(false);
@@ -36,6 +40,7 @@ export default function AddRegion(
                 const successAlert: AlertInfo = {variant: "success", text: `${regionTag} added to portfolio`}
                 props.setAlerts(oldAlerts => [...oldAlerts, successAlert]);
                 console.log(response);
+                props.onSuccess();
             })
             .catch(function (error) {
                 const errorAlert: AlertInfo = {variant: "danger", text: error.toString()}
