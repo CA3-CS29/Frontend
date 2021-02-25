@@ -45,7 +45,7 @@ export default function AddEntry(
                 consumption: consumption,
                 original: 0,
                 converted: 0,
-                source: "custom",
+                source: "Custom",
                 units: "",
                 level1: "",
                 level2: "",

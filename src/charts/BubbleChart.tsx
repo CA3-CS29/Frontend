@@ -3,17 +3,10 @@ import * as d3 from 'd3';
 
 import {COLORS} from '../colors';
 import HoverPanel from "./HoverPanel";
+import {Entry} from "../Interfaces";
 
 
-export default function BubbleChart(props: {
-    entries: {
-        tag: string,
-        consumption: number,
-        source: string,
-        info: string
-    }[]
-}) {
-
+export default function BubbleChart(props: { entries: Entry[] }) {
     useEffect(() => {
         const height = 600, width = 800;
 
@@ -46,7 +39,7 @@ export default function BubbleChart(props: {
                     `<div><strong>Entry: </strong>${d.data.tag}</div>` +
                     `<div><strong>Consumption: </strong>${d.data.consumption} kgCO2e</div>` +
                     `<div><strong>Source: </strong>${d.data.source}</div>` +
-                    `<div><strong>Further Info: </strong>${d.data.info}</div>`
+                    `<div><strong>Further Info: </strong>${d.data.further_info}</div>`
                 )
                     .style("visibility", "visible");
             })

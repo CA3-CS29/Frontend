@@ -13,6 +13,7 @@ import CreatePortfolio from './pages/CreatePortfolio';
 import Portfolios from './pages/Portfolios';
 import Portfolio from './pages/Portfolio';
 import VisualiseOffice from './pages/VisualiseOffice';
+import VisualiseRegion from './pages/VisualiseRegion';
 import Account from './pages/Account';
 import firebase from "firebase";
 
@@ -73,6 +74,9 @@ export default function App() {
                             <Route exact path="/create-portfolio" component={CreatePortfolio}/>
                             <Route exact path="/account" component={Account}/>
                             <Route exact path="/visualise-office" component={VisualiseOffice}/>
+                            <Route exact path="/visualise-region" component={VisualiseRegion} />
+
+                            
                         </Switch>
                     </>
                 )
@@ -90,6 +94,7 @@ export default function App() {
                             <Redirect exact from="/create-portfolio" to="/"/>
                             <Redirect exact from="/account" to="/"/>
                             <Redirect exact from="/visualise-office" to="/"/>
+                            <Redirect exact from="/visualise-region" to="/"/>
                         </Switch>
                     </>
                 )

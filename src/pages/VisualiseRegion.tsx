@@ -2,17 +2,19 @@ import React from 'react';
 import {COLORS} from '../colors';
 import '../App.css';
 import './Portfolio.css';
-import {Badge, Container, Row, Tab, Tabs} from 'react-bootstrap'
+import {Container, Row, Tab, Tabs} from 'react-bootstrap'
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import BarChart from "../charts/BarChart";
 import BubbleChart from "../charts/BubbleChart";
-import {Office, Entry} from "../Interfaces";
+import {Office, Region} from "../Interfaces";
 
-export default function VisualiseOffice(props: { location: { state: { office: Office } } }) {
-    const office = props.location.state.office;
-    const entries: Entry[] = office.entries;
+export default function VisualiseRegion(props: { location: { state: { region: Region } } }) {
+    let region: Region = props.location.state.region;
+    let offices: Office[] = region.offices;
+    const entries = offices[0].entries;
+    console.log(offices)
 
     return (
         <Container
@@ -29,26 +31,10 @@ export default function VisualiseOffice(props: { location: { state: { office: Of
                             style={{
                                 color: COLORS.darkText,
                                 textAlign: "left",
-                                marginBottom: 0,
                             }}
                         >
-                            {office.name}
+                            {region.name}
                         </h1>
-                        <h4
-                            style={{
-                                textAlign: "left",
-                            }}
-                        >
-                            <Badge
-                                style={{
-                                    backgroundColor: COLORS.primary,
-                                    color: COLORS.lightText,
-                                    fontWeight: "normal",
-                                }}
-                            >
-                                Office
-                            </Badge>
-                        </h4>
                         <Tabs
                             defaultActiveKey="bar-chart"
                             id="chart-tabs"
