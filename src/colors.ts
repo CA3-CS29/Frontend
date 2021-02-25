@@ -6,6 +6,4 @@ export const COLORS = {
     highlight: '#00CF79',
     darkText: '#25262C',
     secondaryAccent: '#C7C7C7',
-   
-    // your colors
 }

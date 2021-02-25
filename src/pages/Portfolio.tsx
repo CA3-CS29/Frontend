@@ -109,9 +109,14 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                                             borderColor: "#ccf9ce",
                                             float: 'right',
                                         }}
+                                        as={Link}
+                                        to={{
+                                            pathname: "/visualise-region",
+                                            state: { region: region }
+                                        }}
                                     >
                                         Visualise
-                                    </Button>
+                                </Button>
                                 </Col>
                             </Accordion.Collapse>
                         </Row>

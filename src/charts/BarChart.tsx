@@ -3,17 +3,10 @@ import * as d3 from 'd3';
 
 import {COLORS} from '../colors';
 import HoverPanel from "./HoverPanel";
+import {Entry} from "../Interfaces";
 
 
-export default function BarChart(props: {
-    entries: {
-        tag: string,
-        consumption: number,
-        source: string,
-        info: string
-    }[]
-}) {
-
+export default function BarChart(props: { entries: Entry[] }) {
     useEffect(() => {
         const margin = {top: 15, right: 0, bottom: 30, left: 60},
             barHeight = 25,
@@ -55,7 +48,7 @@ export default function BarChart(props: {
                         `<div><strong>Entry: </strong>${d.tag}</div>` +
                         `<div><strong>Consumption: </strong>${d.consumption} kgCO2e</div>` +
                         `<div><strong>Source: </strong>${d.source}</div>` +
-                        `<div><strong>Further Info: </strong>${d.info}</div>`
+                        `<div><strong>Further Info: </strong>${d.further_info}</div>`
                     )
                     .style("visibility", "visible");
             })
