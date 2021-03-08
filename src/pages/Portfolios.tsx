@@ -17,10 +17,12 @@ export default function Portfolios() {
     const [alerts, setAlerts] = useState<AlertInfo[]>([]);
     const [portfolios, setPortfolios] = useState([]);
     const [portfoliosRetrieved, setPortfoliosRetrieved] = useState<boolean>(false);
+    const [hasWaitedForAPI, setHasWaitedForAPI] = useState<boolean>(false);
 
     const getAllByTagURL = ApiEndPoints.getAllPortfolios + user?.uid
 
     useEffect(() => {
+        setTimeout(() => setHasWaitedForAPI(true), 2000);
         axios.get(getAllByTagURL)
             .then(response => {
                 const data = response.data;
@@ -130,9 +132,23 @@ export default function Portfolios() {
                 </Container>
             )
         } else {
-            return (
-                <></>
-            )
+            if(hasWaitedForAPI){
+                return (
+                    <>
+                        <Col>
+                            <h4 className="MediumText" style={{ color: COLORS.darkText, textAlign: "left" }}>
+                                Loading... <br />
+                            If you have any portfolios they will appear soon.
+                        </h4>
+                        </Col>
+                    </>
+                )
+            }else{
+                return(
+                    <>
+                    </>
+                )
+            }
         }
     }
 
