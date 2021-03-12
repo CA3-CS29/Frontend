@@ -24,6 +24,7 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
 
     const {tag} = props.match.params;
     const [status, setStatus] = useState("");
+    const [portfolio, setPortfolio] = useState("");
     const [portfolioID, setPortfolioID] = useState("");
     const [numRegions, setNumRegions] = useState(0);
     const [regions, setRegions] = useState([]);
@@ -42,6 +43,7 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
 
                 setStatus(data.status);
                 if (data.payload) {
+                    setPortfolio(data.payload);
                     setPortfolioID(data.payload.portfolio_id);
                     setNumRegions(data.payload.num_regions);
                     setRegions(data.payload.regions);
@@ -111,12 +113,12 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                                         }}
                                         as={Link}
                                         to={{
-                                            pathname: "/visualise-region",
-                                            state: { region: region }
+                                            pathname: "/visualise",
+                                            state: {data: region}
                                         }}
                                     >
                                         Visualise
-                                </Button>
+                                    </Button>
                                 </Col>
                             </Accordion.Collapse>
                         </Row>
@@ -183,8 +185,8 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                                     }}
                                     as={Link}
                                     to={{
-                                        pathname: "/visualise-office",
-                                        state: {office: office}
+                                        pathname: "/visualise",
+                                        state: {data: office}
                                     }}
                                 >
                                     Visualise
@@ -262,7 +264,11 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                                     borderColor: "#ccf9ce",
                                     float: 'right',
                                 }}
-                                // as={Link} to="/create-portfolio"
+                                as={Link}
+                                to={{
+                                    pathname: "/visualise",
+                                    state: {data: portfolio}
+                                }}
                             >
                                 Visualise
                             </Button>

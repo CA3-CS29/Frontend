@@ -107,7 +107,7 @@ export default function Portfolios() {
                         </Col>
                         <Col xs="auto">
                             <Button
-                                className="Button mr-1"
+                                className="Button mr-1 mt-1"
                                 style={{
                                     color: COLORS.darkText,
                                     backgroundColor: "#e5e4df",
@@ -117,6 +117,22 @@ export default function Portfolios() {
                                 as={Link} to="/create-portfolio"
                             >
                                 Create Portfolio
+                            </Button>
+                            <Button
+                                className="Button mr-1 mt-1"
+                                style={{
+                                    color: COLORS.darkText,
+                                    backgroundColor: "#ccf9ce",
+                                    borderColor: "#ccf9ce",
+                                    float: 'right',
+                                }}
+                                as={Link}
+                                to={{
+                                    pathname: "/visualise",
+                                    state: {data: {name: user.email, portfolios: portfolios}}//
+                                }}
+                            >
+                                Visualise
                             </Button>
                         </Col>
                     </Row>
@@ -132,19 +148,19 @@ export default function Portfolios() {
                 </Container>
             )
         } else {
-            if(hasWaitedForAPI){
+            if (hasWaitedForAPI) {
                 return (
                     <>
                         <Col>
-                            <h4 className="MediumText" style={{ color: COLORS.darkText, textAlign: "left" }}>
-                                Loading... <br />
-                            If you have any portfolios they will appear soon.
-                        </h4>
+                            <h4 className="MediumText" style={{color: COLORS.darkText, textAlign: "left"}}>
+                                Loading... <br/>
+                                If you have any portfolios they will appear soon.
+                            </h4>
                         </Col>
                     </>
                 )
-            }else{
-                return(
+            } else {
+                return (
                     <>
                     </>
                 )

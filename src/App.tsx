@@ -12,10 +12,9 @@ import Signup from './pages/Signup'
 import CreatePortfolio from './pages/CreatePortfolio';
 import Portfolios from './pages/Portfolios';
 import Portfolio from './pages/Portfolio';
-import VisualiseOffice from './pages/VisualiseOffice';
-import VisualiseRegion from './pages/VisualiseRegion';
 import Account from './pages/Account';
 import firebase from "firebase";
+import Visualise from "./pages/Visualise";
 
 
 const firebaseConfig = {
@@ -73,10 +72,7 @@ export default function App() {
                             <Route exact path="/portfolio/:tag" component={Portfolio}/>
                             <Route exact path="/create-portfolio" component={CreatePortfolio}/>
                             <Route exact path="/account" component={Account}/>
-                            <Route exact path="/visualise-office" component={VisualiseOffice}/>
-                            <Route exact path="/visualise-region" component={VisualiseRegion} />
-
-                            
+                            <Route exact path="/visualise" component={Visualise}/>
                         </Switch>
                     </>
                 )
@@ -93,8 +89,7 @@ export default function App() {
                             <Redirect exact from="/portfolio/:tag" to="/"/>
                             <Redirect exact from="/create-portfolio" to="/"/>
                             <Redirect exact from="/account" to="/"/>
-                            <Redirect exact from="/visualise-office" to="/"/>
-                            <Redirect exact from="/visualise-region" to="/"/>
+                            <Redirect exact from="/visualise" to="/"/>
                         </Switch>
                     </>
                 )
