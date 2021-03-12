@@ -52,9 +52,10 @@ export default function Visualise(props: { location: { state: { data: AccountPor
     return (
         <Container
             fluid
-            className="Landing"
             style={{
-                backgroundColor: COLORS.background
+                backgroundColor: COLORS.background,
+                height: "100%",
+                position: "fixed",
             }}
         >
             <h1 className="MediumText"
