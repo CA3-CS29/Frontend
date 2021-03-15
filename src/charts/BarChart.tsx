@@ -8,10 +8,11 @@ import {Entry} from "../Interfaces";
 
 export default function BarChart(props: { entries: Entry[] }) {
     useEffect(() => {
-        const margin = {top: 15, right: 0, bottom: 30, left: 60},
+        const margin = {top: 15, right: 0, bottom: 40, left: 80},
             barHeight = 25,
             height = Math.ceil((props.entries.length + 0.1) * barHeight) + margin.top + margin.bottom,
-            width = d3.max(props.entries, d => d.consumption) as number;
+            width = 800,
+            maxConsumption = d3.max(props.entries, d => d.consumption) as number;
 
         const svg = d3
             .select("svg")
@@ -19,12 +20,13 @@ export default function BarChart(props: { entries: Entry[] }) {
 
         const x = d3
             .scaleLinear()
-            .domain([0, d3.max(props.entries, d => d.consumption) as number]).nice()
+            .domain([0, maxConsumption])
+            .nice()
             .range([margin.left, width - margin.right]);
 
         const y = d3
             .scaleBand<number>()
-            .domain(d3.range(props.entries.length)) // .domain(props.data.map(d => d.tag)) ??
+            .domain(d3.range(props.entries.length))
             .rangeRound([margin.top, height - margin.bottom])
             .padding(0.1);
 
@@ -70,27 +72,28 @@ export default function BarChart(props: { entries: Entry[] }) {
         (svg
             .select("#x-axis")
             .attr("transform", `translate(0, ${height - margin.bottom})`) as any)
-            .call(d3.axisBottom(x).ticks(width / 80, "d"));
+            .call(d3.axisBottom(x).ticks(maxConsumption / 80, "d"));
 
         (svg
             .select("#y-axis")
             .attr("transform", `translate(${margin.left}, 0)`) as any)
-            .call(d3.axisLeft(y).tickFormat(i => props.entries[i].tag).tickSizeOuter(0));
+            .call(d3.axisLeft(y).tickFormat(i => props.entries[i].tag).tickSizeOuter(0))
+            .attr("font-family", "Lato");
 
         svg
             .select("#x-label")
-            .attr("font-family", "sans-serif")
-            .attr("font-size", 12)
+            .attr("font-family", "Lato")
+            .attr("font-size", 14)
             .attr("x", width / 2)
-            .attr("y", height)
+            .attr("y", height - 5)
             .attr("text-anchor", "middle")
             .text("Carbon Emissions (kgCO2e)");
 
         svg
             .select("#y-label")
-            .attr("font-family", "sans-serif")
-            .attr("font-size", 12)
-            .attr("y", 10)
+            .attr("font-family", "Lato")
+            .attr("font-size", 14)
+            .attr("y", 12)
             .attr("transform", `translate(${margin.left - 10},0)`)
             .attr("text-anchor", "end")
             .text("Entries");
@@ -98,8 +101,8 @@ export default function BarChart(props: { entries: Entry[] }) {
     }, [props]);
 
     return (
-        <div>
-            <svg width={800} height={600}>
+        <div style={{height: "70vh", overflow: "auto"}}>
+            <svg width="90vw">
                 <g id="bars"/>
                 <g id="x-axis"/>
                 <g id="y-axis"/>
