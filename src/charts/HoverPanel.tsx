@@ -15,7 +15,7 @@ export default function HoverPanel() {
             borderRadius: "5px",
             boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.4)",
             color: COLORS.darkText,
-            fontFamily: "sans-serif",
+            fontFamily: "Lato",
             textAlign: "left",
         }}/>
 }
