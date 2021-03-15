@@ -2,8 +2,10 @@ import {AccountPortfolios, Office, Portfolio, Region} from "../Interfaces";
 
 export function setOfficeConsumption(office: Office) {
     let consumption = 0;
-    for (const entry of office.entries) {
-        consumption += entry.consumption;
+    if (office.entries) {
+        for (const entry of office.entries) {
+            consumption += entry.consumption;
+        }
     }
     office.consumption = consumption;
     return consumption;
