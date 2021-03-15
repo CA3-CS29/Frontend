@@ -17,7 +17,9 @@ export default function Visualise(props: { location: { state: { data: AccountPor
     function getEntriesFromRegion(region: Region) {
         let entries: Entry[] = [];
         for (const office of region.offices) {
-            entries = [...entries, ...office.entries];
+            if (office.entries) {
+                entries = [...entries, ...office.entries];
+            }
         }
         return entries;
     }

@@ -8,6 +8,7 @@ import {ApiEndPoints} from "../ApiEndpoints";
 import {v4 as uuidv4} from 'uuid';
 import {AlertInfo, AlertViewer} from "./Alerts";
 import {useAuthStore} from "../App";
+import firebase from "firebase";
 
 const portfolio_id = uuidv4();
 const office_id = uuidv4();
@@ -25,7 +26,7 @@ export default function CreatePortfolio() {
     const [displayCreateRegionButton, setDisplayCreateRegionButton] = useState<boolean>(false);
     const [displayCreateRegionForm, setDisplayCreateRegionForm] = useState<boolean>(false);
 
-    const user = useAuthStore(state => state.user);
+    const user = useAuthStore(state => state.user) as firebase.User;
 
     let history = useHistory()
     
@@ -79,10 +80,10 @@ export default function CreatePortfolio() {
             const timestamp = new Date();
 
             axios.post(
-                ApiEndPoints.createPortfolio + user?.uid,
+                ApiEndPoints.createPortfolio + user.uid,
                 {
                     portfolio_id: portfolio_id,
-                    user_id: user?.uid,
+                    user_id: user.uid,
                     tag: portfolioTag,
                     numRegions: 0,
                     regions: [],
@@ -151,13 +152,13 @@ export default function CreatePortfolio() {
             setDisplayCreateRegionButton(false);
             setDisplayCreateRegionForm(false);
             axios.post(
-                ApiEndPoints.createRegion + user?.uid + '/' + portfolio_id + '/' + user?.uid,
+                ApiEndPoints.createRegion + user.uid + '/' + portfolio_id + '/' + user?.uid,
                 {
-                    "name": regionTag,
-                    "region_id": region_id,
-                    "portfolio_id": portfolio_id,
-                    "user_id": user?.uid,
-                    "offices": []
+                    name: regionTag,
+                    region_id: region_id,
+                    portfolio_id: portfolio_id,
+                    user_id: user.uid,
+                    offices: []
                 })
                 .then(response => {
                     const successAlert: AlertInfo = {
@@ -225,10 +226,11 @@ export default function CreatePortfolio() {
                 {
                     region_id: region_id,
                     portfolio_id: portfolio_id,
-                    account_id: user?.uid,
+                    account_id: user.uid,
                     office_id: office_id,
-                    user_id: user?.uid,
+                    user_id: user.uid,
                     name: officeTag,
+                    entries: [],
                 })
                 .then(response => {
                     const successAlert: AlertInfo = {
