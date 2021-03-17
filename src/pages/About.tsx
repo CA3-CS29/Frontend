@@ -49,24 +49,14 @@ export default function About() {
                                 }}
                             >
                                 This app was made as a third year group project by team CS29.
-
+                                <br/>
                                 If you need to get in touch please shoot us an email at
-                                <a href={"mailto: cs29tp@gmail.com."}> cs29tp@gmail.com </a>
-                            </p>
-
-                            <p className="smallText">
-                                If the maintainers of the site will change this page will reflect the change (hopefully)
+                                <a href={"mailto: cs29tp@gmail.com."}> cs29tp@gmail.com</a>.
+                                <br/>
+                                If the maintainers of the site change, this page should reflect that change.
                             </p>
                         </Row>
                     </Container>
-                    <Row
-                        style={{
-                            marginTop: "1em",
-                            display: "flex",
-                            flexWrap: "wrap",
-                        }}
-                    >
-                    </Row>
                 </Col>
                 <Col
                     style={{

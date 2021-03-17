@@ -89,7 +89,6 @@ export default function AddEntry(
                 onHide={handleClose}
                 backdrop="static"
                 keyboard={false}
-                animation={false}
             >
                 <Modal.Header closeButton>
                     <Modal.Title>Add Entry</Modal.Title>

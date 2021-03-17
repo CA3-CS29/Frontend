@@ -60,7 +60,7 @@ export default function Visualise(props: { location: { state: { data: AccountPor
                 position: "fixed",
             }}
         >
-            <h1 className="MediumText"
+            <h1 className="TitleText"
                 style={{
                     color: COLORS.darkText,
                     textAlign: "left",

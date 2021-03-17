@@ -6,11 +6,12 @@ import {useAuthStore} from '../App';
 import axios from "axios";
 import {ApiEndPoints} from "../ApiEndpoints";
 import {AlertInfo, AlertViewer} from "./Alerts";
+import firebase from "firebase";
 
 
 export default function Account() {
 
-    const user = useAuthStore(state => state.user);
+    const user = useAuthStore(state => state.user) as firebase.User;
     const firebase = useAuthStore(state => state.firebase);
 
     const [alerts, setAlerts] = useState<AlertInfo[]>([]);
@@ -53,7 +54,7 @@ export default function Account() {
                     .then(function () {
                         axios({
                             method: 'post',
-                            url: ApiEndPoints.deleteAccount + user?.uid,
+                            url: ApiEndPoints.deleteAccount + user.uid,
                         });
                         const successAlert: AlertInfo = {variant: "success", text: "Account deleted"};
                         setAlerts([...alerts, successAlert]);
@@ -79,44 +80,25 @@ export default function Account() {
             <Container>
                 <AlertViewer alerts={alerts} setAlerts={setAlerts}/>
                 <Row>
-                    <h1 className="bigText"
+                    <h1 className="TitleText"
                         style={{
                             color: COLORS.darkText,
+                            marginTop: 20,
                         }}
                     >
                         Your Account
                     </h1>
                 </Row>
-                <hr/>
                 <Row>
-                    <h2 className="MediumText"
-                        style={{
-                            color: COLORS.darkText,
-                        }}
-                    >
-                        Your Email
-                    </h2>
-                </Row>
-                <Row>
-                    <p
-                        className="SmallText"
+                    <h4
                         style={{
                             color: COLORS.darkText,
                         }}
                     >
                         {emailString}
-                    </p>
+                    </h4>
                 </Row>
                 <hr/>
-                <Row>
-                    <h2 className="MediumText"
-                        style={{
-                            color: COLORS.darkText,
-                        }}
-                    >
-                        Password
-                    </h2>
-                </Row>
                 <Row>
                     <Button
                         className="Button"
@@ -124,33 +106,20 @@ export default function Account() {
                             color: COLORS.darkText,
                             backgroundColor: COLORS.secondaryAccent,
                             borderColor: COLORS.secondaryAccent,
-                            fontFamily: "lato",
                             fontSize: "1.5vw",
                         }}
                         onClick={sendResetEmail}
                     >
                         Change Password
                     </Button>
-                </Row>
-                <hr/>
-                <Row>
-                    <h2 className="MediumText"
-                        style={{
-                            color: COLORS.darkText,
-                        }}
-                    >
-                        Delete Your Account
-                    </h2>
-                </Row>
-                <Row>
                     <Button
                         className="Button"
                         style={{
                             color: COLORS.lightText,
                             backgroundColor: "#D91212",
                             borderColor: "#D91212",
-                            fontFamily: "lato",
                             fontSize: "1.5vw",
+                            marginLeft: 10,
                         }}
                         onClick={deleteAccount}
                     >

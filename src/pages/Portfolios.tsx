@@ -56,7 +56,12 @@ export default function Portfolios() {
                                 }}
                                 as={Link} to={"portfolio/" + portfolio.tag}>
                                 <Row>
-                                    <Col style={{textAlign: 'left'}}>
+                                    <Col
+                                        style={{
+                                            textAlign: 'left',
+                                            color: COLORS.darkText,
+                                        }}
+                                    >
                                         <h5>
                                             {portfolio.tag}
                                         </h5>
@@ -65,7 +70,6 @@ export default function Portfolios() {
                                         <h5>
                                             <Badge
                                                 style={{
-                                                    fontFamily: "Lato",
                                                     color: COLORS.darkText,
                                                     fontWeight: "normal",
                                                     borderStyle: "solid",
@@ -85,7 +89,12 @@ export default function Portfolios() {
         } else {
             return (
                 <Col>
-                    <h4 className="MediumText" style={{color: COLORS.darkText, textAlign: "left"}}>
+                    <h4
+                        style={{
+                            color: COLORS.darkText,
+                            textAlign: "left",
+                        }}
+                    >
                         There are no portfolios on this account, <br/>
                         you can set one up by clicking the Create Portfolio button.
                     </h4>
@@ -101,7 +110,12 @@ export default function Portfolios() {
                     <AlertViewer alerts={alerts} setAlerts={setAlerts}/>
                     <Row style={{paddingTop: 10, paddingBottom: 10}}>
                         <Col>
-                            <h1 className="MediumText" style={{color: COLORS.darkText, textAlign: "left"}}>
+                            <h1 className="TitleText"
+                                style={{
+                                    color: COLORS.darkText,
+                                    textAlign: "left",
+                                }}
+                            >
                                 Your Portfolios
                             </h1>
                         </Col>
@@ -112,7 +126,6 @@ export default function Portfolios() {
                                     color: COLORS.darkText,
                                     backgroundColor: "#e5e4df",
                                     borderColor: "#e5e4df",
-
                                 }}
                                 as={Link} to="/create-portfolio"
                             >
@@ -152,7 +165,12 @@ export default function Portfolios() {
                 return (
                     <>
                         <Col>
-                            <h4 className="MediumText" style={{color: COLORS.darkText, textAlign: "left"}}>
+                            <h4
+                                style={{
+                                    color: COLORS.darkText,
+                                    textAlign: "left",
+                                }}
+                            >
                                 Loading... <br/>
                                 If you have any portfolios they will appear soon.
                             </h4>

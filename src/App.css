@@ -6,51 +6,26 @@
 
 .Header{
   overflow: hidden;
-  align-items: right;
+}
+
+.TitleText{
+    font-family: "Lora", serif !important;
 }
 
 .Landing{
   position:fixed;
   padding:0;
   margin:0;
-
-
   width: 100%;
   height: 100%;
-  
 }
 
-
-.bigText{
-  font-family: "Lora";
-  fontSize: 10vw;
-                        
-                    
-}
-
-.MediumText{
-  font-family: "Lato";
-  fontSize: 8vw;
-                        
-                    
-}
-
-.SmallText{
-  font-family: "Lato";
-  fontSize: 5vw;
-                        
-                    
-}
-
-.Button{   
-    font-family: 'Lato';
-    font-weight: 'lighter';
-    font-size: 25;
-    height: 40;
-    align-items: "right";
-    justify-content: "center";
-    display: "flex";   
-    
+.Button{
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 25vw;
+    justify-content: center;
+    display: flex;
 }
 
 

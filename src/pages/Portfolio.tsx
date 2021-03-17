@@ -23,10 +23,8 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
     const [dataRetrieved, setDataRetrieved] = useState(false);
 
     const {tag} = props.match.params;
-    const [status, setStatus] = useState("");
     const [portfolio, setPortfolio] = useState("");
     const [portfolioID, setPortfolioID] = useState("");
-    const [numRegions, setNumRegions] = useState(0);
     const [regions, setRegions] = useState([]);
 
     const [alerts, setAlerts] = useState<AlertInfo[]>([]);
@@ -41,11 +39,9 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                 const data = response.data;
                 console.log(data);
 
-                setStatus(data.status);
                 if (data.payload) {
                     setPortfolio(data.payload);
                     setPortfolioID(data.payload.portfolio_id);
-                    setNumRegions(data.payload.num_regions);
                     setRegions(data.payload.regions);
                 } else {
                     const noPortfolioAlert: AlertInfo = {
@@ -75,13 +71,18 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                             <Accordion.Toggle
                                 as={Col}
                                 eventKey={region.region_id}
-                                style={{cursor: "pointer", textAlign: "left", paddingTop: 12, paddingBottom: 12}}
+                                style={{
+                                    cursor: "pointer",
+                                    textAlign: "left",
+                                    paddingTop: 12,
+                                    paddingBottom: 12,
+                                    color: COLORS.darkText,
+                                }}
                             >
                                 <h4>
                                     {region.name}
                                     <Badge
                                         style={{
-                                            fontFamily: "Lato",
                                             color: COLORS.darkText,
                                             fontWeight: "normal",
                                             borderStyle: "solid",
@@ -92,7 +93,6 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                                         {Pluralize("Office", region.num_offices, true)}
                                     </Badge>
                                 </h4>
-                                {region.region_id}
                             </Accordion.Toggle>
                             <Accordion.Collapse eventKey={region.region_id}>
                                 <Col xs="auto" style={{paddingTop: 12, paddingBottom: 12}}>
@@ -124,7 +124,12 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                         </Row>
                     </Card.Header>
                     <Accordion.Collapse eventKey={region.region_id}>
-                        <Card.Body style={{padding: 5}}>
+                        <Card.Body style={{
+                            paddingTop: 1,
+                            paddingRight: 5,
+                            paddingBottom: 0,
+                            paddingLeft: 5,
+                            }}>
                             <Accordion style={{width: '100%'}}>
                                 <OfficeListItems region={region}/>
                             </Accordion>
@@ -141,8 +146,8 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
 
         if (offices && offices.length > 0) {
             const mappedOffices = offices.map((office: Office) =>
-                <ListGroup.Item key={office.office_id} style={{paddingTop: 0}}>
-                    <Row>
+                <ListGroup.Item key={office.office_id} style={{paddingTop: 5}}>
+                    <Row className="align-items-end">
                         <Accordion.Toggle
                             as={Col}
                             eventKey={office.office_id}
@@ -152,7 +157,6 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                                 {office.name}
                                 <Badge
                                     style={{
-                                        fontFamily: "Lato",
                                         color: COLORS.darkText,
                                         fontWeight: "normal",
                                         borderStyle: "solid",
@@ -245,7 +249,12 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                     <AlertViewer alerts={alerts} setAlerts={setAlerts}/>
                     <Row style={{paddingTop: 10, paddingBottom: 10}}>
                         <Col>
-                            <h1 className="MediumText" style={{color: COLORS.darkText, textAlign: "left"}}>
+                            <h1 className="TitleText"
+                                style={{
+                                    color: COLORS.darkText,
+                                    textAlign: "left",
+                                }}
+                            >
                                 {tag}
                             </h1>
                         </Col>
@@ -274,21 +283,6 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                             </Button>
 
                         </Col>
-                    </Row>
-                    <Row>
-                        <Card
-                            style={{
-                                padding: 21,
-                                marginBottom: 20,
-                                width: '100%',
-                                textAlign: "left",
-                            }}
-                        >
-                            This is a paragraph about the portfolio<br/>
-                            Status: {status}<br/>
-                            Portfolio ID: {portfolioID}<br/>
-                            Number of regions: {numRegions}<br/>
-                        </Card>
                     </Row>
                     <Row>
                         <Accordion style={{width: '100%'}}>
