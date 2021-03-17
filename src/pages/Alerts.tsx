@@ -1,5 +1,6 @@
 import React from "react";
 import {Alert} from "react-bootstrap";
+import {COLORS} from '../colors';
 
 
 export interface AlertInfo {
@@ -29,7 +30,10 @@ function DismissibleAlert(
             onClose={() => {
                 props.setAlerts(alerts => alerts.filter((alert, index) => index !== props.index));
             }}
-            style={{marginTop: 10}}
+            style={{
+                marginTop: 10,
+                color: COLORS.darkText,
+            }}
             dismissible
         >
             {props.info.text}

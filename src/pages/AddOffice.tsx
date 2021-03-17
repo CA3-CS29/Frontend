@@ -71,7 +71,6 @@ export default function AddOffice(
                 onHide={handleClose}
                 backdrop="static"
                 keyboard={false}
-                animation={false}
             >
                 <Modal.Header closeButton>
                     <Modal.Title>Add Office</Modal.Title>

@@ -68,7 +68,6 @@ export default function AddRegion(
                 onHide={handleClose}
                 backdrop="static"
                 keyboard={false}
-                animation={false}
             >
                 <Modal.Header closeButton>
                     <Modal.Title>Add Region</Modal.Title>

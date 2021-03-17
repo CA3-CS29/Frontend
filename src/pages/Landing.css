@@ -1,12 +1,10 @@
-
-
 .bigText{
-  font-family: "Lora";
+  font-family: "Lora", serif;
   font-size: 5vw;            
 }
 
 .smallText{
-  font-family: "Lora";
+  font-family: "Lora", serif;
   font-weight: 500;
-  font-size: 3vw;            
+  font-size: 3vw;
 }
