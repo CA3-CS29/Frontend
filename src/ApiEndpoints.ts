@@ -1,4 +1,5 @@
 const baseUrl = "https://ca3-api.herokuapp.com/";
+const cs30Url = "http://cs30.herokuapp.com/api/carbon";
 
 export const ApiEndPoints = {
     createAccount: baseUrl + "account/createAccount/",
@@ -10,4 +11,8 @@ export const ApiEndPoints = {
     getAllRegionsForUser: baseUrl + "region/getAllRegionsForUser/",
     createOffice: baseUrl + "office/createOffice/",
     createEntry: baseUrl + "entry/createEntry/",
+
+    getAllCarbonVals: cs30Url,
+    getScopes: cs30Url + "/scope",
+    getItemInfo: cs30Url + "/info",
 };
