@@ -23,9 +23,7 @@
 .Button{
     font-family: 'Lato', sans-serif;
     font-weight: lighter;
-    font-size: 25vw;
     justify-content: center;
-    display: flex;
 }
 
 
