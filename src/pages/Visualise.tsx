@@ -10,6 +10,7 @@ import BarChart from "../charts/BarChart";
 import BubbleChart from "../charts/BubbleChart";
 import {AccountPortfolios, Entry, Office, Portfolio, Region} from "../Interfaces";
 import HierarchicalBubbleChart from "../charts/HierarchicalBubbleChart";
+import StackedBarChart from "../charts/StackedBarChart";
 
 export default function Visualise(props: { location: { state: { data: AccountPortfolios | Portfolio | Region | Office } } }) {
     const data = props.location.state.data;
@@ -101,11 +102,21 @@ export default function Visualise(props: { location: { state: { data: AccountPor
                                     Bar Chart
                                 </Nav.Link>
                             </Nav.Item>
+
+                            {"entries" in data ||
+                            <Nav.Item>
+                                <Nav.Link eventKey="stacked-bar-chart">
+                                    Stacked Bar Chart
+                                </Nav.Link>
+                            </Nav.Item>
+                            }
+
                             <Nav.Item>
                                 <Nav.Link eventKey="bubble-chart">
                                     Bubble Chart
                                 </Nav.Link>
                             </Nav.Item>
+
                             {"entries" in data ||
                             <Nav.Item>
                                 <Nav.Link eventKey="hierarchical-bubble-chart">
@@ -119,9 +130,20 @@ export default function Visualise(props: { location: { state: { data: AccountPor
                         <Tab.Pane eventKey="bar-chart" style={{backgroundColor: COLORS.background}}>
                             <BarChart entries={entries}/>
                         </Tab.Pane>
-                        <Tab.Pane eventKey="bubble-chart" style={{backgroundColor: COLORS.background}}>
-                            <BubbleChart entries={entries} colourProperty={(entry) => entry.office_id}/>
+
+                        {"entries" in data ||
+                        <Tab.Pane eventKey="stacked-bar-chart" style={{backgroundColor: COLORS.background}}>
+                            <StackedBarChart data={data}/>
                         </Tab.Pane>
+                        }
+
+                        <Tab.Pane eventKey="bubble-chart" style={{backgroundColor: COLORS.background}}>
+                            <BubbleChart
+                                entries={entries}
+                                colourProperty={(entry) => "entries" in data ? entry.source : entry.office_id}
+                            />
+                        </Tab.Pane>
+
                         {"entries" in data ||
                         <Tab.Pane eventKey="hierarchical-bubble-chart" style={{backgroundColor: COLORS.background}}>
                             <HierarchicalBubbleChart data={data}/>
