@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import * as d3 from 'd3';
-import HoverPanel from "./HoverPanel";
+import HoverPanel, {updateHoverPanel} from "./HoverPanel";
 import {AccountPortfolios, Entry, Office, Portfolio, Region} from "../Interfaces";
 import {setAccountConsumption, setPortfolioConsumption, setRegionConsumption} from "./SetConsumption";
 import {COLORS} from "../colors";
@@ -59,11 +59,8 @@ export default function HierarchicalBubbleChart(props: { data: AccountPortfolios
                 focus = transitionZoom(event, root)
             })
             .on("mouseover", function () {
-                d3
-                    .select(this)
-                    .style("background", d3.rgb(colour(0)).brighter(0.5).toString());
                 hoverPanel
-                    .html(updateBackgroundHoverPanel())
+                    .html(updateHoverPanel(props.data))
                     .style("visibility", "visible");
             })
             .on("mousemove", function (event) {
@@ -72,10 +69,6 @@ export default function HierarchicalBubbleChart(props: { data: AccountPortfolios
                     .style("left", event.pageX + 20 + "px");
             })
             .on("mouseout", function () {
-                d3
-                    .select(this)
-                    .transition()
-                    .style("background", colour(0));
                 hoverPanel
                     .html(``)
                     .style("visibility", "hidden");
@@ -86,13 +79,14 @@ export default function HierarchicalBubbleChart(props: { data: AccountPortfolios
             .data(root.descendants().slice(1))
             .join("circle")
             .style("fill", node => colour(node.depth))
+            .attr("cursor", "pointer")
             .on("mouseover", function (event, node: any) {
                 d3
                     .select(this)
                     .style("fill", (node: any) =>
                         d3.rgb(colour(node.depth)).brighter(0.5).toString());
                 hoverPanel
-                    .html(updateCircleHoverPanel(node.data))
+                    .html(updateHoverPanel(node.data))
                     .style("visibility", "visible");
                 event.stopPropagation();
             })
@@ -139,38 +133,8 @@ export default function HierarchicalBubbleChart(props: { data: AccountPortfolios
                         view = zoom(interpolator(t));
                     };
                 });
+            svg.attr("cursor", (node === root) ? "default" : "pointer");
             return node;
-        }
-
-        function updateCircleHoverPanel(datum: Portfolio | Region | Office | Entry) {
-            if ("regions" in datum) {
-                return `<div><strong>Portfolio:</strong> ${datum.tag}</div>` +
-                    `<div><strong>Consumption:</strong> ${datum.consumption} kgCO2e</div>`
-            } else if ("offices" in datum) {
-                return `<div><strong>Region:</strong> ${datum.name}</div>` +
-                    `<div><strong>Consumption:</strong> ${datum.consumption} kgCO2e</div>`
-            } else if ("entries" in datum) {
-                return `<div><strong>Office:</strong> ${datum.name}</div>` +
-                    `<div><strong>Consumption:</strong> ${datum.consumption} kgCO2e</div>`
-            } else {
-                return `<div><strong>Entry:</strong> ${datum.tag}</div>` +
-                    `<div><strong>Consumption:</strong> ${datum.consumption} kgCO2e</div>` +
-                    `<div><strong>Source:</strong> ${datum.source}</div>` +
-                    `<div><strong>Further Info:</strong> ${datum.further_info}</div>`
-            }
-        }
-
-        function updateBackgroundHoverPanel() {
-            if ("portfolios" in props.data) {
-                return `<div><strong>Account:</strong> ${props.data.name}</div>` +
-                    `<div><strong>Consumption:</strong> ${props.data.consumption} kgCO2e</div>`
-            } else if ("regions" in props.data) {
-                return `<div><strong>Portfolio:</strong> ${props.data.tag}</div>` +
-                    `<div><strong>Consumption:</strong> ${props.data.consumption} kgCO2e</div>`
-            } else {
-                return `<div><strong>Region:</strong> ${props.data.name}</div>` +
-                    `<div><strong>Consumption:</strong> ${props.data.consumption} kgCO2e</div>`
-            }
         }
     }, [props.data]);
 

@@ -8,7 +8,7 @@ import {Entry} from "../Interfaces";
 
 export default function BarChart(props: { entries: Entry[] }) {
     useEffect(() => {
-        const margin = {top: 15, right: 0, bottom: 40, left: 80},
+        const margin = {top: 15, right: 20, bottom: 40, left: 80},
             barHeight = 25,
             height = Math.ceil((props.entries.length + 0.1) * barHeight) + margin.top + margin.bottom,
             width = 800,
@@ -72,7 +72,7 @@ export default function BarChart(props: { entries: Entry[] }) {
         (svg
             .select("#x-axis")
             .attr("transform", `translate(0, ${height - margin.bottom})`) as any)
-            .call(d3.axisBottom(x).ticks(maxConsumption / 80, "d"));
+            .call(d3.axisBottom(x).ticks(10, "d"));
 
         (svg
             .select("#y-axis")
