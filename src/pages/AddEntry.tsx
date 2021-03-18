@@ -281,13 +281,14 @@ export default function AddEntry(
                     <AlertViewer alerts={alerts} setAlerts={setAlerts}/>
                     <Tabs
                         id="controlled-tab"
+                        unmountOnExit={true}
                         activeKey={key}
                         onSelect={(k) => {
                             setKey(k);
                         }}
                         variant="pills"
                     >
-                        <Tab eventKey="dbInput" title="Database Lookup">
+                        <Tab eventKey="dbInput" title="Database Lookup" >
                             <br/>
                             <Form id="create-entry-form" onSubmit={submitHandlerBuilder(false)}>
                                 <Form.Row>
