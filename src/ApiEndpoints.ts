@@ -1,5 +1,5 @@
 const baseUrl = "https://ca3-api.herokuapp.com/";
-const cs30Url = "http://cs30.herokuapp.com/api/carbon";
+const cs30Url = "https://cs30.herokuapp.com/api/carbon";
 
 export const ApiEndPoints = {
     createAccount: baseUrl + "account/createAccount/",
