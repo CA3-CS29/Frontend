@@ -2,12 +2,13 @@ import React, {useEffect, useState} from 'react';
 import {COLORS} from '../colors';
 import '../App.css';
 import './Portfolio.css';
-import {Link} from 'react-router-dom';
+import {Link, useHistory} from 'react-router-dom';
 import axios from 'axios'
 import {ApiEndPoints} from "../ApiEndpoints";
 import {Accordion, Badge, Button, Card, Col, Container, ListGroup, Row, Table} from 'react-bootstrap'
 import {AlertInfo, AlertViewer} from "./Alerts";
 import Pluralize from 'pluralize';
+import Trash from '../media/trash.svg';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AddEntry from "./AddEntry";
@@ -19,6 +20,8 @@ import {Entry, Office, Region} from "../Interfaces";
 
 
 export default function Portfolio(props: { match: { params: { tag: string } } }) {
+    let history = useHistory();
+
     const user = useAuthStore(state => state.user) as firebase.User;
     const [dataRetrieved, setDataRetrieved] = useState(false);
 
@@ -60,6 +63,7 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
     }
 
     useEffect(getPortfolio, [getPortfolioURL, tag])
+
 
     function RegionListItems(props: { regions: Region[] }) {
         const regions = props.regions;
@@ -103,6 +107,47 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                                         setAlerts={setAlerts}
                                         onSuccess={getPortfolio}
                                     />
+
+                                    <Button
+                                        className="DeleteButton mr-1 mt-1"
+                                        style={{
+                                            color: COLORS.lightText,
+                                            fontFamily: "Lato",
+                                            backgroundColor: COLORS.background,
+                                            borderColor: "#D91212",
+                                            float: 'right',
+                                        }}
+                                        onClick={() => {
+                                            axios({
+                                                method: 'delete',
+                                                url: ApiEndPoints.deleteRegion +
+                                                    region.region_id + "/" +
+                                                    region.portfolio_id + "/" +
+                                                    tag + "/" +
+                                                    user?.uid,
+                                            })
+                                                .then(function (response) {
+                                                    console.log(response);
+                                                    const successAlert: AlertInfo = {
+                                                        variant: "success",
+                                                        text: `Region ${region.name} deleted`
+                                                    };
+                                                    setAlerts([...alerts, successAlert]);
+                                                    getPortfolio();
+                                                })
+                                                .catch(error => {
+                                                    const errorAlert: AlertInfo = {
+                                                        variant: "danger",
+                                                        text: error.toString()
+                                                    };
+                                                    setAlerts([...alerts, errorAlert]);
+                                                    console.log(error);
+                                                });
+                                        }}
+                                    >
+                                        <img src={Trash} style={{ height: 16, width: 16 }} alt="Delete" />
+                                    </Button>
+
                                     <Button
                                         className="Button mr-1 mt-1"
                                         style={{
@@ -180,6 +225,48 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                                     onSuccess={getPortfolio}
                                 />
                                 <Button
+                                    className="DeleteButton mr-1"
+                                    style={{
+                                        color: COLORS.lightText,
+                                        fontFamily: "Lato",
+                                        backgroundColor: COLORS.background,
+                                        borderColor: "#D91212",
+                                        float: 'right',
+                                    }}
+                                    onClick={() => {
+                                        axios({
+                                            method: 'delete',
+                                            url: ApiEndPoints.deleteOffice +
+                                                office.office_id + "/" +
+                                                region.region_id + "/" +
+                                                region.name + "/" +
+                                                region.portfolio_id + "/" +
+                                                tag + "/" +
+                                                user?.uid,
+                                        })
+                                            .then(response => {
+                                                console.log(response);
+                                                const successAlert: AlertInfo = {
+                                                    variant: "success",
+                                                    text: `Office ${office.name} deleted`
+                                                };
+                                                setAlerts([...alerts, successAlert]);
+                                                getPortfolio();
+                                            })
+                                            .catch(error => {
+                                                const errorAlert: AlertInfo = {
+                                                    variant: "danger",
+                                                    text: error.toString()
+                                                };
+                                                setAlerts([...alerts, errorAlert]);
+                                                console.log(error);
+                                            });
+                                    }}
+                                >
+                                    <img src={Trash} style={{ height: 16, width: 16 }} alt="Delete" />
+                                </Button> 
+
+                                <Button
                                     className="Button mr-1"
                                     style={{
                                         color: COLORS.darkText,
@@ -195,13 +282,14 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                                 >
                                     Visualise
                                 </Button>
+
                             </Col>
                         </Accordion.Collapse>
                     </Row>
                     <Accordion.Collapse eventKey={office.office_id}>
                         <>
                             <hr/>
-                            <EntryListItems office={office}/>
+                            <EntryListItems office={office} region={region}/>
                         </>
                     </Accordion.Collapse>
                 </ListGroup.Item>
@@ -212,7 +300,7 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
         }
     }
 
-    function EntryListItems(props: { office: Office }) {
+    function EntryListItems(props: { office: Office, region: Region }) {
         if (props.office.entries && props.office.entries.length > 0) {
             const mappedEntries = props.office.entries.map((entry: Entry) =>
                 <tr key={entry.entry_id}>
@@ -220,6 +308,47 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                     <td>{entry.consumption}</td>
                     <td>{entry.source}</td>
                     <td>{entry.further_info}</td>
+
+                    <Button
+                        className="Button mt-1 mb-1 mr-1"
+                        style={{
+                            color: COLORS.lightText,
+                            fontFamily: "Lato",
+                            backgroundColor: COLORS.background,
+                            borderColor: "#D91212",
+
+                        }}
+                        onClick={() => {
+                            axios({
+                                method: 'delete',
+                                url: ApiEndPoints.deleteEntry +
+                                    entry.entry_id + "/" +
+                                    props.office.office_id + "/" +
+                                    props.office.name + "/" +
+                                    props.region.region_id + "/" +
+                                    props.region.name + "/" +
+                                    props.region.portfolio_id + "/" +
+                                    tag + "/" +
+                                    user.uid,
+                            })
+                                .then(response => {
+                                    console.log(response);
+                                    const successAlert: AlertInfo = {
+                                        variant: "success",
+                                        text: `Entry ${entry.tag} deleted`
+                                    };
+                                    setAlerts([...alerts, successAlert]);
+                                    getPortfolio();
+                                })
+                                .catch(error => {
+                                    const errorAlert: AlertInfo = {variant: "danger", text: error.toString()};
+                                    setAlerts([...alerts, errorAlert]);
+                                    console.log(error);
+                                });
+                        }}
+                    >
+                        <img src={Trash} style={{height: 16, width: 16}} alt="Delete"/>
+                    </Button>
                 </tr>
             );
             return (
@@ -265,6 +394,37 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                                 setAlerts={setAlerts}
                                 onSuccess={getPortfolio}
                             />
+
+                            <Button
+                                className="DeleteButton mr-1 mt-1"
+                                style={{
+                                    color: COLORS.lightText,
+                                    fontFamily: "Lato",
+                                    backgroundColor: COLORS.background,
+                                    borderColor: "#D91212",
+                                    float: 'right',
+                                }}
+                                onClick={() => {
+                                    axios({
+                                        method: 'delete',
+                                        url: ApiEndPoints.deletePortfolio +
+                                            portfolioID + "/" +
+                                            user?.uid,
+                                    })
+                                        .then(function (response) {
+                                            console.log(response);
+                                            history.push("/portfolios");
+                                        })
+                                        .catch(error => {
+                                            const errorAlert: AlertInfo = {variant: "danger", text: error.toString()};
+                                            setAlerts([...alerts, errorAlert]);
+                                            console.log(error);
+                                        });
+                                }}
+                            >
+                                <img src={Trash} style={{ height: 16, width: 16 }} alt="Delete" />
+                            </Button>
+
                             <Button
                                 className="Button mr-1 mt-1"
                                 style={{
