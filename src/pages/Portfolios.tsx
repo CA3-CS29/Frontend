@@ -78,7 +78,8 @@ export default function Portfolios() {
                                             >
                                                 {Pluralize("Region", portfolio.num_regions, true)}
                                             </Badge>
-                                        </h5>
+
+                                        </h5>        
                                     </Col>
                                 </Row>
                             </ListGroup.Item>
@@ -156,6 +157,7 @@ export default function Portfolios() {
                         }}
                         >
                             <PortfolioListItems portfolios={portfolios}/>
+                            
                         </ListGroup>
                     </Row>
                 </Container>
