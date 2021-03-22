@@ -1,5 +1,5 @@
 variables:
-  APP_NAME: ca3-frontend
+  APP_NAME: carbon-calcu
 
 stages:
   - build
@@ -61,14 +61,12 @@ docker-build:
     - openstack
   services:
     - name: docker:19.03.8-dind
-  only:
-    - master
   before_script:
     - docker login -u _ -p $HEROKU_API_KEY registry.heroku.com
   script:
-    - echo "Building Frontend docker... 🛠"
+    - echo "Building New and cooler frontend docker... 🛠"
     - docker build -f Dockerfile -t registry.heroku.com/$APP_NAME/web .
     - echo "Pushing to docker registry frontend"
     - docker push registry.heroku.com/$APP_NAME/web
     - docker run --rm -e HEROKU_API_KEY=$HEROKU_API_KEY wingrunr21/alpine-heroku-cli container:release web --app $APP_NAME
-    - echo "We have liftoff"
+    - echo "We have brew"
