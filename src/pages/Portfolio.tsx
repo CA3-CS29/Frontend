@@ -14,9 +14,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import AddEntry from "./AddEntry";
 import AddRegion from "./AddRegion";
 import AddOffice from "./AddOffice";
+import CarbonBadge from "./CarbonBadge";
 import {useAuthStore} from "../App";
 import firebase from "firebase";
 import {Entry, Office, Region} from "../Interfaces";
+import {Portfolio as PortfolioInterface} from "../Interfaces";  
 
 
 export default function Portfolio(props: { match: { params: { tag: string } } }) {
@@ -26,7 +28,16 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
     const [dataRetrieved, setDataRetrieved] = useState(false);
 
     const {tag} = props.match.params;
-    const [portfolio, setPortfolio] = useState("");
+    const [portfolio, setPortfolio] = useState<PortfolioInterface>({
+        tag: "",
+        portfolio_id: "",
+        user_id: "",
+        created_on: "",
+        updated_on: "",
+        consumption: 0,
+        num_regions: 0,
+        regions: [],
+    });
     const [portfolioID, setPortfolioID] = useState("");
     const [regions, setRegions] = useState([]);
 
@@ -96,6 +107,7 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                                     >
                                         {Pluralize("Office", region.num_offices, true)}
                                     </Badge>
+                                    <CarbonBadge data={region} />
                                 </h4>
                             </Accordion.Toggle>
                             <Accordion.Collapse eventKey={region.region_id}>
@@ -211,6 +223,7 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                                 >
                                     {Pluralize("Entry", office.num_entries, true)}
                                 </Badge>
+                                <CarbonBadge data={office} />
                             </h5>
                         </Accordion.Toggle>
                         <Accordion.Collapse eventKey={office.office_id}>
@@ -383,9 +396,21 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                                     color: COLORS.darkText,
                                     textAlign: "left",
                                 }}
-                            >
-                                {tag}
+                            >   
+                                <Row>
+                                {tag} 
+                                <h3 className="mt-1"
+                                        style={{
+                                            color: COLORS.darkText,
+                                            textAlign: "left",
+                                            fontFamily: "Lato",
+                                        }}
+                                >
+                                    <CarbonBadge data={portfolio as PortfolioInterface} />
+                                </h3>
+                                </Row>
                             </h1>
+                            
                         </Col>
                         <Col xs="auto">
                             <AddRegion
