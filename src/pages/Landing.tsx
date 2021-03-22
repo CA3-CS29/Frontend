@@ -42,7 +42,7 @@ export default function Landing() {
                                     color: COLORS.darkText,
                                 }}
                             >
-                                Carbon Analysis 3
+                                CARBON ANALYSIS 3
                             </h1>
                         </Row>
                         <Row>
@@ -52,7 +52,7 @@ export default function Landing() {
                                     color: COLORS.darkText,
                                 }}
                             >
-                                Carbon emission calculations and visualisations made easy.
+                                CARBON EMISSION CALCULATIONS AND VISUALISATIONS MADE EASY
                             </p>
                         </Row>
                     </Container>
