@@ -98,6 +98,7 @@ export default function Landing() {
                         background: "url(" + landingPicture + ") center no-repeat",
                         backgroundSize: "cover",
                         height: "100%",
+                        width: "100%",
                         flex: [rs.IsPhone(), rs.IsTabletPortrait()].some(Boolean) ? "60%" : "30%",
                     }}
                 />
