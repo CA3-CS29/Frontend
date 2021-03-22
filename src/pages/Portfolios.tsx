@@ -11,6 +11,7 @@ import {AlertInfo, AlertViewer} from "./Alerts";
 import './Portfolios.css';
 import Pluralize from 'pluralize';
 import {Portfolio} from "../Interfaces";
+import CarbonBadge from "./CarbonBadge";
 
 export default function Portfolios() {
     const user = useAuthStore(state => state.user) as firebase.User;
@@ -63,12 +64,14 @@ export default function Portfolios() {
                                         }}
                                     >
                                         <h5>
-                                            {portfolio.tag}
+                                        {portfolio.tag} 
                                         </h5>
                                     </Col>
                                     <Col style={{textAlign: 'right'}}>
                                         <h5>
+                                            <CarbonBadge data={portfolio} />
                                             <Badge
+                                                className="ml-1"
                                                 style={{
                                                     color: COLORS.darkText,
                                                     fontWeight: "normal",
@@ -117,8 +120,10 @@ export default function Portfolios() {
                                     textAlign: "left",
                                 }}
                             >
-                                Your Portfolios
+                                Your Portfolios 
+
                             </h1>
+                            
                         </Col>
                         <Col xs="auto">
                             <Button
