@@ -114,7 +114,7 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                                             color: COLORS.lightText,
                                             fontFamily: "Lato",
                                             backgroundColor: COLORS.background,
-                                            borderColor: "#D91212",
+                                            borderColor: COLORS.deleteRed,
                                             float: 'right',
                                         }}
                                         onClick={() => {
@@ -152,8 +152,8 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                                         className="Button mr-1 mt-1"
                                         style={{
                                             color: COLORS.darkText,
-                                            backgroundColor: "#ccf9ce",
-                                            borderColor: "#ccf9ce",
+                                            backgroundColor: COLORS.visualiseGreen,
+                                            borderColor: COLORS.visualiseGreen,
                                             float: 'right',
                                         }}
                                         as={Link}
@@ -230,7 +230,7 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                                         color: COLORS.lightText,
                                         fontFamily: "Lato",
                                         backgroundColor: COLORS.background,
-                                        borderColor: "#D91212",
+                                        borderColor: COLORS.deleteRed,
                                         float: 'right',
                                     }}
                                     onClick={() => {
@@ -270,8 +270,8 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                                     className="Button mr-1"
                                     style={{
                                         color: COLORS.darkText,
-                                        backgroundColor: "#ccf9ce",
-                                        borderColor: "#ccf9ce",
+                                        backgroundColor: COLORS.visualiseGreen,
+                                        borderColor: COLORS.visualiseGreen,
                                         float: "right",
                                     }}
                                     as={Link}
@@ -315,7 +315,7 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                             color: COLORS.lightText,
                             fontFamily: "Lato",
                             backgroundColor: COLORS.background,
-                            borderColor: "#D91212",
+                            borderColor: COLORS.deleteRed,
 
                         }}
                         onClick={() => {
@@ -401,7 +401,7 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                                     color: COLORS.lightText,
                                     fontFamily: "Lato",
                                     backgroundColor: COLORS.background,
-                                    borderColor: "#D91212",
+                                    borderColor: COLORS.deleteRed,
                                     float: 'right',
                                 }}
                                 onClick={() => {
@@ -429,8 +429,8 @@ export default function Portfolio(props: { match: { params: { tag: string } } })
                                 className="Button mr-1 mt-1"
                                 style={{
                                     color: COLORS.darkText,
-                                    backgroundColor: "#ccf9ce",
-                                    borderColor: "#ccf9ce",
+                                    backgroundColor: COLORS.visualiseGreen,
+                                    borderColor: COLORS.visualiseGreen,
                                     float: 'right',
                                 }}
                                 as={Link}

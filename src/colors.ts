@@ -1,4 +1,4 @@
-export const COLORS = {
+export const COLORS_Orignal = {
     lightText: '#E5EEE9',
     background: '#FFFFFF',
     accent: '#E0E0E0',
@@ -6,6 +6,21 @@ export const COLORS = {
     highlight: '#00CF79',
     darkText: '#25262C',
     secondaryAccent: '#C7C7C7',
+    deleteRed: "#E84123",
+    visualiseGreen: "#ccf9ce",
+}
+
+export const COLORS = {
+    lightText: '#000000',
+    background: '#FFFFFF',
+    accent: '#E0E0E0',
+    primary: '#FFFFFF',
+    highlight: '#36D5FA',
+    darkText: '#25262C',
+    secondaryAccent: '#C7C7C7',
+    secondaryBackground: '#ECECEC',
+    deleteRed: "#E84123",
+    visualiseGreen: "#00B98A"
 }
 
 export const colourScheme20 = [ // from colorgorical

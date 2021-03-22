@@ -136,8 +136,8 @@ export default function Portfolios() {
                                 className="Button mr-1 mt-1"
                                 style={{
                                     color: COLORS.darkText,
-                                    backgroundColor: "#ccf9ce",
-                                    borderColor: "#ccf9ce",
+                                    backgroundColor: COLORS.visualiseGreen,
+                                    borderColor: COLORS.visualiseGreen,
                                     float: 'right',
                                 }}
                                 as={Link}
