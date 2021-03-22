@@ -66,7 +66,7 @@ export default function BarChart(props: { entries: Entry[] }) {
                 d3
                     .select(this)
                     .transition()
-                    .attr("fill", COLORS.primary);
+                    .attr("fill", COLORS.visualiseGreen);
             });
 
         (svg
