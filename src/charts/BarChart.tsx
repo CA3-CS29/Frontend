@@ -35,7 +35,7 @@ export default function BarChart(props: { entries: Entry[] }) {
 
         svg
             .select("#bars")
-            .attr("fill", COLORS.primary)
+            .attr("fill", COLORS.visualiseGreen)
             .selectAll("rect")
             .data(props.entries)
             .join("rect")

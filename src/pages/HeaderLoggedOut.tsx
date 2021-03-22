@@ -44,7 +44,7 @@ export default function HeaderLoggedOut(props: { logoText: string }) {
                 <Navbar.Brand
                     style={{
                         color: COLORS.lightText,
-                        fontFamily: 'Lato',
+                        fontFamily: 'Oswald',
                         fontWeight: 'lighter',
                         fontSize: 40,
                     }}

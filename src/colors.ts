@@ -20,7 +20,7 @@ export const COLORS = {
     secondaryAccent: '#C7C7C7',
     secondaryBackground: '#ECECEC',
     deleteRed: "#E84123",
-    visualiseGreen: "#00B98A"
+    visualiseGreen: "#34D19F"
 }
 
 export const colourScheme20 = [ // from colorgorical
